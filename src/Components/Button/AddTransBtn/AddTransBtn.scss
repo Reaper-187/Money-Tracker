@@ -1,0 +1,85 @@
+.add-trans-btn {
+  text-transform: uppercase;
+  text-decoration: none;
+  padding: 10px 30px;
+  display: inline-block;
+  border-radius: 7px;
+  transition: all 0.2s;
+  position: relative;
+  cursor: pointer;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+.add-trans-btn:hover {
+  transform: translateY(-3px);
+}
+
+.add-trans-btn:active {
+  transform: translateY(-1px);
+}
+
+.btn-white {
+  background-color: var(--light-secondary-color);
+  color: var(--text-color);
+  font-weight: 600;
+}
+
+.add-trans-btn::after {
+  content: "";
+  display: inline-block;
+  height: 100%;
+  width: 100%;
+  border-radius: 7px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: -1;
+  transition: all 0.4s;
+}
+
+.btn-white::after {
+  background-color: var(--secondary-color);
+}
+
+.add-trans-btn:hover::after {
+  transform: scaleX(1.4) scaleY(1.6);
+  opacity: 0;
+}
+
+.btn-animated {
+  animation: moveInBottom 5s ease-out;
+  animation-fill-mode: backwards;
+}
+
+@keyframes moveInBottom {
+  0% {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0px);
+  }
+}
+
+@media (max-width: 1024px) {
+  .add-trans-container {
+    width: 20vw;
+    font-size: var(--font-size-small);
+  }
+}
+
+/* Mobile (Bildschirme zwischen 480px und 767px) */
+@media (max-width: 767px) {
+  .add-trans-container {
+    width: 30vw;
+  }
+}
+
+/* Sehr kleine Geräte (Bildschirme unter 480px) */
+@media (max-width: 480px) {
+  .add-trans-container {
+    width: fit-content;
+  }
+}

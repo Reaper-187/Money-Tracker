@@ -1,0 +1,83 @@
+:root {
+  --main-brand-color: #2563eb; /* Blau (Vertrauen, Stabilität) */
+  --accent-color: #059669; /* Grün (Wachstum, Erfolg) */
+  --primary-color: #f8fafc; /* Hellgrau (Hintergrund) */
+  --secondary-color: #e2e8f0; /* Mittelgrau (Karten/Abschnitte) */
+  --light-secondary-color: #ffffff; /* Weiß (Akzente) */
+  --text-color: #1e293b; /* Dunkelblau (Primärtext) */
+  --secondary-text-color: #64748b; /* Graublau (Sekundärtext) */
+
+  /* --main-brand-color: #4caf50; */
+  /* Grün als Hauptfarbe für Vertrauen & Finanzthema */
+  /* --primary-color: #f5f7fa; */
+  /* Sehr helles Grau für den Hintergrund */
+  /* --secondary-color: #e0e6ed; */
+  /* Subtiles Grau für UI-Elemente */
+  /* --light-secondary-color: #f0f4f8; */
+  /* Noch helleres Grau für Kontraste */
+  /* --text-color: #2c3e50; */
+  /* Dunkles Blau für optimale Lesbarkeit */
+  /* --secondary-text-color: #7b8a98; */
+  /* Grauton für weniger wichtige Texte */
+
+  --font-size-h1: clamp(2rem, 4vw, 2.5rem);
+  /* Hauptüberschrift (min: 32px, ideal: 4vw, max: 40px) */
+
+  --font-size-h2: clamp(1.75rem, 3.5vw, 2rem);
+  /* Wichtige Unterüberschrift (min: 28px, ideal: 3.5vw, max: 32px) */
+
+  --font-size-h3: clamp(1.5rem, 3vw, 1.75rem);
+  /* Sekundäre Überschrift (min: 24px, ideal: 3vw, max: 28px) */
+
+  --font-size-h4: clamp(1.25rem, 2.5vw, 1.5rem);
+  /* Kleinere Überschrift (min: 20px, ideal: 2.5vw, max: 24px) */
+
+  --font-size-h5: clamp(1.1rem, 2vw, 1.25rem);
+  /* Kleinere Abschnitte (min: 18px, ideal: 2vw, max: 20px) */
+
+  --font-size-h6: clamp(1rem, 1.8vw, 1.125rem);
+  /* Unwichtige Überschrift (min: 16px, ideal: 1.8vw, max: 18px) */
+
+  --font-size-body: clamp(1.2rem, 1.8vw, 1.6rem);
+  /* Standard-Text (min: 12px, ideal: 1.8vw, max: 16px) */
+
+  --font-size-small: clamp(0.8rem, 1.4vw, 1.4rem);
+  /* Kleine Hinweise (min: 12px, ideal: 1.4vw, max: 14px) */
+
+  --font-size-tiny: clamp(0.7rem, 1.2vw, 0.875rem);
+  /* Sehr kleine Texte (min: 11px, ideal: 1.2vw, max: 14px) */
+}
+
+.dark {
+  --main-brand-color: #3b82f6; /* Hellblau (Markenfarbe) */
+  --accent-color: #10b981; /* Hellgrün (Positive Aktionen) */
+  --primary-color: #1e293b; /* Dunkelblau (Hintergrund) */
+  --secondary-color: #334155; /* Mittelblau (Karten/Abschnitte) */
+  --light-secondary-color: #475569; /* Hellblau (Akzente) */
+  --text-color: #f8fafc; /* Weiß (Primärtext) */
+  --secondary-text-color: #94a3b8; /* Graublau (Sekundärtext) */
+
+  /* --main-brand-color: #4caf50; */
+  /* Bleibt unverändert - Frisches Grün für die Hauptfarbe */
+  /* --primary-color: #121212; */
+  /* Sehr dunkles Grau für den Hintergrund (noch dunkler, für besseren Kontrast und Lesbarkeit) */
+  /* --secondary-color: #333333; */
+  /* Dunkleres Grau für Karten, noch etwas heller als der Hintergrund, aber weiterhin gut erkennbar */
+  /* --light-secondary-color: #444444; */
+  /* Etwas helleres Grau für Abgrenzungen oder weniger hervorstechende Elemente */
+  /* --text-color: #f1f1f1; */
+  /* Fast Weiß für Lesbarkeit (eher ein weiches Weiß als reines Weiß, um die Augen zu schonen) */
+  /* --secondary-text-color: #b0b0b0; */
+  /* Dezentes Grau für weniger wichtige Texte (hier bleibt das Grau, aber es ist ein wenig sanfter für den Dark Mode) */
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Inter", sans-serif;
+}
+
+body {
+  background-color: var(--secondary-color);
+}
