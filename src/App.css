@@ -49,10 +49,8 @@
 }
 
 .dark {
-  --main-brand-color: #3b82f6; /* Hellblau (Markenfarbe) */
-  --accent-color: #10b981; /* Hellgrün (Positive Aktionen) */
-  --primary-color: #1e293b; /* Dunkelblau (Hintergrund) */
-  --secondary-color: #334155; /* Mittelblau (Karten/Abschnitte) */
+  --main-brand-color: #fafafa; /* Hellblau (Markenfarbe) */
+  --primary-color: #09090b; /* Dunkelblau (Hintergrund) */
   --light-secondary-color: #475569; /* Hellblau (Akzente) */
   --text-color: #f8fafc; /* Weiß (Primärtext) */
   --secondary-text-color: #94a3b8; /* Graublau (Sekundärtext) */
@@ -79,5 +77,5 @@
 }
 
 body {
-  background-color: var(--secondary-color);
+  background-color: var(--primary-color);
 }

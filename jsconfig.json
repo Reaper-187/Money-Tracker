@@ -9,7 +9,9 @@
     "strictFunctionTypes": true,
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["src/*"],
+      "@c/*": ["src/Components/*"],
+      "@ui/*": ["src/Components/ui/*"]
     }
   },
   "exclude": ["node_modules", "**/node_modules/*"]

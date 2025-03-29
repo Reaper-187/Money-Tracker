@@ -6,7 +6,9 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent } from "@ui/card";
+
+import "./BarChart.scss";
 
 const data = [
   { name: "Mon", value: 400 },
@@ -16,17 +18,19 @@ const data = [
   { name: "Fri", value: 600 },
 ];
 
-export function BarChartComponent() {
+export default function BarChartComponent() {
   return (
-    <Card className="w-full p-4">
+    <Card className="w-full p-4 bar-card flex justify-center bg-transparent">
       <CardContent>
-        <h2 className="text-lg font-semibold">Weekly Overview</h2>
+        <h2 className="text-lg text-center font-semibold">Weekly Overview</h2>
         <ResponsiveContainer width="100%" height={250}>
           <BarChart data={data}>
             <XAxis dataKey="name" />
             <YAxis />
             <Tooltip />
-            <Bar dataKey="value" fill="#8884d8" />
+            <Bar dataKey="value" fill="#0088FE" />
+            <Bar dataKey="value" fill="#0080ff33" />
+            <Bar dataKey="value" fill="#000" />
           </BarChart>
         </ResponsiveContainer>
       </CardContent>

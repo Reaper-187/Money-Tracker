@@ -1,9 +1,8 @@
 .transactions-container {
   width: 80%;
   margin: 5rem auto;
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.356);
+  box-shadow: 0 0px 5px var(--text-color);
   border-radius: 10px;
-  font-size: var(--font-size-small);
 }
 
 .history-header {
@@ -11,9 +10,12 @@
   justify-content: space-between;
   align-items: center;
   padding: 1rem;
-  background-color: var(--main-brand-color);
+  background-color: var(--primary-color);
   border-radius: 10px 10px 0 0;
   color: var(--text-color);
+  h2 {
+    font-size: var(--font-size-small);
+  }
 }
 
 .search-header {
@@ -51,7 +53,7 @@
 }
 
 .sortable-header {
-  background: var(--secondary-color);
+  background: var(--primary-color);
   font-weight: 600;
   color: var(--text-color);
   border-radius: 10px 10px 0 0;
@@ -72,7 +74,7 @@
 }
 
 .transaction-item:has(input:checked) {
-  background-color: rgba(0, 128, 255, 0.2);
+  background-color: #0080ff33;
 }
 
 .sortable-header li,
