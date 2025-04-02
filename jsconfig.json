@@ -10,9 +10,10 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"],
-      "@c/*": ["src/Components/*"],
-      "@ui/*": ["src/Components/ui/*"]
+      "@c/*": ["src/components/*"],
+      "@ui/*": ["src/components/ui/*"]
     }
   },
+  "include": ["src/**/*"],
   "exclude": ["node_modules", "**/node_modules/*"]
 }

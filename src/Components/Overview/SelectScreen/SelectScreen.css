@@ -1,6 +1,6 @@
 .select-container {
   position: fixed;
-  width: 30%;
+  width: 31%;
   right: 0;
   transform: translateX(100%);
   transition: transform ease 0.4s;
@@ -10,8 +10,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--text-color);
-
+  color: var(--foreground);
+  border-left: solid 1px var(--border);
   &.active {
     transform: translateX(0);
   }
@@ -35,7 +35,7 @@
   width: 100%;
   height: 100%;
   padding: 1rem;
-  background-color: var(--light-secondary-color);
+  background-color: var(--background);
 }
 
 lable {

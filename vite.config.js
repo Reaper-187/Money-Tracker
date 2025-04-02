@@ -1,15 +1,16 @@
-import react from "@vitejs/plugin-react";
 import { defineConfig } from "vite";
-import path from "path";
+import react from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
+import path from "path";
 
+// https://vite.dev/config/
 export default defineConfig({
   plugins: [react(), tailwindcss()],
   resolve: {
     alias: {
-      "@": path.resolve(__dirname, "./src"), // Existiert bereits
-      "@c": path.resolve(__dirname, "./src/Components"),
-      "@ui": path.resolve(__dirname, "src/Components/ui"), // Hier den Alias für @ui hinzufügen
+      "@": path.resolve(__dirname, "./src"),
+      "@c": path.resolve(__dirname, "./src/components"),
+      "@ui": path.resolve(__dirname, "src/components/ui"),
     },
   },
 });

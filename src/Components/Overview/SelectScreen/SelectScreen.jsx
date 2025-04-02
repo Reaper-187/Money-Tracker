@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "./SelectScreen.scss";
+import "./SelectScreen.css";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 import ArrowCircleRightIcon from "@mui/icons-material/ArrowCircleRight";
@@ -27,24 +27,24 @@ export function SelectScreen({ toggleSelectScreen, closeSelectScreen }) {
         />
         <h3>Add Transaction</h3>
 
-        <lable>Date of Transaction</lable>
+        <label>Date of Transaction</label>
         <input type="date" className="date-input" />
 
-        <lable>Category</lable>
+        <label>Category</label>
         <select name="" id="" className="select-option">
           <option value="Chash">Invest</option>
           <option value="Card">Entertainment</option>
           <option value="Chash">Study</option>
         </select>
 
-        <lable>Payment</lable>
+        <label>Payment</label>
         <select name="" id="" className="select-option">
           <option value="Card">Card</option>
           <option value="Chash">Chash</option>
         </select>
 
         <div className="ammount-container">
-          <lable>Amount</lable>
+          <label>Amount</label>
           <div className="amount-sign" onClick={toggleSign}>
             {isAdd ? (
               <AddCircleOutlineIcon className="add-plus" />

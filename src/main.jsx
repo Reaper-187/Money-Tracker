@@ -6,8 +6,8 @@ import {
   Navigate,
 } from "react-router-dom";
 import { App } from "./App";
-import { Dashboard } from "./Components/Dashboard/Dashboard";
-import { Transactions } from "./Components/Transaction/Transactions";
+import { Dashboard } from "@c/Dashboard/Dashboard";
+import { Transactions } from "@c/Transaction/Transactions";
 import "./index.css";
 
 const router = createBrowserRouter([

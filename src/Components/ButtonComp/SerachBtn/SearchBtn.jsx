@@ -1,5 +1,5 @@
 import React from "react";
-import "./SearchBtn.scss";
+import "./SearchBtn.css";
 export function SearchBtn() {
   return (
     <div className="search-container">

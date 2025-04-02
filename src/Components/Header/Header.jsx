@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import "./Header.scss";
+import "./Header.css";
 import { Link, useLocation } from "react-router-dom";
 import { FaSun, FaMoon } from "react-icons/fa";
 
@@ -7,7 +7,7 @@ export const Header = () => {
   const [theme, setTheme] = useState("light");
   const location = useLocation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const navRef = useRef(null); // Referenz für die Navbar
+  const navRef = useRef(null);
 
   useEffect(() => {
     const savedTheme = localStorage.getItem("theme") || "light";

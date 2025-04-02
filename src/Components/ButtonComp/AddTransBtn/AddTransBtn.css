@@ -7,7 +7,7 @@
   transition: all 0.2s;
   position: relative;
   cursor: pointer;
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+  box-shadow: 0px 0px 5px 0px var(--color-border);
 }
 
 .add-trans-btn:hover {
@@ -19,8 +19,7 @@
 }
 
 .btn-white {
-  background-color: var(--light-secondary-color);
-  color: var(--text-color);
+  color: var(--foreground);
   font-weight: 600;
 }
 
@@ -38,7 +37,7 @@
 }
 
 .btn-white::after {
-  background-color: var(--secondary-color);
+  background-color: var(--color-border);
 }
 
 .add-trans-btn:hover::after {

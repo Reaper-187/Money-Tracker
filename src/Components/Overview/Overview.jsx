@@ -2,8 +2,8 @@ import React from "react";
 import SavingsIcon from "@mui/icons-material/Savings";
 import TrendingUpIcon from "@mui/icons-material/TrendingUp";
 import TrendingDownIcon from "@mui/icons-material/TrendingDown";
-import { AddTransBtn } from "../Button/AddTransBtn/AddTransBtn";
-import "./overview.scss";
+import { AddTransBtn } from "@c/ButtonComp/AddTransBtn/AddTransBtn";
+import "./overview.css";
 
 export function Overview() {
   return (

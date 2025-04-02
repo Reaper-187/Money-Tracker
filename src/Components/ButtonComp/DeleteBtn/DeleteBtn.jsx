@@ -1,5 +1,5 @@
 import React from "react";
-import "./DeleteBtn.scss";
+import "./DeleteBtn.css";
 
 export function DeleteBtn() {
   return (

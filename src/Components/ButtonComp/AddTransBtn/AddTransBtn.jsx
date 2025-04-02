@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { SelectScreen } from "../../Overview/SelectScreen/SelectScreen";
-import "./AddTransBtn.scss";
+import { SelectScreen } from "@c/Overview/SelectScreen/SelectScreen";
+import "./AddTransBtn.css";
 
 export function AddTransBtn() {
   const [toggleSelectScreen, setToggleSelectScreen] = useState(false);
