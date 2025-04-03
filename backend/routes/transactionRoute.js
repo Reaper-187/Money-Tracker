@@ -4,6 +4,21 @@ const Transaction = require("../model/TransactionSchema/TransactionSchema");
 // const mongoose = require("mongoose");
 const router = express.Router();
 
+router.get("/transactions", async (req, res) => {
+  try {
+    // const userId = new mongoose.Types.ObjectId(req.session.passport.user);
+    const eachTransaction = await Transaction.find();
+
+    res.json({
+      eachTransaction,
+    });
+  } catch (err) {
+    res
+      .status(500)
+      .json({ message: "Fehler beim Abrufen der Tranasaktionen", error: err });
+  }
+});
+
 // POST-Route, um eine TX hinzuzufügen
 router.post("/transactions", async (req, res) => {
   try {

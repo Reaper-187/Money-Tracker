@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   flexRender,
   getCoreRowModel,
@@ -32,89 +32,10 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { DeleteBtn } from "@c/ButtonComp/DeleteBtn/DeleteBtn";
+import axios from "axios";
 
-const data = [
-  {
-    date: new Date().toLocaleDateString(),
-    id: "m5gr84i9",
-    amount: 316,
-    status: "success",
-    payment: "Merchant",
-    email: "ken99@example.com",
-  },
-  {
-    date: new Date().toLocaleDateString(),
-    id: "3u1reuv4",
-    amount: 242,
-    status: "success",
-    payment: "Company",
-    email: "Abe45@example.com",
-  },
-  {
-    date: new Date().toLocaleDateString(),
-    id: "derv1ws0",
-    amount: 837,
-    status: "processing",
-    payment: "Utilitys",
-    email: "Monserrat44@example.com",
-  },
-  {
-    date: new Date().toLocaleDateString(),
-    id: "5kma53ae",
-    amount: 874,
-    status: "success",
-    payment: "Entertainment",
-    email: "Silas22@example.com",
-  },
-  {
-    date: new Date().toLocaleDateString(),
-    id: "bhqecj4p",
-    amount: 721,
-    status: "failed",
-    payment: "Merchant",
-    email: "carmella@example.com",
-  },
-  {
-    date: new Date().toLocaleDateString(),
-    id: "m5gr84i9",
-    amount: 316,
-    status: "success",
-    payment: "Company",
-    email: "ken99@example.com",
-  },
-  {
-    date: new Date().toLocaleDateString(),
-    id: "3u1reuv4",
-    amount: 242,
-    status: "success",
-    payment: "Merchant",
-    email: "Abe45@example.com",
-  },
-  {
-    date: new Date().toLocaleDateString(),
-    id: "derv1ws0",
-    amount: 837,
-    status: "processing",
-    payment: "Stealing",
-    email: "Monserrat44@example.com",
-  },
-  {
-    date: new Date().toLocaleDateString(),
-    id: "5kma53ae",
-    amount: 874,
-    status: "success",
-    payment: "Company",
-    email: "Silas22@example.com",
-  },
-  {
-    date: new Date().toLocaleDateString(),
-    id: "bhqecj4p",
-    amount: 721,
-    status: "failed",
-    payment: "Safemoney",
-    email: "carmella@example.com",
-  },
-];
+// axios.defaults.withCredentials = true; // damit erlaube ich das senden von cookies
+const transactions = import.meta.env.VITE_API_TRANSACTIONS;
 
 export const columns = [
   {
@@ -141,32 +62,32 @@ export const columns = [
   },
   {
     accessorKey: "date",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Date
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      );
-    },
+    header: ({ column }) => (
+      <Button
+        variant="ghost"
+        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+      >
+        Date
+        <ArrowUpDown className="ml-2 h-4 w-4" />
+      </Button>
+    ),
   },
   {
-    accessorKey: "email",
+    accessorKey: "category",
     header: ({ column }) => {
       return (
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Email
+          Category
           <ArrowUpDown />
         </Button>
       );
     },
-    cell: ({ row }) => <div className="lowercase">{row.getValue("email")}</div>,
+    cell: ({ row }) => (
+      <div className="lowercase">{row.getValue("category")}</div>
+    ),
   },
   {
     accessorKey: "payment",
@@ -201,11 +122,19 @@ export const columns = [
     },
   },
   {
+    accessorKey: "notes",
+    header: () => <div className="text-right">notes</div>,
+    cell: ({ row }) => {
+      return (
+        <div className="text-right font-small">{row.getValue("category")}</div>
+      );
+    },
+  },
+  {
     id: "actions",
     enableHiding: false,
     cell: ({ row }) => {
-      const payment = row.original;
-
+      const transaction = row.original; // Zugriff auf die komplette Zeile
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -215,15 +144,13 @@ export const columns = [
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(payment.id)}
+              onClick={() => console.log("Deleting:", transaction)}
             >
-              Copy payment ID
+              Delete Transaction
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>View customer</DropdownMenuItem>
-            <DropdownMenuItem>View payment details</DropdownMenuItem>
+            <DropdownMenuItem>Download Transaction</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       );
@@ -232,13 +159,29 @@ export const columns = [
 ];
 
 export function Transactions() {
+  const [selectTransactions, setSelectTransactions] = useState([]);
+
+  useEffect(() => {
+    const GetTransactionsData = async () => {
+      try {
+        const response = await axios.get(transactions);
+        setSelectTransactions(response.data.eachTransaction);
+        console.log("response Antwort", response);
+        console.log("response.DATA Antwort", response.data);
+      } catch (err) {
+        console.error("GET-Data not found", err);
+      }
+    };
+    GetTransactionsData();
+  }, []);
+
   const [sorting, setSorting] = useState([]);
   const [columnFilters, setColumnFilters] = useState([]);
   const [columnVisibility, setColumnVisibility] = useState({});
   const [rowSelection, setRowSelection] = useState({});
 
   const table = useReactTable({
-    data,
+    data: selectTransactions,
     columns,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
@@ -254,14 +197,14 @@ export function Transactions() {
   return (
     <div className="w-full px-2">
       <div className="flex-row items-center justify-center gap-4 py-4">
-        <div className="flex flex-col items-center">
+        <div className="flex flex-col items-center md:flex-row items-center justify-center ">
           <Input
-            placeholder="Filter emails..."
-            value={table.getColumn("email")?.getFilterValue() ?? ""}
+            placeholder="Filter categorys..."
+            value={table.getColumn("category")?.getFilterValue() ?? ""}
             onChange={(event) =>
-              table.getColumn("email")?.setFilterValue(event.target.value)
+              table.getColumn("category")?.setFilterValue(event.target.value)
             }
-            className="max-w-32 mb-2 lg:max-w-sm "
+            className="max-w-32 mb-2 lg:max-w-sm mr-5 "
           />
           {table.getFilteredSelectedRowModel().rows.length > 0 && (
             <DeleteBtn>
