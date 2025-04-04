@@ -59,3 +59,33 @@ export function DatePickerWithRange({ dateRange }) {
     </div>
   );
 }
+
+export function DatePickerNoRange({ field, form }) {
+  return (
+    <Popover>
+      <PopoverTrigger asChild>
+        <Button
+          variant={"outline"}
+          className={cn(
+            "w-[380px] justify-center text-start font-normal",
+            !field.value && "text-muted-foreground"
+          )}
+        >
+          <CalendarIcon />
+          {field.value ? format(field.value, "PPP") : <span>Pick a date</span>}
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent
+        className="w-auto p-0 popover-content"
+        style={{ zIndex: 9999 }}
+      >
+        <Calendar
+          mode="single"
+          selected={field.value}
+          onSelect={(date) => form.setValue("date", date)}
+          initialFocus
+        />
+      </PopoverContent>
+    </Popover>
+  );
+}

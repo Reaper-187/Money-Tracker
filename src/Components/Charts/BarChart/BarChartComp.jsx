@@ -23,7 +23,7 @@ export default function BarChartComponent() {
     <Card className="w-full p-4 bar-card flex justify-center bg-transparent">
       <CardContent>
         <h2 className="text-lg text-center font-semibold">Weekly Overview</h2>
-        <ResponsiveContainer width="100%" height={400}>
+        <ResponsiveContainer width="100%" height={370}>
           <BarChart data={data}>
             <XAxis dataKey="name" />
             <YAxis />

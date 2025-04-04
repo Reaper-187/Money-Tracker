@@ -23,7 +23,7 @@ export default function StackedDonutChart() {
         <h2 className="text-lg font-semibold text-center">
           Spending Breakdown
         </h2>
-        <ResponsiveContainer width="100%" height={445}>
+        <ResponsiveContainer width="100%" height={430}>
           <PieChart>
             {data.map((entry, index) => (
               <Pie

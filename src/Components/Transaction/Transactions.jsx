@@ -33,6 +33,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { DeleteBtn } from "@c/ButtonComp/DeleteBtn/DeleteBtn";
 import axios from "axios";
+import { AddTransBtn } from "@c/ButtonComp/AddTransBtn/AddTransBtn";
 
 // axios.defaults.withCredentials = true; // damit erlaube ich das senden von cookies
 const transactions = import.meta.env.VITE_API_TRANSACTIONS;
@@ -71,6 +72,16 @@ export const columns = [
         <ArrowUpDown className="ml-2 h-4 w-4" />
       </Button>
     ),
+    cell: ({ row }) => {
+      const rawDate = row.getValue("date"); // Holt den ursprünglichen Wert
+      const formattedDate = new Date(rawDate).toLocaleDateString("de-DE", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+      });
+
+      return <div>{formattedDate}</div>;
+    },
   },
   {
     accessorKey: "category",
@@ -126,7 +137,7 @@ export const columns = [
     header: () => <div className="text-right">notes</div>,
     cell: ({ row }) => {
       return (
-        <div className="text-right font-small">{row.getValue("category")}</div>
+        <div className="text-right font-small">{row.getValue("notes")}</div>
       );
     },
   },
@@ -211,10 +222,13 @@ export function Transactions() {
               ({table.getFilteredSelectedRowModel().rows.length})
             </DeleteBtn>
           )}
+
+          <AddTransBtn />
+
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="outline" className="ml-auto">
-                Columns <ChevronDown />
+                Filter <ChevronDown />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">

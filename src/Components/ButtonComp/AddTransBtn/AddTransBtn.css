@@ -1,7 +1,7 @@
 .add-trans-btn {
   text-transform: uppercase;
   text-decoration: none;
-  padding: 10px 30px;
+  padding: 5px 20px;
   display: inline-block;
   border-radius: 7px;
   transition: all 0.2s;
@@ -41,7 +41,7 @@
 }
 
 .add-trans-btn:hover::after {
-  transform: scaleX(1.4) scaleY(1.6);
+  transform: scaleX(1.2) scaleY(1.4);
   opacity: 0;
 }
 
