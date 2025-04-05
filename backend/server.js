@@ -62,7 +62,7 @@ app.use(passport.session());
 app.use(flash());
 
 // Routen
-app.use("/api", transactionRoutes); // Route für Workouts
+app.use("/api", transactionRoutes); // Route für transcations
 
 // Route für User
 // app.use("/api/user", userRoute);

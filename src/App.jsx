@@ -8,7 +8,7 @@ import { Toaster } from "sonner";
 
 export const App = () => {
   return (
-    <div className="app-container">
+    <div className="h-dvh">
       <Header />
       <Outlet />
       <Toaster />

@@ -18,8 +18,8 @@ export function AmountBtn({ value, onChange, placeholder, disabled }) {
 
   const onReversValue = () => {
     if (!value) return;
-    const newValue = parseFloat(value) * -1;
-    onChange(newValue.toString());
+    const reversed = value.startsWith("-") ? value.slice(1) : `-${value}`;
+    onChange(reversed);
   };
 
   return (

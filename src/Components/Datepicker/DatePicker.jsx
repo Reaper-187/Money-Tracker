@@ -61,6 +61,7 @@ export function DatePickerWithRange({ dateRange }) {
 }
 
 export function DatePickerNoRange({ field, form }) {
+  const today = new Date();
   return (
     <Popover>
       <PopoverTrigger asChild>
@@ -82,7 +83,12 @@ export function DatePickerNoRange({ field, form }) {
         <Calendar
           mode="single"
           selected={field.value}
-          onSelect={(date) => form.setValue("date", date)}
+          onSelect={(date) => {
+            if (date > today) {
+              return;
+            }
+            form.setValue("date", date);
+          }}
           initialFocus
         />
       </PopoverContent>

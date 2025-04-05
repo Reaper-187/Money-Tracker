@@ -23,6 +23,17 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+
+import {
+  Home,
+  ShoppingBasket,
+  Car,
+  Ticket,
+  PiggyBank,
+  Wallet,
+  CreditCard,
+} from "lucide-react";
+
 import "./SelectScreen.css";
 import { DatePickerNoRange } from "@/components/Datepicker/DatePicker";
 import { AmountBtn } from "@/components/ButtonComp/AmountBtn/AmountBtn";
@@ -32,7 +43,7 @@ const formSchema = z.object({
   category: z.string(),
   payment: z.string(),
   amount: z.string(),
-  notes: z.string(),
+  notes: z.string().max(50, { message: "Maximal 50 Zeichen erlaubt." }),
 });
 
 function onSubmit(data) {
@@ -68,6 +79,14 @@ export function SelectScreen({
     },
   });
 
+  const categories = [
+    { label: "Housing", value: "housing", icon: Home },
+    { label: "Living Expenses", value: "living", icon: ShoppingBasket },
+    { label: "Transportation", value: "transportation", icon: Car },
+    { label: "Entertainment", value: "entertainment", icon: Ticket },
+    { label: "Finance", value: "finance", icon: PiggyBank },
+  ];
+
   return (
     <div
       className={
@@ -93,7 +112,7 @@ export function SelectScreen({
               name="date"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Date</FormLabel>
+                  <FormLabel className="text-(--foreground)">Date</FormLabel>
                   <DatePickerNoRange field={field} form={form} />
                 </FormItem>
               )}
@@ -106,7 +125,9 @@ export function SelectScreen({
               name="category"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Category</FormLabel>
+                  <FormLabel className="text-(--foreground)">
+                    Category
+                  </FormLabel>
                   <FormControl>
                     <Select
                       onValueChange={(value) =>
@@ -122,11 +143,14 @@ export function SelectScreen({
                       >
                         <SelectGroup>
                           <SelectLabel>Category</SelectLabel>
-                          <SelectItem value="apple">Apple</SelectItem>
-                          <SelectItem value="banana">Banana</SelectItem>
-                          <SelectItem value="blueberry">Blueberry</SelectItem>
-                          <SelectItem value="grapes">Grapes</SelectItem>
-                          <SelectItem value="pineapple">Pineapple</SelectItem>
+                          {categories.map(({ label, value, icon: Icon }) => (
+                            <SelectItem key={value} value={value}>
+                              <div className="flex items-center gap-2">
+                                <Icon className="w-4 h-4" />
+                                {label}
+                              </div>
+                            </SelectItem>
+                          ))}
                         </SelectGroup>
                       </SelectContent>
                     </Select>
@@ -142,9 +166,38 @@ export function SelectScreen({
               name="payment"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Payment</FormLabel>
+                  <FormLabel className="text-(--foreground)">Payment</FormLabel>
                   <FormControl>
-                    <Input placeholder="Payment" {...field} />
+                    <Select
+                      onValueChange={(value) =>
+                        form.setValue("category", value)
+                      }
+                    >
+                      <SelectTrigger className="w-fit">
+                        <SelectValue placeholder="Select a Payment" />
+                      </SelectTrigger>
+                      <SelectContent
+                        className="w-auto p-0 popover-content"
+                        style={{ zIndex: 999 }}
+                      >
+                        <SelectGroup>
+                          <SelectLabel>Payment</SelectLabel>
+                          <SelectItem value="cash">
+                            <div className="flex items-center gap-2">
+                              <Wallet className="w-4 h-4" />
+                              Cash
+                            </div>
+                          </SelectItem>
+
+                          <SelectItem value="creditcard">
+                            <div className="flex items-center gap-2">
+                              <CreditCard className="w-4 h-4" />
+                              Credit Card
+                            </div>
+                          </SelectItem>
+                        </SelectGroup>
+                      </SelectContent>
+                    </Select>
                   </FormControl>
                 </FormItem>
               )}
@@ -157,7 +210,7 @@ export function SelectScreen({
               name="amount"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Amount</FormLabel>
+                  <FormLabel className="text-(--foreground)">Amount</FormLabel>
                   <FormControl>
                     <AmountBtn
                       value={field.value}
@@ -177,9 +230,13 @@ export function SelectScreen({
               name="notes"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Notes</FormLabel>
+                  <FormLabel className="text-(--foreground)">Notes</FormLabel>
                   <FormControl>
-                    <Input {...field} placeholder="Optional..." />
+                    <Input
+                      {...field}
+                      placeholder="Optional..."
+                      maxLength={50}
+                    />
                   </FormControl>
                 </FormItem>
               )}
