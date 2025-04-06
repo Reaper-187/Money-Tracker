@@ -58,7 +58,7 @@ export function AmountBtn({ value, onChange, placeholder, disabled }) {
         decimalScale={2}
         onValueChange={onChange}
         disabled={disabled}
-        prefix="€"
+        prefix="€ "
       />
       <p className="text-s text-muted-forderfround mt-2">
         {isIncome && "This will count as income"}

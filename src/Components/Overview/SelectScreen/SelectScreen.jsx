@@ -1,11 +1,12 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
+import axios from "axios";
 import {
   Form,
   FormControl,
@@ -38,6 +39,8 @@ import "./SelectScreen.css";
 import { DatePickerNoRange } from "@/components/Datepicker/DatePicker";
 import { AmountBtn } from "@/components/ButtonComp/AmountBtn/AmountBtn";
 
+const transactions = import.meta.env.VITE_API_TRANSACTIONS;
+
 const formSchema = z.object({
   date: z.date(),
   category: z.string(),
@@ -46,21 +49,28 @@ const formSchema = z.object({
   notes: z.string().max(50, { message: "Maximal 50 Zeichen erlaubt." }),
 });
 
-function onSubmit(data) {
+async function onSubmit(data) {
   const cleanedData = {
     ...data,
     date: data.date.toISOString(),
   };
 
-  toast("You saved the transaction:", {
-    description: (
-      <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-        <code className="text-white">
-          {JSON.stringify(cleanedData, null, 2)}
-        </code>
-      </pre>
-    ),
-  });
+  try {
+    const response = await axios.post(transactions, cleanedData);
+    console.log("response POST data", response.data);
+
+    toast("You saved the transaction:", {
+      description: (
+        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
+          <code className="text-white">
+            {JSON.stringify(cleanedData, null, 2)}
+          </code>
+        </pre>
+      ),
+    });
+  } catch (err) {
+    console.error("POST-Data not found", err);
+  }
 }
 
 export function SelectScreen({
@@ -169,9 +179,7 @@ export function SelectScreen({
                   <FormLabel className="text-(--foreground)">Payment</FormLabel>
                   <FormControl>
                     <Select
-                      onValueChange={(value) =>
-                        form.setValue("category", value)
-                      }
+                      onValueChange={(value) => form.setValue("payment", value)}
                     >
                       <SelectTrigger className="w-fit">
                         <SelectValue placeholder="Select a Payment" />

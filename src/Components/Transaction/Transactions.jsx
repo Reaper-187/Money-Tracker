@@ -35,7 +35,7 @@ import { DeleteBtn } from "@c/ButtonComp/DeleteBtn/DeleteBtn";
 import axios from "axios";
 import { AddTransBtn } from "@c/ButtonComp/AddTransBtn/AddTransBtn";
 
-// axios.defaults.withCredentials = true; // damit erlaube ich das senden von cookies
+axios.defaults.withCredentials = true; // damit erlaube ich das senden von cookies
 const transactions = import.meta.env.VITE_API_TRANSACTIONS;
 
 export const columns = [
@@ -121,12 +121,12 @@ export const columns = [
     accessorKey: "amount",
     header: () => <div className="text-right">Amount</div>,
     cell: ({ row }) => {
-      const amount = parseFloat(row.getValue("amount"));
+      const amount = row.getValue("amount");
 
       // Format the amount as a dollar amount
-      const formatted = new Intl.NumberFormat("en-US", {
+      const formatted = new Intl.NumberFormat("de-DE", {
         style: "currency",
-        currency: "USD",
+        currency: "EUR",
       }).format(amount);
 
       return <div className="text-right font-medium">{formatted}</div>;

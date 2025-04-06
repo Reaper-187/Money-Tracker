@@ -26,6 +26,7 @@ router.post("/transactions", async (req, res) => {
       ...req.body,
       // userId: req.session.passport.user,
       date: new Date(req.body.date),
+      amount: parseFloat(req.body.amount).toFixed(2),
     });
 
     const savedtransaction = await transaction.save();
