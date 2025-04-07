@@ -9,15 +9,16 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
+
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+
 import {
   Table,
   TableBody,
@@ -27,13 +28,14 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
+import { toast } from "sonner";
 import { ArrowUpDown, ChevronDown, MoreHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
-import { DeleteBtn } from "@c/ButtonComp/DeleteBtn/DeleteBtn";
-import axios from "axios";
 import { AddTransBtn } from "@c/ButtonComp/AddTransBtn/AddTransBtn";
+import { DeleteConfirmDialog } from "@c/Alert/Alert";
+import axios from "axios";
 
 axios.defaults.withCredentials = true; // damit erlaube ich das senden von cookies
 const transactions = import.meta.env.VITE_API_TRANSACTIONS;
@@ -186,6 +188,32 @@ export function Transactions() {
     GetTransactionsData();
   }, []);
 
+  function deleteSelectedTransactions() {
+    const selectedRows = table.getSelectedRowModel().rows;
+    const selectedIds = selectedRows.map((row) => row.original._id);
+
+    if (selectedIds.length === 0) {
+      toast("Keine Transaktionen ausgewählt");
+      return;
+    }
+
+    axios
+      .delete(transactions, {
+        data: { ids: selectedIds },
+      })
+      .then((res) => {
+        toast("Transaktion Erfolgreich gelöscht!");
+        // Aktualisiere deine Tabellen-Daten
+        const updatedList = selectTransactions.filter(
+          (t) => !selectedIds.includes(t._id)
+        );
+        setSelectTransactions(updatedList);
+      })
+      .catch((err) => {
+        console.error("Fehler beim Löschen:", err);
+      });
+  }
+
   const [sorting, setSorting] = useState([]);
   const [columnFilters, setColumnFilters] = useState([]);
   const [columnVisibility, setColumnVisibility] = useState({});
@@ -194,6 +222,7 @@ export function Transactions() {
   const table = useReactTable({
     data: selectTransactions,
     columns,
+    getRowId: (row) => row._id,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
     getCoreRowModel: getCoreRowModel(),
@@ -208,7 +237,7 @@ export function Transactions() {
   return (
     <div className="w-full px-2">
       <div className="flex-row items-center justify-center gap-4 py-4">
-        <div className="flex flex-col items-center md:flex-row items-center justify-center ">
+        <div className="flex flex-col gap-3 items-start md:flex-row items-center justify-center ">
           <Input
             placeholder="Filter categorys..."
             value={table.getColumn("category")?.getFilterValue() ?? ""}
@@ -218,9 +247,9 @@ export function Transactions() {
             className="max-w-32 mb-2 lg:max-w-sm mr-5 "
           />
           {table.getFilteredSelectedRowModel().rows.length > 0 && (
-            <DeleteBtn>
+            <DeleteConfirmDialog onConfirm={deleteSelectedTransactions}>
               ({table.getFilteredSelectedRowModel().rows.length})
-            </DeleteBtn>
+            </DeleteConfirmDialog>
           )}
 
           <AddTransBtn />
@@ -278,6 +307,7 @@ export function Transactions() {
               table.getRowModel().rows.map((row) => (
                 <TableRow
                   key={row.id}
+                  // key= {table.getRowModel().rows.map((rowId) => rowId === row.id)}
                   data-state={row.getIsSelected() && "selected"}
                 >
                   {row.getVisibleCells().map((cell) => (
