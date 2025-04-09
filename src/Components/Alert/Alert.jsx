@@ -10,12 +10,15 @@ import {
   AlertDialogAction,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
+import "./Alert.css";
 
 export function DeleteConfirmDialog({ onConfirm }) {
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
-        <Button variant="destructive">Ausgewählte löschen</Button>
+        <Button variant="destructive" className="btn-delete">
+          Ausgewählte löschen
+        </Button>
       </AlertDialogTrigger>
 
       <AlertDialogContent>

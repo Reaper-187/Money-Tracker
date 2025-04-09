@@ -40,136 +40,139 @@ import axios from "axios";
 axios.defaults.withCredentials = true; // damit erlaube ich das senden von cookies
 const transactions = import.meta.env.VITE_API_TRANSACTIONS;
 
-export const columns = [
-  {
-    id: "select",
-    header: ({ table }) => (
-      <Checkbox
-        checked={
-          table.getIsAllPageRowsSelected() ||
-          (table.getIsSomePageRowsSelected() && "indeterminate")
-        }
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label="Select all"
-      />
-    ),
-    cell: ({ row }) => (
-      <Checkbox
-        checked={row.getIsSelected()}
-        onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label="Select row"
-      />
-    ),
-    enableSorting: false,
-    enableHiding: false,
-  },
-  {
-    accessorKey: "date",
-    header: ({ column }) => (
-      <Button
-        variant="ghost"
-        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-      >
-        Date
-        <ArrowUpDown className="ml-2 h-4 w-4" />
-      </Button>
-    ),
-    cell: ({ row }) => {
-      const rawDate = row.getValue("date"); // Holt den ursprünglichen Wert
-      const formattedDate = new Date(rawDate).toLocaleDateString("de-DE", {
-        day: "2-digit",
-        month: "2-digit",
-        year: "numeric",
-      });
-
-      return <div>{formattedDate}</div>;
+export function creatColumns(deleteSelectedTransactions) {
+  return [
+    {
+      id: "select",
+      header: ({ table }) => (
+        <Checkbox
+          checked={
+            table.getIsAllPageRowsSelected() ||
+            (table.getIsSomePageRowsSelected() && "indeterminate")
+          }
+          onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+          aria-label="Select all"
+        />
+      ),
+      cell: ({ row }) => (
+        <Checkbox
+          checked={row.getIsSelected()}
+          onCheckedChange={(value) => row.toggleSelected(!!value)}
+          aria-label="Select row"
+        />
+      ),
+      enableSorting: false,
+      enableHiding: false,
     },
-  },
-  {
-    accessorKey: "category",
-    header: ({ column }) => {
-      return (
+    {
+      accessorKey: "date",
+      header: ({ column }) => (
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Category
-          <ArrowUpDown />
+          Date
+          <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
-      );
-    },
-    cell: ({ row }) => (
-      <div className="lowercase">{row.getValue("category")}</div>
-    ),
-  },
-  {
-    accessorKey: "payment",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Payment
-          <ArrowUpDown />
-        </Button>
-      );
-    },
-    cell: ({ row }) => (
-      <div className="lowercase">{row.getValue("payment")}</div>
-    ),
-  },
-  {
-    accessorKey: "amount",
-    header: () => <div className="text-right">Amount</div>,
-    cell: ({ row }) => {
-      const amount = row.getValue("amount");
+      ),
+      cell: ({ row }) => {
+        const rawDate = row.getValue("date"); // Holt den ursprünglichen Wert
+        const formattedDate = new Date(rawDate).toLocaleDateString("de-DE", {
+          day: "2-digit",
+          month: "2-digit",
+          year: "numeric",
+        });
 
-      // Format the amount as a dollar amount
-      const formatted = new Intl.NumberFormat("de-DE", {
-        style: "currency",
-        currency: "EUR",
-      }).format(amount);
+        return <div>{formattedDate}</div>;
+      },
+    },
+    {
+      accessorKey: "category",
+      header: ({ column }) => {
+        return (
+          <Button
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          >
+            Category
+            <ArrowUpDown />
+          </Button>
+        );
+      },
+      cell: ({ row }) => (
+        <div className="lowercase">{row.getValue("category")}</div>
+      ),
+    },
+    {
+      accessorKey: "payment",
+      header: ({ column }) => {
+        return (
+          <Button
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          >
+            Payment
+            <ArrowUpDown />
+          </Button>
+        );
+      },
+      cell: ({ row }) => (
+        <div className="lowercase">{row.getValue("payment")}</div>
+      ),
+    },
+    {
+      accessorKey: "amount",
+      header: () => <div className="text-right">Amount</div>,
+      cell: ({ row }) => {
+        const amount = row.getValue("amount");
 
-      return <div className="text-right font-medium">{formatted}</div>;
+        // Format the amount as a dollar amount
+        const formatted = new Intl.NumberFormat("de-DE", {
+          style: "currency",
+          currency: "EUR",
+        }).format(amount);
+
+        return <div className="text-right font-medium">{formatted}</div>;
+      },
     },
-  },
-  {
-    accessorKey: "notes",
-    header: () => <div className="text-right">notes</div>,
-    cell: ({ row }) => {
-      return (
-        <div className="text-right font-small">{row.getValue("notes")}</div>
-      );
+    {
+      accessorKey: "notes",
+      header: () => <div className="text-right">notes</div>,
+      cell: ({ row }) => {
+        return (
+          <div className="text-right font-small">{row.getValue("notes")}</div>
+        );
+      },
     },
-  },
-  {
-    id: "actions",
-    enableHiding: false,
-    cell: ({ row }) => {
-      const transaction = row.original; // Zugriff auf die komplette Zeile
-      return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-18 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuItem
-              onClick={() => console.log("Deleting:", transaction)}
-            >
-              Delete Transaction
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>Download Transaction</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      );
+    {
+      id: "actions",
+      enableHiding: false,
+      cell: ({ row }) => {
+        const transaction = row.original; // Zugriff auf die komplette Zeile
+        return (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" className="h-18 w-8 p-0">
+                <span className="sr-only">Open menu</span>
+                <MoreHorizontal />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DeleteConfirmDialog
+                onConfirm={() => deleteSelectedTransactions([transaction._id])}
+              >
+                Delete Transaction
+              </DeleteConfirmDialog>
+
+              <DropdownMenuSeparator />
+              <DropdownMenuItem>Download Transaction</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        );
+      },
     },
-  },
-];
+  ];
+}
 
 export function Transactions() {
   const [selectTransactions, setSelectTransactions] = useState([]);
@@ -188,24 +191,14 @@ export function Transactions() {
     GetTransactionsData();
   }, []);
 
-  function deleteSelectedTransactions() {
-    const selectedRows = table.getSelectedRowModel().rows;
-    const selectedIds = selectedRows.map((row) => row.original._id);
-
-    if (selectedIds.length === 0) {
-      toast("Keine Transaktionen ausgewählt");
-      return;
-    }
-
+  function deleteSelectedTransactions(idsToDelete) {
     axios
-      .delete(transactions, {
-        data: { ids: selectedIds },
-      })
+      // wenn über delete ein body ans BE gegeben wird dann ist das nur mit data: möglich weil das der key ist
+      .delete(transactions, { data: { idsToDelete } })
       .then((res) => {
-        toast("Transaktion Erfolgreich gelöscht!");
-        // Aktualisiere deine Tabellen-Daten
+        toast("Transaktion erfolgreich gelöscht!");
         const updatedList = selectTransactions.filter(
-          (t) => !selectedIds.includes(t._id)
+          (trans) => !idsToDelete.includes(trans._id)
         );
         setSelectTransactions(updatedList);
       })
@@ -213,6 +206,8 @@ export function Transactions() {
         console.error("Fehler beim Löschen:", err);
       });
   }
+
+  const columns = creatColumns(deleteSelectedTransactions);
 
   const [sorting, setSorting] = useState([]);
   const [columnFilters, setColumnFilters] = useState([]);
@@ -246,8 +241,17 @@ export function Transactions() {
             }
             className="max-w-32 mb-2 lg:max-w-sm mr-5 "
           />
+          {/* Prüft ob min. eine TX (row) ausgewählt wurde */}
           {table.getFilteredSelectedRowModel().rows.length > 0 && (
-            <DeleteConfirmDialog onConfirm={deleteSelectedTransactions}>
+            <DeleteConfirmDialog
+              onConfirm={() => {
+                deleteSelectedTransactions(
+                  table
+                    .getFilteredSelectedRowModel()
+                    .rows.map((row) => row.original._id)
+                );
+              }}
+            >
               ({table.getFilteredSelectedRowModel().rows.length})
             </DeleteConfirmDialog>
           )}

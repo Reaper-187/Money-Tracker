@@ -54,11 +54,8 @@ async function onSubmit(data) {
     ...data,
     date: data.date.toISOString(),
   };
-
   try {
     const response = await axios.post(transactions, cleanedData);
-    console.log("response POST data", response.data);
-
     toast("You saved the transaction:", {
       description: (
         <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">

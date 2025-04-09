@@ -41,13 +41,13 @@ router.post("/transactions", async (req, res) => {
 // DELETE-Route, um eine TX hinzuzufügen
 router.delete("/transactions", async (req, res) => {
   try {
-    const { ids } = req.body;
+    const { idsToDelete } = req.body;
 
-    if (!Array.isArray(ids) || ids.length === 0) {
+    if (!Array.isArray(idsToDelete) || idsToDelete.length === 0) {
       return res.status(400).json({ message: "No IDs provided" });
     }
 
-    const result = await Transaction.deleteMany({ _id: { $in: ids } });
+    const result = await Transaction.deleteMany({ _id: { $in: idsToDelete } });
 
     res.status(200).json({
       message: `${result.deletedCount} Transaktionen gelöscht`,
