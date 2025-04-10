@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   flexRender,
   getCoreRowModel,
@@ -36,6 +36,7 @@ import { Input } from "@/components/ui/input";
 import { AddTransBtn } from "@c/ButtonComp/AddTransBtn/AddTransBtn";
 import { DeleteConfirmDialog } from "@c/Alert/Alert";
 import axios from "axios";
+import { GetTransactionsContext } from "@c/Context/Context";
 
 axios.defaults.withCredentials = true; // damit erlaube ich das senden von cookies
 const transactions = import.meta.env.VITE_API_TRANSACTIONS;
@@ -175,21 +176,9 @@ export function creatColumns(deleteSelectedTransactions) {
 }
 
 export function Transactions() {
-  const [selectTransactions, setSelectTransactions] = useState([]);
-
-  useEffect(() => {
-    const GetTransactionsData = async () => {
-      try {
-        const response = await axios.get(transactions);
-        setSelectTransactions(response.data.eachTransaction);
-        console.log("response Antwort", response);
-        console.log("response.DATA Antwort", response.data);
-      } catch (err) {
-        console.error("GET-Data not found", err);
-      }
-    };
-    GetTransactionsData();
-  }, []);
+  const { selectTransactions, setSelectTransactions } = useContext(
+    GetTransactionsContext
+  );
 
   function deleteSelectedTransactions(idsToDelete) {
     axios

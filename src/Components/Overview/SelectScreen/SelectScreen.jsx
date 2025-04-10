@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useContext } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import axios from "axios";
+
 import {
   Form,
   FormControl,
@@ -15,6 +16,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+
 import {
   Select,
   SelectContent,
@@ -39,6 +41,8 @@ import "./SelectScreen.css";
 import { DatePickerNoRange } from "@/components/Datepicker/DatePicker";
 import { AmountBtn } from "@/components/ButtonComp/AmountBtn/AmountBtn";
 
+import { GetTransactionsContext } from "@c/Context/Context";
+
 const transactions = import.meta.env.VITE_API_TRANSACTIONS;
 
 const formSchema = z.object({
@@ -49,32 +53,35 @@ const formSchema = z.object({
   notes: z.string().max(50, { message: "Maximal 50 Zeichen erlaubt." }),
 });
 
-async function onSubmit(data) {
-  const cleanedData = {
-    ...data,
-    date: data.date.toISOString(),
-  };
-  try {
-    const response = await axios.post(transactions, cleanedData);
-    toast("You saved the transaction:", {
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">
-            {JSON.stringify(cleanedData, null, 2)}
-          </code>
-        </pre>
-      ),
-    });
-  } catch (err) {
-    console.error("POST-Data not found", err);
-  }
-}
-
 export function SelectScreen({
   toggleSelectScreen,
   closeSelectScreen,
   disabled,
 }) {
+  const { setSelectTransactions } = useContext(GetTransactionsContext);
+
+  async function onSubmit(data) {
+    const cleanedData = {
+      ...data,
+      date: data.date.toISOString(),
+    };
+    try {
+      const response = await axios.post(transactions, cleanedData);
+      toast("You saved the transaction:", {
+        description: (
+          <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
+            <code className="text-white">
+              {JSON.stringify(cleanedData, null, 2)}
+            </code>
+          </pre>
+        ),
+      });
+      setSelectTransactions((prevUpdate) => [...prevUpdate, cleanedData]);
+    } catch (err) {
+      console.error("POST-Data not found", err);
+    }
+  }
+
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
