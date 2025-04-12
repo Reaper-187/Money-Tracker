@@ -41,7 +41,7 @@ import "./SelectScreen.css";
 import { DatePickerNoRange } from "@/components/Datepicker/DatePicker";
 import { AmountBtn } from "@/components/ButtonComp/AmountBtn/AmountBtn";
 
-import { GetTransactionsContext } from "@c/Context/Context";
+import { FetchTransactionsContext } from "@c/Context/Context";
 
 const transactions = import.meta.env.VITE_API_TRANSACTIONS;
 
@@ -58,7 +58,7 @@ export function SelectScreen({
   closeSelectScreen,
   disabled,
 }) {
-  const { setSelectTransactions } = useContext(GetTransactionsContext);
+  const { fetchTransactions } = useContext(FetchTransactionsContext);
 
   async function onSubmit(data) {
     const cleanedData = {
@@ -76,7 +76,7 @@ export function SelectScreen({
           </pre>
         ),
       });
-      setSelectTransactions((prevUpdate) => [...prevUpdate, cleanedData]);
+      await fetchTransactions();
     } catch (err) {
       console.error("POST-Data not found", err);
     }

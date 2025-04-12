@@ -36,7 +36,7 @@ import { Input } from "@/components/ui/input";
 import { AddTransBtn } from "@c/ButtonComp/AddTransBtn/AddTransBtn";
 import { DeleteConfirmDialog } from "@c/Alert/Alert";
 import axios from "axios";
-import { GetTransactionsContext } from "@c/Context/Context";
+import { FetchTransactionsContext } from "@c/Context/Context";
 
 axios.defaults.withCredentials = true; // damit erlaube ich das senden von cookies
 const transactions = import.meta.env.VITE_API_TRANSACTIONS;
@@ -177,7 +177,7 @@ export function creatColumns(deleteSelectedTransactions) {
 
 export function Transactions() {
   const { selectTransactions, setSelectTransactions } = useContext(
-    GetTransactionsContext
+    FetchTransactionsContext
   );
 
   function deleteSelectedTransactions(idsToDelete) {
