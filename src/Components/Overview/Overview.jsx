@@ -6,14 +6,19 @@ import { AddTransBtn } from "@c/ButtonComp/AddTransBtn/AddTransBtn";
 import "./overview.css";
 import { FetchTransactionsContext } from "@c/Context/Context";
 
-export function Overview() {
+export function Overview({ date }) {
   const { selectTransactions } = useContext(FetchTransactionsContext);
 
-  const calcIncome = selectTransactions
+  const filteredTransactions = selectTransactions.filter((tx) => {
+    const txDate = new Date(tx.date);
+    return txDate >= new Date(date.from) && txDate <= new Date(date.to);
+  });
+
+  const calcIncome = filteredTransactions
     .filter((incomeTransactions) => incomeTransactions.amount >= 0)
     .reduce((acc, currentAmount) => acc + currentAmount.amount, 0);
 
-  const calcExpenses = selectTransactions
+  const calcExpenses = filteredTransactions
     .filter((expensTransactions) => expensTransactions.amount < 0)
     .reduce((acc, currentAmount) => acc + currentAmount.amount, 0);
 

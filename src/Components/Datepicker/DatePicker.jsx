@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { addDays, format } from "date-fns";
+import { format } from "date-fns";
 import { Calendar as CalendarIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -12,14 +12,10 @@ import {
 
 import "./DatePicker.css";
 
-export function DatePickerWithRange({ dateRange }) {
-  const [date, setDate] = useState({
-    from: new Date(),
-    to: addDays(new Date(), 10),
-  });
+export function DatePickerWithRange({ date, onDateChange }) {
 
   return (
-    <div className={cn("grid gap-2 mt-4", dateRange)}>
+    <div className={cn("grid gap-2 mt-4")}>
       <Popover>
         <PopoverTrigger asChild>
           <Button
@@ -51,7 +47,7 @@ export function DatePickerWithRange({ dateRange }) {
             mode="range"
             defaultMonth={date?.from}
             selected={date}
-            onSelect={setDate}
+            onSelect={onDateChange}
             numberOfMonths={2}
           />
         </PopoverContent>

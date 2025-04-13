@@ -26,10 +26,18 @@ const CustomTooltip = ({ active, payload, label }) => {
   return null;
 };
 
-export default function BarChartComponent() {
+export default function BarChartComponent({ date }) {
   const { selectTransactions } = useContext(FetchTransactionsContext);
+  
+  const filteredTransactions = selectTransactions.filter((tx) => {
+    const txDate = new Date(tx.date);
+    return txDate >= new Date(date.from) && txDate <= new Date(date.to);
+  });
 
-  const groupedByDay = selectTransactions.reduce((acc, tx) => {
+  console.log(filteredTransactions);
+  
+  
+  const groupedByDay = filteredTransactions.reduce((acc, tx) => {
     const dateObj = new Date(tx.date);
     const day = String(dateObj.getDate()).padStart(2, "0");
     const month = String(dateObj.getMonth() + 1).padStart(2, "0");
@@ -49,8 +57,6 @@ export default function BarChartComponent() {
 
     return acc;
   }, {});
-
-  console.log("Das ist die groupedByDay", Object.values(groupedByDay));
 
   const groupedArray = Object.values(groupedByDay).sort((a, b) => {
     const [dayA, monthA, yearA] = a.date.split(".");
