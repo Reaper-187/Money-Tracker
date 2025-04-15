@@ -9,20 +9,61 @@ import { FetchTransactionsContext } from "@c/Context/Context";
 export function Overview({ date }) {
   const { selectTransactions } = useContext(FetchTransactionsContext);
 
-  const filteredTransactions = selectTransactions.filter((tx) => {
+  const currentTransactions = selectTransactions.filter((tx) => {
     const txDate = new Date(tx.date);
     return txDate >= new Date(date.from) && txDate <= new Date(date.to);
   });
 
-  const calcIncome = filteredTransactions
+  const calcIncome = currentTransactions
     .filter((incomeTransactions) => incomeTransactions.amount >= 0)
     .reduce((acc, currentAmount) => acc + currentAmount.amount, 0);
 
-  const calcExpenses = filteredTransactions
+  const calcExpenses = currentTransactions
     .filter((expensTransactions) => expensTransactions.amount < 0)
     .reduce((acc, currentAmount) => acc + currentAmount.amount, 0);
 
   const calcRemaining = calcIncome + calcExpenses;
+
+  const lastMonthTransactions = selectTransactions.filter((tx) => {
+    const currentMonth = new Date();
+
+    const firstDayInPreviousMonth = new Date(
+      Date.UTC(currentMonth.getFullYear(), currentMonth.getMonth() - 1, 1)
+    ).toISOString();
+
+    const lastDayInPreviousMonth = new Date(
+      currentMonth.getFullYear(),
+      currentMonth.getMonth(),
+      0
+    ).toISOString();
+
+    const lastMonthTx = new Date(tx.date);
+    return (
+      lastMonthTx >= new Date(firstDayInPreviousMonth) &&
+        lastMonthTx <= new Date(lastDayInPreviousMonth),
+      1
+    );
+  });
+
+  const calcIncomeLastMonth = lastMonthTransactions
+    .filter((incomeTransactions) => incomeTransactions.amount >= 0)
+    .reduce((acc, currentAmount) => acc + currentAmount.amount, 0);
+
+  const calcExpensesLastMonth = lastMonthTransactions
+    .filter((expensTransactions) => expensTransactions.amount < 0)
+    .reduce((acc, currentAmount) => acc + currentAmount.amount, 0);
+
+  const calcRemainingLastMonth = calcIncome + calcExpenses;
+
+  console.log(
+    "calcIncomeLastMonth",
+    calcIncomeLastMonth,
+    "calcExpensesLastMonth",
+    calcExpensesLastMonth,
+    "calcRemainingLastMonth",
+    calcRemainingLastMonth,
+    lastMonthTransactions
+  );
 
   return (
     <div className="overview-container">

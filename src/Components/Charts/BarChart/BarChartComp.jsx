@@ -28,15 +28,12 @@ const CustomTooltip = ({ active, payload, label }) => {
 
 export default function BarChartComponent({ date }) {
   const { selectTransactions } = useContext(FetchTransactionsContext);
-  
+
   const filteredTransactions = selectTransactions.filter((tx) => {
     const txDate = new Date(tx.date);
     return txDate >= new Date(date.from) && txDate <= new Date(date.to);
   });
 
-  console.log(filteredTransactions);
-  
-  
   const groupedByDay = filteredTransactions.reduce((acc, tx) => {
     const dateObj = new Date(tx.date);
     const day = String(dateObj.getDate()).padStart(2, "0");
@@ -73,14 +70,14 @@ export default function BarChartComponent({ date }) {
   return (
     <Card className="w-full p-4 bar-card flex justify-center bg-transparent">
       <CardContent>
-        <h2 className="text-lg text-center font-semibold">Weekly Overview</h2>
+        <h2 className="text-lg text-center font-semibold">Overview</h2>
         <ResponsiveContainer width="100%" height={370}>
           <BarChart data={data}>
             <XAxis dataKey="date" />
             <YAxis />
             <Tooltip content={<CustomTooltip />} />
-            <Bar dataKey="income" fill="#00C02C" radius={4} />
-            <Bar dataKey="expenses" fill="#D52828" radius={4} />
+            <Bar dataKey="income" fill="#00C02C" radius={4} barSize={20} />
+            <Bar dataKey="expenses" fill="#D52828" radius={4} barSize={20} />
           </BarChart>
         </ResponsiveContainer>
       </CardContent>

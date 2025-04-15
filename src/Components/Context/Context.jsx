@@ -13,8 +13,6 @@ export const GetTransactionsProvider = ({ children }) => {
     try {
       const response = await axios.get(transactions);
       const transactionsDataArray = response.data.eachTransaction;
-      console.log("GETANFRAGE", transactionsDataArray);
-
       setSelectTransactions(transactionsDataArray);
     } catch (err) {
       console.error("GET-Data not found", err);
