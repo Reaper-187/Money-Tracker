@@ -41,3 +41,19 @@ export function DeleteConfirmDialog({ onConfirm }) {
     </AlertDialog>
   );
 }
+
+export function NoteDetailsDialog({ open, onOpenChange, selectedNoteText }) {
+  return (
+    <AlertDialog open={open} onOpenChange={onOpenChange}>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>Notiz</AlertDialogTitle>
+          <AlertDialogDescription>{selectedNoteText}</AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <Button onClick={() => onOpenChange(false)}>Schließen</Button>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
+  );
+}

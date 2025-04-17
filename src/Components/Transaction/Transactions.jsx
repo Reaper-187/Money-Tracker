@@ -29,19 +29,28 @@ import {
 } from "@/components/ui/table";
 
 import { toast } from "sonner";
-import { ArrowUpDown, ChevronDown, MoreHorizontal } from "lucide-react";
+import {
+  ArrowUpDown,
+  ChevronDown,
+  MoreHorizontal,
+  NotebookPen,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { AddTransBtn } from "@c/ButtonComp/AddTransBtn/AddTransBtn";
-import { DeleteConfirmDialog } from "@c/Alert/Alert";
+import { DeleteConfirmDialog, NoteDetailsDialog } from "@c/Alert/Alert";
 import axios from "axios";
 import { FetchTransactionsContext } from "@c/Context/Context";
 
 axios.defaults.withCredentials = true; // damit erlaube ich das senden von cookies
 const transactions = import.meta.env.VITE_API_TRANSACTIONS;
 
-export function creatColumns(deleteSelectedTransactions) {
+export function creatColumns(
+  deleteSelectedTransactions,
+  setSelectedNoteText,
+  setIsNoteDialogOpen
+) {
   return [
     {
       id: "select",
@@ -141,7 +150,15 @@ export function creatColumns(deleteSelectedTransactions) {
       header: () => <div className="text-right">notes</div>,
       cell: ({ row }) => {
         return (
-          <div className="text-right font-small">{row.getValue("notes")}</div>
+          <div
+            className="flex justify-end cursor-pointer"
+            onClick={() => {
+              setSelectedNoteText(row.getValue("notes"));
+              setIsNoteDialogOpen(true);
+            }}
+          >
+            <NotebookPen />
+          </div>
         );
       },
     },
@@ -161,9 +178,7 @@ export function creatColumns(deleteSelectedTransactions) {
             <DropdownMenuContent align="end">
               <DeleteConfirmDialog
                 onConfirm={() => deleteSelectedTransactions([transaction._id])}
-              >
-                Delete Transaction
-              </DeleteConfirmDialog>
+              ></DeleteConfirmDialog>
 
               <DropdownMenuSeparator />
               <DropdownMenuItem>Download Transaction</DropdownMenuItem>
@@ -179,6 +194,9 @@ export function Transactions() {
   const { selectTransactions, setSelectTransactions } = useContext(
     FetchTransactionsContext
   );
+
+  const [isNoteDialogOpen, setIsNoteDialogOpen] = useState(false);
+  const [selectedNoteText, setSelectedNoteText] = useState("");
 
   function deleteSelectedTransactions(idsToDelete) {
     axios
@@ -196,7 +214,12 @@ export function Transactions() {
       });
   }
 
-  const columns = creatColumns(deleteSelectedTransactions);
+  function showNote(note) {
+    setSelectedNoteText(note);
+    setIsNoteDialogOpen(true);
+  }
+
+  const columns = creatColumns(deleteSelectedTransactions, showNote);
 
   const [sorting, setSorting] = useState([]);
   const [columnFilters, setColumnFilters] = useState([]);
@@ -276,6 +299,12 @@ export function Transactions() {
         </div>
       </div>
       <div className="rounded-md border">
+        <NoteDetailsDialog
+          open={isNoteDialogOpen}
+          onOpenChange={setIsNoteDialogOpen}
+          selectedNoteText={selectedNoteText}
+        />
+
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
@@ -300,7 +329,6 @@ export function Transactions() {
               table.getRowModel().rows.map((row) => (
                 <TableRow
                   key={row.id}
-                  // key= {table.getRowModel().rows.map((rowId) => rowId === row.id)}
                   data-state={row.getIsSelected() && "selected"}
                 >
                   {row.getVisibleCells().map((cell) => (
