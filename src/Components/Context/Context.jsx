@@ -13,7 +13,10 @@ export const GetTransactionsProvider = ({ children }) => {
     try {
       const response = await axios.get(transactions);
       const transactionsDataArray = response.data.eachTransaction;
-      setSelectTransactions(transactionsDataArray);
+      const sortByDate = transactionsDataArray.sort(
+        (a, b) => new Date(b.date) - new Date(a.date)
+      );
+      setSelectTransactions(sortByDate);
     } catch (err) {
       console.error("GET-Data not found", err);
     }

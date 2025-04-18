@@ -39,17 +39,22 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { AddTransBtn } from "@c/ButtonComp/AddTransBtn/AddTransBtn";
-import { DeleteConfirmDialog, NoteDetailsDialog } from "@c/Alert/Alert";
+import {
+  DeleteConfirmDialog,
+  ExportToComp,
+  NoteDetailsDialog,
+} from "@c/Alert/Alert";
 import axios from "axios";
 import { FetchTransactionsContext } from "@c/Context/Context";
-
+import * as XLSX from "xlsx";
 axios.defaults.withCredentials = true; // damit erlaube ich das senden von cookies
 const transactions = import.meta.env.VITE_API_TRANSACTIONS;
 
 export function creatColumns(
   deleteSelectedTransactions,
   setSelectedNoteText,
-  setIsNoteDialogOpen
+  setIsNoteDialogOpen,
+  handleOnExport
 ) {
   return [
     {
@@ -86,13 +91,12 @@ export function creatColumns(
         </Button>
       ),
       cell: ({ row }) => {
-        const rawDate = row.getValue("date"); // Holt den ursprünglichen Wert
+        const rawDate = row.getValue("date");
         const formattedDate = new Date(rawDate).toLocaleDateString("de-DE", {
           day: "2-digit",
           month: "2-digit",
           year: "numeric",
         });
-
         return <div>{formattedDate}</div>;
       },
     },
@@ -181,7 +185,11 @@ export function creatColumns(
               ></DeleteConfirmDialog>
 
               <DropdownMenuSeparator />
-              <DropdownMenuItem>Download Transaction</DropdownMenuItem>
+              <DropdownMenuItem
+                onHandleExport={() => handleOnExport([transaction])}
+              >
+                Download Transaction
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         );
@@ -219,7 +227,22 @@ export function Transactions() {
     setIsNoteDialogOpen(true);
   }
 
-  const columns = creatColumns(deleteSelectedTransactions, showNote);
+  function handleOnExport(data) {
+    const workBook = XLSX.utils.book_new(),
+      workSheet = XLSX.utils.json_to_sheet(data);
+    XLSX.utils.book_append_sheet(
+      workBook,
+      workSheet,
+      "Transactions-Money-Tracker"
+    );
+    XLSX.writeFile(workBook, "MyExcel.xlsx");
+  }
+
+  const columns = creatColumns(
+    deleteSelectedTransactions,
+    showNote,
+    handleOnExport
+  );
 
   const [sorting, setSorting] = useState([]);
   const [columnFilters, setColumnFilters] = useState([]);
@@ -255,19 +278,29 @@ export function Transactions() {
           />
           {/* Prüft ob min. eine TX (row) ausgewählt wurde */}
           {table.getFilteredSelectedRowModel().rows.length > 0 && (
-            <DeleteConfirmDialog
-              onConfirm={() => {
-                deleteSelectedTransactions(
-                  table
-                    .getFilteredSelectedRowModel()
-                    .rows.map((row) => row.original._id)
-                );
-              }}
-            >
-              ({table.getFilteredSelectedRowModel().rows.length})
-            </DeleteConfirmDialog>
+            <>
+              <DeleteConfirmDialog
+                onConfirm={() => {
+                  deleteSelectedTransactions(
+                    table
+                      .getFilteredSelectedRowModel()
+                      .rows.map((row) => row.original._id)
+                  );
+                }}
+              >
+                ({table.getFilteredSelectedRowModel().rows.length})
+              </DeleteConfirmDialog>
+              <ExportToComp
+                onHandleExport={() => {
+                  handleOnExport(
+                    table
+                      .getFilteredSelectedRowModel()
+                      .rows.map((row) => row.original)
+                  );
+                }}
+              ></ExportToComp>
+            </>
           )}
-
           <AddTransBtn />
 
           <DropdownMenu>

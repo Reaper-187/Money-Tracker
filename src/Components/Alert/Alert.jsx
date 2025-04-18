@@ -57,3 +57,29 @@ export function NoteDetailsDialog({ open, onOpenChange, selectedNoteText }) {
     </AlertDialog>
   );
 }
+
+export function ExportToComp({ onHandleExport }) {
+  return (
+    <AlertDialog>
+      <AlertDialogTrigger asChild>
+        <Button>Export Transactions</Button>
+      </AlertDialogTrigger>
+
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>Bist du dir sicher?</AlertDialogTitle>
+          <AlertDialogDescription>
+            Ausgewählte Transaktionen werden Exportiert
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+
+        <AlertDialogFooter>
+          <AlertDialogCancel>Abbrechen</AlertDialogCancel>
+          <AlertDialogAction onClick={onHandleExport}>
+            Export Excel
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
+  );
+}
