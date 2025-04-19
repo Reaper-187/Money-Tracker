@@ -228,8 +228,31 @@ export function Transactions() {
   }
 
   function handleOnExport(data) {
-    const workBook = XLSX.utils.book_new(),
-      workSheet = XLSX.utils.json_to_sheet(data);
+
+    const formattedData = data.map((entry) => ({
+      ...entry,
+      date: new Date(entry.date),
+    }));
+
+    const workBook = XLSX.utils.book_new();
+    const workSheet = XLSX.utils.json_to_sheet(data);
+  
+    for (let i = 0; i < formattedData.length; i++) {
+      const row = i + 2;
+
+      const dateCell = `B${row}`;
+      const amountCell = `E${row}`;
+  
+      if (workSheet[dateCell]) {
+        workSheet[dateCell].t = "d";
+        workSheet[dateCell].z = "dd.mm.yyyy";
+      }
+  
+      if (workSheet[amountCell]) {
+        workSheet[amountCell].z = '#,##0.00 €';
+      }
+    }
+  
     XLSX.utils.book_append_sheet(
       workBook,
       workSheet,
