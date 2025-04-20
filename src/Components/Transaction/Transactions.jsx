@@ -28,33 +28,38 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-import { toast } from "sonner";
 import {
   ArrowUpDown,
   ChevronDown,
   MoreHorizontal,
   NotebookPen,
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Input } from "@/components/ui/input";
-import { AddTransBtn } from "@c/ButtonComp/AddTransBtn/AddTransBtn";
+
 import {
   DeleteConfirmDialog,
   ExportToComp,
   NoteDetailsDialog,
 } from "@c/Alert/Alert";
-import axios from "axios";
-import { FetchTransactionsContext } from "@c/Context/Context";
+
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Input } from "@/components/ui/input";
+import { AddTransBtn } from "@c/ButtonComp/AddTransBtn/AddTransBtn";
+import { toast } from "sonner";
 import * as XLSX from "xlsx";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
+import axios from "axios";
+
+import { FetchTransactionsContext } from "@c/Context/Context";
+
 axios.defaults.withCredentials = true; // damit erlaube ich das senden von cookies
 const transactions = import.meta.env.VITE_API_TRANSACTIONS;
 
 export function creatColumns(
   deleteSelectedTransactions,
-  setSelectedNoteText,
-  setIsNoteDialogOpen,
-  handleOnExport
+  showNote,
+  handleExport
 ) {
   return [
     {
@@ -146,7 +151,13 @@ export function creatColumns(
           currency: "EUR",
         }).format(amount);
 
-        return <div className="text-right font-medium">{formatted}</div>;
+        return (
+          <div
+            className={`${amount >= 0 ? "text-green-500" : "text-red-500"} text-right font-medium`}
+          >
+            {formatted}
+          </div>
+        );
       },
     },
     {
@@ -157,8 +168,7 @@ export function creatColumns(
           <div
             className="flex justify-end cursor-pointer"
             onClick={() => {
-              setSelectedNoteText(row.getValue("notes"));
-              setIsNoteDialogOpen(true);
+              showNote(row.getValue("notes"));
             }}
           >
             <NotebookPen />
@@ -170,7 +180,7 @@ export function creatColumns(
       id: "actions",
       enableHiding: false,
       cell: ({ row }) => {
-        const transaction = row.original; // Zugriff auf die komplette Zeile
+        const transaction = row.original;
         return (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -185,11 +195,11 @@ export function creatColumns(
               ></DeleteConfirmDialog>
 
               <DropdownMenuSeparator />
-              <DropdownMenuItem
-                onHandleExport={() => handleOnExport([transaction])}
-              >
-                Download Transaction
-              </DropdownMenuItem>
+              <ExportToComp
+                onHandleExport={(exportTyp) => {
+                  handleExport([transaction], exportTyp);
+                }}
+              ></ExportToComp>
             </DropdownMenuContent>
           </DropdownMenu>
         );
@@ -227,32 +237,38 @@ export function Transactions() {
     setIsNoteDialogOpen(true);
   }
 
-  function handleOnExport(data) {
+  function formatDate(date) {
+    const d = new Date(date);
+    const day = String(d.getDate()).padStart(2, "0");
+    const month = String(d.getMonth() + 1).padStart(2, "0");
+    const year = d.getFullYear();
+    return `${day}.${month}.${year}`;
+  }
 
+  function formatAmount(amount) {
+    return `${amount.toFixed(2)} €`;
+  }
+
+  const handleExport = (data, format) => {
+    if (format === "Excel") {
+      exportToXlsx(data);
+    } else if (format === "CSV") {
+      exportToCSV(data);
+    } else if (format === "PDF") {
+      exportToPDF(data);
+    }
+  };
+
+  function exportToXlsx(data) {
     const formattedData = data.map((entry) => ({
       ...entry,
-      date: new Date(entry.date),
+      date: formatDate(entry.date),
+      amount: formatAmount(entry.amount),
     }));
 
     const workBook = XLSX.utils.book_new();
-    const workSheet = XLSX.utils.json_to_sheet(data);
-  
-    for (let i = 0; i < formattedData.length; i++) {
-      const row = i + 2;
+    const workSheet = XLSX.utils.json_to_sheet(formattedData);
 
-      const dateCell = `B${row}`;
-      const amountCell = `E${row}`;
-  
-      if (workSheet[dateCell]) {
-        workSheet[dateCell].t = "d";
-        workSheet[dateCell].z = "dd.mm.yyyy";
-      }
-  
-      if (workSheet[amountCell]) {
-        workSheet[amountCell].z = '#,##0.00 €';
-      }
-    }
-  
     XLSX.utils.book_append_sheet(
       workBook,
       workSheet,
@@ -261,10 +277,45 @@ export function Transactions() {
     XLSX.writeFile(workBook, "MyExcel.xlsx");
   }
 
+  function exportToCSV(data) {
+    const formattedData = data.map((entry) => ({
+      ...entry,
+      date: formatDate(entry.date),
+      amount: formatAmount(entry.amount),
+    }));
+
+    const worksheet = XLSX.utils.json_to_sheet(formattedData);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1");
+
+    XLSX.writeFile(workbook, "transactions.csv", { bookType: "csv" });
+  }
+
+  function exportToPDF(data) {
+    const head = [["ID", "Date", "Category", "Amount", "Notes"]];
+
+    const body = data.map((item) => [
+      item._id,
+      formatDate(item.date),
+      item.category,
+      formatAmount(item.amount),
+      item.note,
+    ]);
+
+    const pdf = new jsPDF();
+
+    autoTable(pdf, {
+      head: head,
+      body: body,
+    });
+
+    pdf.save("Transactions.pdf");
+  }
+
   const columns = creatColumns(
     deleteSelectedTransactions,
     showNote,
-    handleOnExport
+    handleExport
   );
 
   const [sorting, setSorting] = useState([]);
@@ -314,11 +365,12 @@ export function Transactions() {
                 ({table.getFilteredSelectedRowModel().rows.length})
               </DeleteConfirmDialog>
               <ExportToComp
-                onHandleExport={() => {
-                  handleOnExport(
+                onHandleExport={(exportTyp) => {
+                  handleExport(
                     table
                       .getFilteredSelectedRowModel()
-                      .rows.map((row) => row.original)
+                      .rows.map((row) => row.original),
+                    exportTyp
                   );
                 }}
               ></ExportToComp>

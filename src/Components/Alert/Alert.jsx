@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 import {
   AlertDialog,
   AlertDialogTrigger,
@@ -9,6 +11,17 @@ import {
   AlertDialogCancel,
   AlertDialogAction,
 } from "@/components/ui/alert-dialog";
+
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+
 import { Button } from "@/components/ui/button";
 import "./Alert.css";
 
@@ -59,9 +72,11 @@ export function NoteDetailsDialog({ open, onOpenChange, selectedNoteText }) {
 }
 
 export function ExportToComp({ onHandleExport }) {
+  const [exportTyp, setExportTyp] = useState("Excel");
+
   return (
     <AlertDialog>
-      <AlertDialogTrigger asChild>
+      <AlertDialogTrigger asChild className="w-43">
         <Button>Export Transactions</Button>
       </AlertDialogTrigger>
 
@@ -70,13 +85,34 @@ export function ExportToComp({ onHandleExport }) {
           <AlertDialogTitle>Bist du dir sicher?</AlertDialogTitle>
           <AlertDialogDescription>
             Ausgewählte Transaktionen werden Exportiert
+            {/* In shadcn/ui wird der <Select>-Tag selbst nicht gesteuert,
+             sondern wird der Wert über ----onValueChange---- setzen, nicht über !!!!onChange!!!!!. */}
+            <Select value={exportTyp} onValueChange={setExportTyp}>
+              <SelectTrigger className="w-[180px] mt-3">
+                <SelectValue placeholder="Select a format" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectLabel>Formats</SelectLabel>
+                  <SelectItem value="Excel" className="text-green-500">
+                    Excel
+                  </SelectItem>
+                  <SelectItem value="CSV" className="text-blue-500">
+                    CSV
+                  </SelectItem>
+                  <SelectItem value="PDF" className="text-red-500">
+                    PDF
+                  </SelectItem>
+                </SelectGroup>
+              </SelectContent>
+            </Select>
           </AlertDialogDescription>
         </AlertDialogHeader>
 
         <AlertDialogFooter>
           <AlertDialogCancel>Abbrechen</AlertDialogCancel>
-          <AlertDialogAction onClick={onHandleExport}>
-            Export Excel
+          <AlertDialogAction onClick={() => onHandleExport(exportTyp)}>
+            Export to {exportTyp}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
