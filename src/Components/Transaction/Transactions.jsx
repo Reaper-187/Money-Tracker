@@ -141,7 +141,17 @@ export function creatColumns(
     },
     {
       accessorKey: "amount",
-      header: () => <div className="text-right">Amount</div>,
+      header: ({ column }) => {
+        return (
+          <Button
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          >
+            Amount
+            <ArrowUpDown />
+          </Button>
+        );
+      },
       cell: ({ row }) => {
         const amount = row.getValue("amount");
 
@@ -153,7 +163,7 @@ export function creatColumns(
 
         return (
           <div
-            className={`${amount >= 0 ? "text-green-500" : "text-red-500"} text-right font-medium`}
+            className={`${amount >= 0 ? "text-green-500" : "text-red-500"} text-left font-medium`}
           >
             {formatted}
           </div>
@@ -162,11 +172,11 @@ export function creatColumns(
     },
     {
       accessorKey: "notes",
-      header: () => <div className="text-right">notes</div>,
+      header: () => <div className="text-left">notes</div>,
       cell: ({ row }) => {
         return (
           <div
-            className="flex justify-end cursor-pointer"
+            className="cursor-pointer"
             onClick={() => {
               showNote(row.getValue("notes"));
             }}
@@ -348,7 +358,7 @@ export function Transactions() {
             onChange={(event) =>
               table.getColumn("category")?.setFilterValue(event.target.value)
             }
-            className="max-w-32 mb-2 lg:max-w-sm mr-5 "
+            className="max-w-32 mt-11 lg:max-w-sm mr-5 "
           />
           {/* Prüft ob min. eine TX (row) ausgewählt wurde */}
           {table.getFilteredSelectedRowModel().rows.length > 0 && (

@@ -9,7 +9,7 @@ import { GetTransactionsProvider } from "@c/Context/Context";
 
 export const App = () => {
   return (
-    <div className="h-dvh">
+    <div>
       <Header />
       <GetTransactionsProvider>
         <Outlet />

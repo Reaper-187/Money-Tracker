@@ -23,15 +23,12 @@ import {
 } from "@/components/ui/select";
 
 import { Button } from "@/components/ui/button";
-import "./Alert.css";
 
 export function DeleteConfirmDialog({ onConfirm }) {
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
-        <Button variant="destructive" className="btn-delete">
-          Ausgewählte löschen
-        </Button>
+        <Button className="bg-red-500 sm: w-full">Ausgewählte löschen</Button>
       </AlertDialogTrigger>
 
       <AlertDialogContent>
