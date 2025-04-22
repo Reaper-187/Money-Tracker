@@ -104,15 +104,17 @@ export function Overview({ date }) {
     100;
 
   return (
-    <div className="overview-container">
-      <div className="welcome-text">
-        <h1 className="text-4xl">Welcome Back, Name</h1>
-        <p className="text-lg">This is your Finacial Overview Report</p>
+    <div className="flex flex-col items-center p-3 mt-10">
+      <div className="block float-left w-full py-3 text-base text-(--foreground)">
+        <h1 className="text-3xl sm:text-4xl">Welcome Back, Name</h1>
+        <p className="text-m sm:text-lg">
+          This is your Finacial Overview Report
+        </p>
       </div>
 
       <div className="overviwe-wrapper">
         <div className="overview-card remaing">
-          <div className="card-header">
+          <div className="flex flex-row items-center justify-evenly">
             <h2 className="text-2xl">Remaining</h2>
             <SavingsIcon className="stat-icons save-icon" />
           </div>
@@ -133,7 +135,7 @@ export function Overview({ date }) {
         </div>
 
         <div className="overview-card income">
-          <div className="card-header">
+          <div className="flex align-center justify-evenly">
             <h2 className="text-2xl">Income</h2>
             <TrendingUpIcon className="stat-icons up-icon" />
           </div>
@@ -149,7 +151,7 @@ export function Overview({ date }) {
         </div>
 
         <div className="overview-card outcome">
-          <div className="card-header">
+          <div className="flex align-center justify-evenly">
             <h2 className="text-2xl">Expenses</h2>
             <TrendingDownIcon className="stat-icons down-icon" />
           </div>

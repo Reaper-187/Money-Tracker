@@ -351,14 +351,14 @@ export function Transactions() {
   return (
     <div className="w-full px-2">
       <div className="flex-row items-center justify-center gap-4 py-4">
-        <div className="flex flex-col gap-3 items-start md:flex-row items-center justify-center ">
+        <div className="flex flex-col gap-3 items-start md:flex-row items-center justify-end mt-12 lg:mt-0">
           <Input
+            className="max-w-31 lg:max-w-sm"
             placeholder="Filter categorys..."
             value={table.getColumn("category")?.getFilterValue() ?? ""}
             onChange={(event) =>
               table.getColumn("category")?.setFilterValue(event.target.value)
             }
-            className="max-w-32 mt-11 lg:max-w-sm mr-5 "
           />
           {/* Prüft ob min. eine TX (row) ausgewählt wurde */}
           {table.getFilteredSelectedRowModel().rows.length > 0 && (

@@ -8,9 +8,13 @@ import {
   ResponsiveContainer,
   Legend,
 } from "recharts";
+import { useMediaQuery } from "react-responsive";
+
 import { FetchTransactionsContext } from "@c/Context/Context";
 
 export default function StackedDonutChart() {
+  const isSmallScreen = useMediaQuery({ maxWidth: 640 });
+
   const { selectTransactions } = useContext(FetchTransactionsContext);
 
   const filteredInCategory = selectTransactions.filter((fetchCat) => {
@@ -56,10 +60,10 @@ export default function StackedDonutChart() {
   return (
     <Card className="w-full p-4 bg-transparent">
       <CardContent>
-        <h2 className="text-lg font-semibold text-center">
+        <h2 className="text-lg font-semibold text-center py-2">
           Spending Breakdown for {month}
         </h2>
-        <ResponsiveContainer width="100%" height={430}>
+        <ResponsiveContainer width={"100%"} height={400}>
           <PieChart>
             {pieChartData.map((entry, index) => (
               <Pie
@@ -67,8 +71,8 @@ export default function StackedDonutChart() {
                 data={[entry]}
                 dataKey="value"
                 nameKey="name"
-                cx="50%"
-                cy="55%"
+                cx={isSmallScreen ? "40%" : "50%"}
+                cy={isSmallScreen ? "65%" : "55%"}
                 innerRadius={60 + index * 35}
                 outerRadius={70 + index * 35}
                 startAngle={90}
@@ -78,7 +82,11 @@ export default function StackedDonutChart() {
               </Pie>
             ))}
             <Tooltip />
-            <Legend layout="vertical" align="right" verticalAlign="middle" />
+            <Legend
+              layout={isSmallScreen ? "horizontal" : "vertical"}
+              align={isSmallScreen ? "center" : "right"}
+              verticalAlign={isSmallScreen ? "bottom" : "middle"}
+            />
           </PieChart>
         </ResponsiveContainer>
       </CardContent>

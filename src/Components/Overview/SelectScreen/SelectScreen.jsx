@@ -110,7 +110,7 @@ export function SelectScreen({
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="w-full space-y-20 h-full"
+          className="w-full space-y-15 h-full sm:space-y-20"
         >
           <Button
             type="button"

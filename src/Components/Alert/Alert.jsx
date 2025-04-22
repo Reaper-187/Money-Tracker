@@ -28,7 +28,9 @@ export function DeleteConfirmDialog({ onConfirm }) {
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
-        <Button className="bg-red-500 sm: w-full">Ausgewählte löschen</Button>
+        <Button className="bg-red-500 w-full sm:w-fit">
+          Ausgewählte löschen
+        </Button>
       </AlertDialogTrigger>
 
       <AlertDialogContent>
@@ -73,7 +75,7 @@ export function ExportToComp({ onHandleExport }) {
 
   return (
     <AlertDialog>
-      <AlertDialogTrigger asChild className="w-43">
+      <AlertDialogTrigger asChild className="w-full sm:w-43">
         <Button>Export Transactions</Button>
       </AlertDialogTrigger>
 
