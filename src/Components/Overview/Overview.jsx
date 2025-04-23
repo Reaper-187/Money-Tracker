@@ -104,7 +104,7 @@ export function Overview({ date }) {
     100;
 
   return (
-    <div className="flex flex-col items-center p-3 mt-10 lg:mt-0">
+    <div className="flex flex-col items-center p-3 mt-10 md:mt-0">
       <div className="block float-left w-full py-3 text-base text-(--foreground)">
         <h1 className="text-3xl sm:text-4xl">Welcome Back, Name</h1>
         <p className="text-m sm:text-lg">
@@ -112,7 +112,7 @@ export function Overview({ date }) {
         </p>
       </div>
 
-      <div className="w-full grid grid-cols-1 gap-5 items-center sm:grid-cols-2 lg:grid-cols-4">
+      <div className="w-full grid justify-items-center grid-cols-1 gap-5 items-center sm:grid-cols-2 lg:grid-cols-4">
         <div className="overview-card remaing">
           <div className="flex align-center justify-evenly">
             <h2 className="text-[min(8vw,1.5rem)]">Remaining</h2>

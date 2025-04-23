@@ -13,7 +13,6 @@ import {
 import "./DatePicker.css";
 
 export function DatePickerWithRange({ date, onDateChange }) {
-
   return (
     <div className={cn("grid gap-2 mt-4")}>
       <Popover>
@@ -62,9 +61,9 @@ export function DatePickerNoRange({ field, form }) {
     <Popover>
       <PopoverTrigger asChild>
         <Button
-          variant={"outline"}
+          variant="outline"
           className={cn(
-            "w-[380px] justify-center text-start font-normal",
+            "w-[clamp(300px,100%,380px)] justify-center text-start font-normal",
             !field.value && "text-muted-foreground"
           )}
         >
