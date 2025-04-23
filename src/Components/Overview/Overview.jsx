@@ -104,7 +104,7 @@ export function Overview({ date }) {
     100;
 
   return (
-    <div className="flex flex-col items-center p-3 mt-10">
+    <div className="flex flex-col items-center p-3 mt-10 lg:mt-0">
       <div className="block float-left w-full py-3 text-base text-(--foreground)">
         <h1 className="text-3xl sm:text-4xl">Welcome Back, Name</h1>
         <p className="text-m sm:text-lg">
@@ -112,10 +112,10 @@ export function Overview({ date }) {
         </p>
       </div>
 
-      <div className="overviwe-wrapper">
+      <div className="w-full grid grid-cols-1 gap-5 items-center sm:grid-cols-2 lg:grid-cols-4">
         <div className="overview-card remaing">
-          <div className="flex flex-row items-center justify-evenly">
-            <h2 className="text-2xl">Remaining</h2>
+          <div className="flex align-center justify-evenly">
+            <h2 className="text-[min(8vw,1.5rem)]">Remaining</h2>
             <SavingsIcon className="stat-icons save-icon" />
           </div>
           <p
@@ -136,7 +136,7 @@ export function Overview({ date }) {
 
         <div className="overview-card income">
           <div className="flex align-center justify-evenly">
-            <h2 className="text-2xl">Income</h2>
+            <h2 className="text-[min(8vw,1.5rem)]">Income</h2>
             <TrendingUpIcon className="stat-icons up-icon" />
           </div>
           <p className="text-xl text-green-500">{calcIncome} €</p>
@@ -152,7 +152,7 @@ export function Overview({ date }) {
 
         <div className="overview-card outcome">
           <div className="flex align-center justify-evenly">
-            <h2 className="text-2xl">Expenses</h2>
+            <h2 className="text-[min(8vw,1.5rem)]">Expenses</h2>
             <TrendingDownIcon className="stat-icons down-icon" />
           </div>
           <p className="text-xl text-red-500">{Math.abs(calcExpenses)} €</p>
@@ -166,7 +166,9 @@ export function Overview({ date }) {
           </p>
         </div>
 
-        <AddTransBtn />
+        <div className="w-full flex justify-center">
+          <AddTransBtn />
+        </div>
       </div>
     </div>
   );

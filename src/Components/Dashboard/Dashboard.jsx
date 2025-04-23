@@ -26,7 +26,7 @@ export function Dashboard() {
       <div className="flex justify-center date-range-picker">
         <DatePickerWithRange date={date} onDateChange={handleDateChange} />
       </div>
-      <div className="grid lg:grid-cols-2 md:grid-cols-1 gap-4 p-6 chart-container">
+      <div className="grid xl:grid-cols-2 md:grid-cols-1 gap-4 p-6 chart-container">
         <BarChartComponent date={date} />
         <PieChartComponent date={date} />
       </div>
