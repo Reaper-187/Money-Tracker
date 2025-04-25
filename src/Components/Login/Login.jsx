@@ -56,7 +56,7 @@ export const Login = () => {
               <Label className="text-md">Email</Label>
               <Input {...register("email")} />
               {errors.email && (
-                <div className="text-red-500">{errors.email.message}</div>
+                <div className="text-red-600">{errors.email.message}</div>
               )}
               <Label className="text-md">Password</Label>
               <div className="relative">
@@ -65,7 +65,7 @@ export const Login = () => {
                   type={showPassword ? "text" : "password"}
                 />
                 {errors.password && (
-                  <div className="text-red-500">{errors.password.message}</div>
+                  <div className="text-red-600">{errors.password.message}</div>
                 )}
                 <button
                   type="button"
