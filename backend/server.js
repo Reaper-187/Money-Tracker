@@ -9,8 +9,7 @@ const authRoutes = require("./routes/authRoute");
 const cors = require("cors");
 const session = require("express-session");
 const passport = require("passport");
-// const initializePassport = require("./routes/passportConfig");
-// const User = require("../model/userSchema/userModel");
+const initializePassport = require("./config/passport");
 const flash = require("express-flash");
 const MongoStore = require("connect-mongo");
 const crypto = require("crypto");
@@ -51,11 +50,11 @@ app.use(
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// initializePassport(
-//   passport,
-//   async (email) => await User.findOne({ email }),
-//   async (id) => await User.findById(id)
-// );
+initializePassport(
+  passport,
+  async (email) => await User.findOne({ email }),
+  async (id) => await User.findById(id)
+);
 
 app.use(passport.initialize());
 app.use(passport.session());

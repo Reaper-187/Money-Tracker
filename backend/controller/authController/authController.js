@@ -1,15 +1,61 @@
 const User = require("../../model/userSchema/userModel");
-
 const nodemailer = require("nodemailer");
-// const crypto = require('crypto');
+const crypto = require("crypto");
 const bcrypt = require("bcrypt");
-
+const passport = require("passport");
 const EMAIL_USER = process.env.EMAIL_USER;
 const EMAIL_PASS = process.env.EMAIL_PASS;
+
+exports.authChecking = (req, res) => {
+  if (req.session.passport && req.session.passport.user) {
+    res.status(200).json({ loggedIn: true });
+  } else {
+    res.status(200).json({ loggedIn: false });
+  }
+};
+
+exports.existingUser = (req, res, next) => {
+  passport.authenticate("local", async (err, user, info) => {
+    if (err) {
+      return res.status(500).json({ success: false, message: "Servererror" });
+    }
+    if (!user) {
+      return res
+        .status(401)
+        .json({ success: false, message: "wrong login-data" });
+    }
+
+    // Überprüfung, ob der Benutzer verifiziert ist
+    if (!user.isVerified) {
+      return res.status(403).json({
+        success: false,
+        message: "Please confirm your Email, to Sign-in.",
+      });
+    }
+
+    req.logIn(user, (err) => {
+      if (err) {
+        console.log("Error with login:", err);
+        return res
+          .status(500)
+          .json({ success: false, message: "sign-in unsuccessfully" });
+      }
+      req.session.loggedIn = true;
+      res.status(200).json({
+        success: true,
+        message: "Login successfully",
+        user: { email: user.email },
+      });
+    });
+  })(req, res, next);
+};
 
 exports.creatUser = async (req, res) => {
   try {
     const hashedPassword = await bcrypt.hash(req.body.password, 10);
+
+    const verificationToken = crypto.randomBytes(32).toString("hex");
+    const tokenExpires = Date.now() + 24 * 60 * 60 * 1000; // 24 Stunden gültig
 
     const newUser = new User({
       name: req.body.name,
@@ -35,7 +81,7 @@ exports.creatUser = async (req, res) => {
     });
 
     await transporter.sendMail({
-      from: "abdulcheik3@gmail.com",
+      from: EMAIL_USER,
       to: req.body.email,
       subject: "E-Mail-Verification",
       text: `Please click on the current Link, to verify your E-Mail: ${verifyLink}`,
@@ -85,5 +131,125 @@ exports.verifyUser = async (req, res) => {
   } catch (err) {
     console.error("Error with the verification:", err);
     res.status(500).send("Intern ServerError.");
+  }
+};
+
+exports.forgotPw = async (req, res) => {
+  const { email } = req.body;
+
+  // E-Mail Validierung
+  const emailRegex = /^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/;
+  if (!emailRegex.test(email)) {
+    return res.status(400).json({ message: "Ungültige E-Mail-Adresse." });
+  }
+
+  try {
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(404).json({ message: "E-Mail nicht gefunden." });
+    }
+
+    // Überprüfen, ob der Code noch nicht abgelaufen ist
+    if (user.resetCodeExpires > Date.now()) {
+      return res.status(400).json({
+        message:
+          "Ein Reset-Code wurde bereits gesendet. Bitte warte, bis der Code abläuft.",
+      });
+    }
+
+    const resetCode = Math.floor(1000 + Math.random() * 9000); // 4-stelliger Code
+
+    // Reset-Code und Ablaufdatum speichern
+    user.resetCode = resetCode;
+    user.resetCodeExpires = Date.now() + 600000; // Code 10 Minuten gültig
+
+    await user.save();
+    // Code per E-Mail senden
+    const transporter = nodemailer.createTransport({
+      host: "smtp.gmail.com",
+      port: 465,
+      secure: true,
+      auth: {
+        user: EMAIL_USER,
+        pass: EMAIL_PASS,
+      },
+    });
+
+    await transporter.sendMail({
+      from: EMAIL_USER,
+      to: req.body.email,
+      subject: "Passwort-Reset-OTP",
+      text: `Dein 4-stelliger Code zum Zurücksetzen des Passworts lautet: ${resetCode}. Dieser Code ist 10 Minuten gültig.`,
+    });
+
+    res.json({ message: "Code zum Zurücksetzen gesendet." });
+  } catch (error) {
+    console.error("Fehler beim Senden des Codes:", error);
+    res.status(500).json({ message: "Serverfehler" });
+  }
+};
+
+exports.verifyReset = async (req, res) => {
+  const { email, resetCode } = req.body;
+  try {
+    const resetCodeInt = parseInt(resetCode);
+    const user = await User.findOne({
+      email,
+      resetCode: resetCodeInt,
+      resetCodeExpires: { $gt: Date.now() },
+    });
+
+    if (
+      user &&
+      user.resetCode === resetCodeInt &&
+      user.resetCodeExpires > Date.now()
+    ) {
+      res.json({
+        message: "Code verifiziert. Du kannst nun dein Passwort ändern.",
+      });
+    } else {
+      res.status(400).json({ message: "Ungültiger oder abgelaufener Code." });
+    }
+  } catch (error) {
+    console.error("Fehler bei der Code-Verifikation:", error);
+    res.status(500).json({ message: "Serverfehler" });
+  }
+};
+
+exports.resetPw = async (req, res) => {
+  const { email, resetCode, newPassword } = req.body;
+
+  try {
+    const user = await User.findOne({
+      email,
+      resetCode,
+      resetCodeExpires: { $gt: Date.now() },
+    });
+
+    if (!user) {
+      console.log("Code is invalid or expired.");
+      return res
+        .status(400)
+        .json({ message: "Ungültiger oder abgelaufener Code." });
+    }
+
+    // Überprüfen, ob das neue Passwort mit dem alten übereinstimmt
+    const isSamePassword = await bcrypt.compare(newPassword, user.password);
+    if (isSamePassword) {
+      return res.status(400).json({
+        message: "Das neue Passwort darf nicht mit dem alten übereinstimmen.",
+      });
+    }
+
+    user.password = await bcrypt.hash(newPassword, 10);
+    user.resetCode = undefined;
+    user.resetCodeExpires = undefined;
+
+    await user.save();
+
+    res.json({ message: "Passwort erfolgreich geändert." });
+  } catch (error) {
+    console.error("Fehler beim Zurücksetzen des Passworts:", error);
+    res.status(500).json({ message: "Serverfehler" });
   }
 };
