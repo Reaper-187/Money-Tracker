@@ -1,0 +1,137 @@
+import React, { useState } from "react";
+
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Input } from "../ui/input";
+import { Button } from "../ui/button";
+import { Checkbox } from "../ui/checkbox";
+import { Label } from "../ui/label";
+import { Eye, EyeOff, Github, Mail } from "lucide-react";
+import { useForm } from "react-hook-form";
+import { Link } from "react-router-dom";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+const formSchema = z.object({
+  name: z
+    .string()
+    .min(2, "Name must be at least 2 characters")
+    .regex(/^[A-Za-z]+$/, "Name must contain only letters"),
+  email: z.string().toLowerCase().email("Invalid email format"),
+  password: z
+    .string()
+    .min(8, "Password must be at least 8 characters")
+    .refine((value) => /[A-Z]/.test(value), {
+      message: "Password must contain at least one uppercase letter",
+    })
+    .refine((value) => /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(value), {
+      message: "Password must contain at least one special character",
+    }),
+});
+
+export const Register = () => {
+  const [showPassword, setShowPassword] = useState(false);
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(formSchema),
+  });
+
+  const onSubmit = (data) => {
+    console.log(data);
+  };
+
+  return (
+    <>
+      <div className="min-h-screen flex items-center justify-center p-4">
+        <Card className="w-1/2 lg:w-1/3 md:w-1/2">
+          <CardHeader>
+            <CardTitle className="flex justify-self-center text-4xl">
+              Register
+            </CardTitle>
+            <CardDescription className="text-center">
+              Enter your credentials to create an account
+            </CardDescription>
+          </CardHeader>
+
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <CardContent className="flex flex-col space-y-3">
+              <Label className="text-md">Name</Label>
+              <Input {...register("name")} />
+              {errors.name && (
+                <div className="text-red-600">{errors.name.message}</div>
+              )}
+              <Label className="text-md">Email</Label>
+              <Input {...register("email")} />
+              {errors.email && (
+                <div className="text-red-600">{errors.email.message}</div>
+              )}
+              <Label className="text-md">Password</Label>
+              <div className="relative">
+                <Input
+                  {...register("password")}
+                  type={showPassword ? "text" : "password"}
+                />
+                {errors.password && (
+                  <div className="text-red-600">{errors.password.message}</div>
+                )}
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2"
+                >
+                  {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                </button>
+              </div>
+              <Button className="w-full font-semibold" type="submit">
+                Sign in
+              </Button>
+            </CardContent>
+          </form>
+          <div className="relative">
+            <div className="absolute inset-0 flex items-center">
+              <span className="w-full border-t" />
+            </div>
+            <div className="relative flex justify-center text-xs uppercase">
+              <span className="bg-primary-foreground px-2 text-muted-foreground">
+                Or continue with
+              </span>
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-4 px-4">
+            <Button className="w-full font-semibold" varaint="outlone">
+              <Github className="mr-2 h-4 w-4" />
+              Github
+            </Button>
+
+            <Button className="w-full font-semibold" varaint="outlone">
+              <Mail className="mr-2 h-4 w-4" />
+              Google
+            </Button>
+          </div>
+
+          <CardFooter className="felx justify-center">
+            <div>
+              You have an account already ?{" "}
+              <Link
+                to="/login"
+                className="text-blue-400 hover:text-blue-500 font-medium"
+              >
+                Sign in
+              </Link>
+            </div>
+          </CardFooter>
+        </Card>
+      </div>
+    </>
+  );
+};

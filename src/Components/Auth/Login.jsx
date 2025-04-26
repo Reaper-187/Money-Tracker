@@ -13,8 +13,8 @@ import { Button } from "../ui/button";
 import { Checkbox } from "../ui/checkbox";
 import { Label } from "../ui/label";
 import { Eye, EyeOff, Github, Mail } from "lucide-react";
-import { useForm, Link } from "react-hook-form";
-
+import { useForm } from "react-hook-form";
+import { Link } from "react-router-dom";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 

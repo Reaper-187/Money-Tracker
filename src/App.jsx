@@ -6,13 +6,16 @@ import { Outlet } from "react-router-dom";
 import { Header } from "@c/Header/Header";
 import { Toaster } from "sonner";
 import { GetTransactionsProvider } from "@c/Context/Context";
-import { Login } from '@c/Login/Login'
+import { Login } from "@/components/Auth/Login";
+import { Register } from "@/components/Auth/Register";
 
 export const App = () => {
   return (
     <div>
       {/* <Header /> */}
-      <Login/>
+      {/* <Login /> */}
+      <Register />
+
       {/* <GetTransactionsProvider>
         <Outlet />
       </GetTransactionsProvider>
