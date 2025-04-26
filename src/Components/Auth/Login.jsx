@@ -113,7 +113,7 @@ export const Login = () => {
             <div>
               Don't have an account ?{" "}
               <Link
-                to="/register"
+                to="/Register"
                 className="text-blue-400 hover:text-blue-500 font-medium"
               >
                 Sign up

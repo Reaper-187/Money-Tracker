@@ -6,11 +6,21 @@ import {
   Navigate,
 } from "react-router-dom";
 import { App } from "./App";
+import { Login } from "@c/Auth/Login";
+import { Register } from "@c/Auth/Register";
 import { Dashboard } from "@c/Dashboard/Dashboard";
 import { Transactions } from "@c/Transaction/Transactions";
 import "./index.css";
 
 const router = createBrowserRouter([
+  {
+    path: "/login",
+    element: <Login />,
+  },
+  {
+    path: "/register",
+    element: <Register />,
+  },
   {
     element: <App />,
     children: [
