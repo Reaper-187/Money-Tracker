@@ -13,7 +13,7 @@ export const App = () => {
   return (
     <div>
       {/* <Header /> */}
-      <OneTimeOtp />
+      {/* <OneTimeOtp /> */}
 
       {/* <GetTransactionsProvider>
         <Outlet />

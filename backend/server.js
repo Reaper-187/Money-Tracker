@@ -5,12 +5,12 @@ const express = require("express");
 const app = express();
 const connectDB = require("./MongoDb");
 const transactionRoutes = require("./routes/transactionRoute");
-const userRoute = require("./routes/userRoute");
+const authRoutes = require("./routes/authRoute");
 const cors = require("cors");
 const session = require("express-session");
 const passport = require("passport");
 // const initializePassport = require("./routes/passportConfig");
-// const User = require("./model/UserLogin/UserLoginSchema");
+// const User = require("../model/userSchema/userModel");
 const flash = require("express-flash");
 const MongoStore = require("connect-mongo");
 const crypto = require("crypto");
@@ -65,7 +65,7 @@ app.use(flash());
 app.use("/api", transactionRoutes); // Route für transcations
 
 // Route für User
-// app.use("/api/user", userRoute);
+app.use("/api", authRoutes); // Route für userAuthen
 
 // DB-Verbindung herstellen
 connectDB();
