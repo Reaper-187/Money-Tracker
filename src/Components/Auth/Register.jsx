@@ -10,13 +10,16 @@ import {
 } from "@/components/ui/card";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
-import { Checkbox } from "../ui/checkbox";
 import { Label } from "../ui/label";
 import { Eye, EyeOff, Github, Mail } from "lucide-react";
 import { useForm } from "react-hook-form";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import axios from "axios";
+
+axios.defaults.withCredentials = true; // damit erlaube ich das senden von cookies
+const registerApi = import.meta.env.VITE_API_REGISTER;
 
 const formSchema = z.object({
   name: z
@@ -38,6 +41,8 @@ const formSchema = z.object({
 export const Register = () => {
   const [showPassword, setShowPassword] = useState(false);
 
+  const navigate = useNavigate();
+
   const {
     register,
     handleSubmit,
@@ -46,8 +51,14 @@ export const Register = () => {
     resolver: zodResolver(formSchema),
   });
 
-  const onSubmit = (data) => {
-    console.log(data);
+  const onSubmit = async (data) => {
+    try {
+      console.log(data);
+      const response = await axios.post(registerApi, data);
+      navigate("/login");
+    } catch (err) {
+      console.error(err, "Error with the Registration");
+    }
   };
 
   return (

@@ -10,6 +10,7 @@ import { Login } from "@c/Auth/Login";
 import { Register } from "@c/Auth/Register";
 import { Dashboard } from "@c/Dashboard/Dashboard";
 import { Transactions } from "@c/Transaction/Transactions";
+import { Toaster } from "sonner";
 import "./index.css";
 
 const router = createBrowserRouter([
@@ -32,7 +33,10 @@ const router = createBrowserRouter([
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")).render(
-  <RouterProvider router={router} />
+  <>
+    <Toaster />
+    <RouterProvider router={router} />
+  </>
 );
 
 // import { ErrorPage } from './components/ErrorPage';

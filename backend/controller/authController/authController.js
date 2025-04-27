@@ -6,12 +6,9 @@ const passport = require("passport");
 const EMAIL_USER = process.env.EMAIL_USER;
 const EMAIL_PASS = process.env.EMAIL_PASS;
 
-exports.authChecking = (req, res) => {
-  if (req.session.passport && req.session.passport.user) {
-    res.status(200).json({ loggedIn: true });
-  } else {
-    res.status(200).json({ loggedIn: false });
-  }
+exports.authStatus = (req, res) => {
+  const isLoggedIn = req.session.passport?.user ? true : false;
+  res.status(200).json({ loggedIn: isLoggedIn });
 };
 
 exports.existingUser = (req, res, next) => {
@@ -50,7 +47,7 @@ exports.existingUser = (req, res, next) => {
   })(req, res, next);
 };
 
-exports.creatUser = async (req, res) => {
+exports.createUser = async (req, res) => {
   try {
     const hashedPassword = await bcrypt.hash(req.body.password, 10);
 
@@ -104,7 +101,7 @@ exports.creatUser = async (req, res) => {
   }
 };
 
-exports.verifyUser = async (req, res) => {
+exports.verifySession = async (req, res) => {
   const { token } = req.query;
 
   try {

@@ -13,7 +13,7 @@ const initializePassport = require("./config/passport");
 const flash = require("express-flash");
 const MongoStore = require("connect-mongo");
 const crypto = require("crypto");
-// const axios = require("axios");
+const User = require("./model/userSchema/userModel");
 
 // CORS-Konfiguration
 // const FRONTEND_URL_PROD = process.env.FRONTEND_URL_PROD;
@@ -64,7 +64,7 @@ app.use(flash());
 app.use("/api", transactionRoutes); // Route für transcations
 
 // Route für User
-app.use("/api", authRoutes); // Route für userAuthen
+app.use("/api/auth", authRoutes); // Route für userAuthen
 
 // DB-Verbindung herstellen
 connectDB();
