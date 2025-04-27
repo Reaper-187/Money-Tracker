@@ -191,25 +191,28 @@ exports.forgotPw = async (req, res) => {
 
 exports.verifyReset = async (req, res) => {
   const { email, resetCode } = req.body;
+
+  const resetCodeInt = Number(resetCode);
+  if (isNaN(resetCodeInt)) {
+    return res.status(400).json({ message: "Ungültiger Reset-Code." });
+  }
+
   try {
-    const resetCodeInt = parseInt(resetCode);
     const user = await User.findOne({
       email,
       resetCode: resetCodeInt,
       resetCodeExpires: { $gt: Date.now() },
     });
 
-    if (
-      user &&
-      user.resetCode === resetCodeInt &&
-      user.resetCodeExpires > Date.now()
-    ) {
-      res.json({
-        message: "Code verifiziert. Du kannst nun dein Passwort ändern.",
-      });
-    } else {
-      res.status(400).json({ message: "Ungültiger oder abgelaufener Code." });
+    if (!user) {
+      return res
+        .status(400)
+        .json({ message: "Ungültiger oder abgelaufener Code." });
     }
+
+    res.status(200).json({
+      message: "Code verifiziert. Du kannst nun dein Passwort ändern.",
+    });
   } catch (error) {
     console.error("Fehler bei der Code-Verifikation:", error);
     res.status(500).json({ message: "Serverfehler" });

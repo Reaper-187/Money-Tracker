@@ -12,7 +12,7 @@ router.post("/verifyReset", authController.verifyReset);
 
 router.post("/resetPw", authController.resetPw);
 
-router.get("/verify", authController.verifyUser);
+router.get("/verifyUser", authController.verifyUser);
 
 router.get("/authChecking", authController.authChecking);
 
