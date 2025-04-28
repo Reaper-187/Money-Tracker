@@ -6,6 +6,24 @@ const passport = require("passport");
 const EMAIL_USER = process.env.EMAIL_USER;
 const EMAIL_PASS = process.env.EMAIL_PASS;
 
+exports.logout = (req, res) => {
+  try {
+    req.session.destroy((err) => {
+      if (err) {
+        return res
+          .status(500)
+          .json({ success: false, message: "Logout failed" });
+      }
+      res.status(200).json({ success: true, message: "Logout successful" });
+    });
+  } catch (err) {
+    console.error("Error during logout:", err);
+    res
+      .status(500)
+      .json({ success: false, message: "Server error during logout" });
+  }
+};
+
 exports.authStatus = (req, res) => {
   const isLoggedIn = req.session.passport?.user ? true : false;
   res.status(200).json({ loggedIn: isLoggedIn });

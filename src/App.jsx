@@ -6,18 +6,13 @@ import { Outlet } from "react-router-dom";
 import { Header } from "@c/Header/Header";
 import { GetTransactionsProvider } from "@c/Context/Context";
 
-import { OneTimeOtp } from "./components/Auth/OTP/OneTimeOtp";
-
 export const App = () => {
   return (
     <div>
-      {/* <Header />
-      <OneTimeOtp /> */}
-
-      {/* <GetTransactionsProvider>
+      <Header />
+      <GetTransactionsProvider>
         <Outlet />
       </GetTransactionsProvider>
-      */}
     </div>
   );
 };

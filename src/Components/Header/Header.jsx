@@ -1,7 +1,12 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useContext } from "react";
 import "./Header.css";
-import { Link, useLocation } from "react-router-dom";
+import { Link, Navigate, useLocation, useNavigate } from "react-router-dom";
 import { FaSun, FaMoon } from "react-icons/fa";
+import axios from "axios";
+import { Button } from "../ui/button";
+
+axios.defaults.withCredentials = true; // damit erlaube ich das senden von cookies
+const logoutApi = import.meta.env.VITE_API_LOGOUT;
 
 export const Header = () => {
   const [theme, setTheme] = useState("light");
@@ -31,6 +36,17 @@ export const Header = () => {
   };
 
   // Schließe die Navbar, wenn außerhalb geklickt wird
+
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    try {
+      await axios.post(logoutApi);
+      navigate("/login");
+    } catch (err) {
+      console.error("Error during the Logout:", err);
+    }
+  };
 
   return (
     <nav ref={navRef}>
@@ -65,6 +81,15 @@ export const Header = () => {
               </span>
             </div>
           </Link>
+
+          <Button className="btn nav-btn" onClick={handleLogout}>
+            <span
+              className={`word ${location.pathname === "/login" ? "active" : ""}`}
+              data-text="Logout"
+            >
+              Logout
+            </span>
+          </Button>
 
           <button onClick={toggleTheme} className="theme-toggle-btn">
             {theme === "light" ? <FaMoon /> : <FaSun />}

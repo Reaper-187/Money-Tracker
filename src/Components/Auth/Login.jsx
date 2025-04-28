@@ -15,7 +15,7 @@ import { Label } from "../ui/label";
 import { toast } from "sonner";
 import { Eye, EyeOff, Github, Mail } from "lucide-react";
 import { useForm } from "react-hook-form";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
@@ -31,7 +31,6 @@ const formSchema = z.object({
 export const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
 
-  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
@@ -40,11 +39,12 @@ export const Login = () => {
     resolver: zodResolver(formSchema),
   });
 
+  const navigate = useNavigate();
+
   const onSubmit = async (data) => {
     try {
-      const response = await axios.post(loginApi, data);
-      console.log("Login Successfully");
-      navigate("/dashboard");
+      await axios.post(loginApi, data);
+      navigate("/dashboard"); // <-- JETZT wird wirklich navigiert
     } catch (err) {
       console.error("Login Failed:", err);
 
