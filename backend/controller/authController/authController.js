@@ -24,9 +24,34 @@ exports.logout = (req, res) => {
   }
 };
 
-exports.authStatus = (req, res) => {
-  const isLoggedIn = req.session.passport?.user ? true : false;
-  res.status(200).json({ loggedIn: isLoggedIn });
+// exports.authStatus = (req, res) => {
+//   const isLoggedIn = req.session.passport?.user ? true : false;
+//   res.status(200).json({ loggedIn: isLoggedIn, isVerified: user.isVerified,
+//     otpSent: user.otpSent });
+// };
+
+exports.authStatus = async (req, res) => {
+  const userId = req.session.passport?.user;
+
+  if (!userId) {
+    return res.status(200).json({ loggedIn: false });
+  }
+
+  try {
+    const user = await User.findById(userId).select("isVerified");
+
+    if (!user) {
+      return res.status(404).json({ loggedIn: false });
+    }
+
+    res.status(200).json({
+      loggedIn: true,
+      isVerified: user.isVerified,
+    });
+  } catch (err) {
+    console.error("AuthCheck Error:", err);
+    res.status(500).json({ loggedIn: false, error: "Internal Server Error" });
+  }
 };
 
 exports.existingUser = (req, res, next) => {
@@ -172,10 +197,10 @@ exports.forgotPw = async (req, res) => {
       });
     }
 
-    const resetCode = Math.floor(1000 + Math.random() * 9000); // 4-stelliger Code
+    const otpSent = Math.floor(1000 + Math.random() * 9000); // 4-stelliger Code
 
     // Reset-Code und Ablaufdatum speichern
-    user.resetCode = resetCode;
+    user.otpSent = otpSent;
     user.resetCodeExpires = Date.now() + 600000; // Code 10 Minuten gültig
 
     await user.save();
@@ -194,7 +219,7 @@ exports.forgotPw = async (req, res) => {
       from: EMAIL_USER,
       to: req.body.email,
       subject: "Passwort-Reset-OTP",
-      text: `Dein 4-stelliger Code zum Zurücksetzen des Passworts lautet: ${resetCode}. Dieser Code ist 10 Minuten gültig.`,
+      text: `Dein 4-stelliger Code zum Zurücksetzen des Passworts lautet: ${otpSent}. Dieser Code ist 10 Minuten gültig.`,
     });
 
     res.json({ message: "Code zum Zurücksetzen gesendet." });
@@ -205,9 +230,9 @@ exports.forgotPw = async (req, res) => {
 };
 
 exports.verifyReset = async (req, res) => {
-  const { email, resetCode } = req.body;
+  const { email, otpSent } = req.body;
 
-  const resetCodeInt = Number(resetCode);
+  const resetCodeInt = Number(otpSent);
   if (isNaN(resetCodeInt)) {
     return res.status(400).json({ message: "Ungültiger Reset-Code." });
   }
@@ -215,7 +240,7 @@ exports.verifyReset = async (req, res) => {
   try {
     const user = await User.findOne({
       email,
-      resetCode: resetCodeInt,
+      otpSent: resetCodeInt,
       resetCodeExpires: { $gt: Date.now() },
     });
 
@@ -235,12 +260,12 @@ exports.verifyReset = async (req, res) => {
 };
 
 exports.resetPw = async (req, res) => {
-  const { email, resetCode, newPassword } = req.body;
+  const { email, otpSent, newPassword } = req.body;
 
   try {
     const user = await User.findOne({
       email,
-      resetCode,
+      otpSent,
       resetCodeExpires: { $gt: Date.now() },
     });
 
@@ -260,7 +285,7 @@ exports.resetPw = async (req, res) => {
     }
 
     user.password = await bcrypt.hash(newPassword, 10);
-    user.resetCode = undefined;
+    user.otpSent = undefined;
     user.resetCodeExpires = undefined;
 
     await user.save();

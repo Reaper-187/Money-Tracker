@@ -4,11 +4,11 @@ const userModel = new mongoose.Schema({
   name: { type: String, required: true },
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
-  isVerified: { type: Boolean, required: false },
-  verificationToken: { type: String, required: false },
-  tokenExpires: { type: Date, required: false },
+  isVerified: { type: Boolean, default: false },
+  verificationToken: { type: String, default: false },
+  tokenExpires: { type: Date, default: false },
   createdOn: { type: Date, default: Date.now },
-  resetCode: { type: Number },
+  otpSent: { type: Number },
 });
 
 module.exports = mongoose.model("User", userModel);

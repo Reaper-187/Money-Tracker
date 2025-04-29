@@ -9,27 +9,43 @@ import { Login } from "@c/Auth/Login";
 import { Register } from "@c/Auth/Register";
 import { Dashboard } from "@c/Dashboard/Dashboard";
 import { Transactions } from "@c/Transaction/Transactions";
+import { OneTimeOtp } from "@c/Auth/OTP/OneTimeOtp";
+import {
+  ProtectedRoute,
+  VerificationRoute,
+} from "@c/Auth/ProtectedRoute/ProtectedRoute";
+import { GetAuthenticationProvider } from "@c/Context/AuthContext";
+import { GuestRoute } from "@c/Auth/ProtectedRoute/ProtectedRoute";
+import { App } from "./App";
 import { Toaster } from "sonner";
 import "./index.css";
-import { OneTimeOtp } from "@c/Auth/OTP/OneTimeOtp";
-import { App } from "./App";
-import { ProtectedRoute } from "@c/Auth/ProtectedRoute/ProtectedRoute";
-import { GetAuthenticationProvider } from "@c/Context/AuthContext";
+import { Verification } from "@c/Auth/Verification/Verification";
 
 const router = createBrowserRouter([
   {
     path: "/login",
-    element: <Login />,
+    element: (
+      <GuestRoute>
+        <Login />
+      </GuestRoute>
+    ),
   },
   {
     path: "/register",
-    element: <Register />,
+    element: (
+      <GuestRoute>
+        <Register />
+      </GuestRoute>
+    ),
   },
-  // {
-  //   path: "/verify",
-  //   element: <VerifyPage />,
-  //   errorElement: <ErrorPage />
-  // },
+  {
+    path: "/verify",
+    element: (
+      <VerificationRoute>
+        <Verification />,
+      </VerificationRoute>
+    ),
+  },
   {
     path: "/OneTimeOtp",
     element: <OneTimeOtp />,

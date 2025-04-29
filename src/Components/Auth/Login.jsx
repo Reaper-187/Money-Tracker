@@ -15,7 +15,7 @@ import { Label } from "../ui/label";
 import { toast } from "sonner";
 import { Eye, EyeOff, Github, Mail } from "lucide-react";
 import { useForm } from "react-hook-form";
-import { Link, Navigate, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
@@ -44,7 +44,7 @@ export const Login = () => {
   const onSubmit = async (data) => {
     try {
       await axios.post(loginApi, data);
-      navigate("/dashboard"); // <-- JETZT wird wirklich navigiert
+      navigate("/dashboard");
     } catch (err) {
       console.error("Login Failed:", err);
 
