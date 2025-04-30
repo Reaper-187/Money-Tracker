@@ -1,14 +1,16 @@
-import { useState, useEffect, useRef, useContext } from "react";
+import { useState, useEffect, useRef } from "react";
 import "./Header.css";
-import { Link, Navigate, useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { FaSun, FaMoon } from "react-icons/fa";
 import axios from "axios";
 import { Button } from "../ui/button";
+import { useAuth } from "@c/Context/AuthContext";
 
 axios.defaults.withCredentials = true; // damit erlaube ich das senden von cookies
-const logoutApi = import.meta.env.VITE_API_LOGOUT;
 
 export const Header = () => {
+  const { logoutUser } = useAuth();
+
   const [theme, setTheme] = useState("light");
   const location = useLocation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -41,8 +43,10 @@ export const Header = () => {
 
   const handleLogout = async () => {
     try {
-      await axios.post(logoutApi);
-      navigate("/login");
+      const logoutRes = await logoutUser();
+      if (logoutRes) {
+        navigate("/login");
+      }
     } catch (err) {
       console.error("Error during the Logout:", err);
     }

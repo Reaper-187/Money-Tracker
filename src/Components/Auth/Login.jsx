@@ -19,9 +19,9 @@ import { Link, useNavigate } from "react-router-dom";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
+import { useAuth } from "@c/Context/AuthContext";
 
 axios.defaults.withCredentials = true; // damit erlaube ich das senden von cookies
-const loginApi = import.meta.env.VITE_API_LOGIN;
 
 const formSchema = z.object({
   email: z.string().email("Invalid email format"),
@@ -29,6 +29,8 @@ const formSchema = z.object({
 });
 
 export const Login = () => {
+  const { loginUser } = useAuth();
+
   const [showPassword, setShowPassword] = useState(false);
 
   const {
@@ -43,8 +45,10 @@ export const Login = () => {
 
   const onSubmit = async (data) => {
     try {
-      await axios.post(loginApi, data);
-      navigate("/dashboard");
+      const loginRes = await loginUser(data);
+      if (loginRes) {
+        navigate("/dashboard");
+      }
     } catch (err) {
       console.error("Login Failed:", err);
 

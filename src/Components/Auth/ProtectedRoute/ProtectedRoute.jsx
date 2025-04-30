@@ -1,31 +1,26 @@
-import { useContext } from "react";
-import { AuthContext } from "@c/Context/AuthContext";
 import { Navigate } from "react-router-dom";
+import { useAuth } from "@c/Context/AuthContext";
 
 export const ProtectedRoute = ({ children }) => {
-  const { isAuthStatus } = useContext(AuthContext);
+  const { isAuthStatus } = useAuth();
 
   if (isAuthStatus === null) {
     return <div>Loading...</div>;
   }
 
-  if (isAuthStatus === true) {
-    return children;
-  }
+  if (isAuthStatus.loggedIn) return children;
 
   return <Navigate to="/login" />;
-
-  return <></>;
 };
 
 export const GuestRoute = ({ children }) => {
-  const { isAuthStatus } = useContext(AuthContext);
+  const { isAuthStatus } = useAuth();
 
   if (isAuthStatus === null) {
     return <div>Loading...</div>;
   }
 
-  if (isAuthStatus === true) {
+  if (isAuthStatus.loggedIn) {
     return <Navigate to="/dashboard" />;
   }
 
@@ -33,7 +28,7 @@ export const GuestRoute = ({ children }) => {
 };
 
 export const VerificationRoute = ({ children }) => {
-  const { isAuthStatus } = useContext(AuthContext);
+  const { isAuthStatus } = useAuth();
 
   if (isAuthStatus === null) {
     return <div>Loading...</div>;
@@ -45,3 +40,17 @@ export const VerificationRoute = ({ children }) => {
 
   return <Navigate to="/login" />;
 };
+
+// export const OtpRoute = ({ children }) => {
+//   const { isAuthStatus } = useAuth();
+
+//   if (isAuthStatus === null) {
+//     return <div>Loading...</div>;
+//   }
+
+//   if (!isAuthStatus.isVerified && isAuthStatus.verificationToken) {
+//     return children;
+//   }
+
+//   return <Navigate to="/login" />;
+// };
