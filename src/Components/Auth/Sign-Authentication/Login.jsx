@@ -8,10 +8,10 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Input } from "../ui/input";
-import { Button } from "../ui/button";
-import { Checkbox } from "../ui/checkbox";
-import { Label } from "../ui/label";
+import { Input } from "../../ui/input";
+import { Button } from "../../ui/button";
+import { Checkbox } from "../../ui/checkbox";
+import { Label } from "../../ui/label";
 import { toast } from "sonner";
 import { Eye, EyeOff, Github, Mail } from "lucide-react";
 import { useForm } from "react-hook-form";
@@ -105,7 +105,12 @@ export const Login = () => {
                   <Checkbox />
                   <p className="px-2">remember me</p>
                 </div>
-                <Button>forgot password</Button>
+                <Link
+                  to="/Reset-Password-Authentication"
+                  className="text-blue-400 hover:text-blue-500 font-medium"
+                >
+                  forgot password
+                </Link>
               </div>
             </CardContent>
           </form>

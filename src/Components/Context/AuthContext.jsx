@@ -19,6 +19,7 @@ export const GetAuthenticationProvider = ({ children }) => {
         loggedIn: response.data.loggedIn,
         isVerified: response.data.isVerified,
         verificationToken: response.data.verificationToken,
+        otpSent: response.data.otpSent,
       });
     } catch (err) {
       console.error(err);

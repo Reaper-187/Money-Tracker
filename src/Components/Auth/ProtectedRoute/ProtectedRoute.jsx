@@ -41,16 +41,15 @@ export const VerificationRoute = ({ children }) => {
   return <Navigate to="/login" />;
 };
 
-// export const OtpRoute = ({ children }) => {
-//   const { isAuthStatus } = useAuth();
+export const OtpRoute = ({ children }) => {
+  const { isAuthStatus } = useAuth();
 
-//   if (isAuthStatus === null) {
-//     return <div>Loading...</div>;
-//   }
+  if (isAuthStatus === null) {
+    return <div>Loading...</div>;
+  }
 
-//   if (!isAuthStatus.isVerified && isAuthStatus.verificationToken) {
-//     return children;
-//   }
-
-//   return <Navigate to="/login" />;
-// };
+  if (isAuthStatus.isVerified && isAuthStatus.otpSent) {
+    return children;
+  }
+  return <Navigate to="/login" />;
+};

@@ -86,14 +86,14 @@ export const Header = () => {
             </div>
           </Link>
 
-          <Button className="btn nav-btn" onClick={handleLogout}>
+          <div className="btn nav-btn" onClick={handleLogout}>
             <span
               className={`word ${location.pathname === "/login" ? "active" : ""}`}
               data-text="Logout"
             >
               Logout
             </span>
-          </Button>
+          </div>
 
           <button onClick={toggleTheme} className="theme-toggle-btn">
             {theme === "light" ? <FaMoon /> : <FaSun />}

@@ -38,7 +38,9 @@ exports.authStatus = async (req, res) => {
   }
 
   try {
-    const user = await User.findById(userId).select("isVerified");
+    const user = await User.findById(userId).select(
+      "isVerified verificationToken otpSent"
+    );
 
     if (!user) {
       return res.status(404).json({ loggedIn: false });
@@ -47,6 +49,8 @@ exports.authStatus = async (req, res) => {
     res.status(200).json({
       loggedIn: true,
       isVerified: user.isVerified,
+      otpSent: user.otpSent,
+      verificationToken: user.verificationToken,
     });
   } catch (err) {
     console.error("AuthCheck Error:", err);
@@ -160,8 +164,8 @@ exports.verifySession = async (req, res) => {
 
     // Benutzer verifizieren
     user.isVerified = true;
-    user.verificationToken = undefined; // Token entfernen
-    user.tokenExpires = undefined; // Ablaufdatum entfernen
+    user.verificationToken = null; // Token entfernen
+    user.tokenExpires = null; // Ablaufdatum entfernen
     await user.save();
 
     res.status(200).json({
@@ -200,6 +204,7 @@ exports.forgotPw = async (req, res) => {
     const otpSent = Math.floor(1000 + Math.random() * 9000); // 4-stelliger Code
 
     // Reset-Code und Ablaufdatum speichern
+    user.otpSent = true;
     user.otpSent = otpSent;
     user.resetCodeExpires = Date.now() + 600000; // Code 10 Minuten gültig
 
@@ -285,8 +290,8 @@ exports.resetPw = async (req, res) => {
     }
 
     user.password = await bcrypt.hash(newPassword, 10);
-    user.otpSent = undefined;
-    user.resetCodeExpires = undefined;
+    user.otpSent = null;
+    user.resetCodeExpires = null;
 
     await user.save();
 

@@ -8,7 +8,7 @@ const userModel = new mongoose.Schema({
   verificationToken: { type: String, default: false },
   tokenExpires: { type: Date, default: false },
   createdOn: { type: Date, default: Date.now },
-  otpSent: { type: Number },
+  otpSent: { type: Number, default: null },
 });
 
 module.exports = mongoose.model("User", userModel);

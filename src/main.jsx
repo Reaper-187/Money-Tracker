@@ -6,17 +6,19 @@ import {
   Navigate,
 } from "react-router-dom";
 import {
+  OtpRoute,
   ProtectedRoute,
   VerificationRoute,
 } from "@c/Auth/ProtectedRoute/ProtectedRoute";
 import { Dashboard } from "@c/Dashboard/Dashboard";
 import { Transactions } from "@c/Transaction/Transactions";
 import { GetAuthenticationProvider } from "@c/Context/AuthContext";
-import { Login } from "@c/Auth/Login";
-import { Register } from "@c/Auth/Register";
+import { Login } from "@c/Auth/Sign-Authentication/Login";
+import { Register } from "@c/Auth/Sign-Authentication/Register";
 import { OneTimeOtp } from "@c/Auth/OTP/OneTimeOtp";
 import { Verification } from "@c/Auth/Verification/Verification";
 import { GuestRoute } from "@c/Auth/ProtectedRoute/ProtectedRoute";
+import { Forgotpw } from "@c/Auth/OTP/Forgotpw";
 import { App } from "./App";
 import { Toaster } from "sonner";
 import "./index.css";
@@ -39,6 +41,14 @@ const router = createBrowserRouter([
     ),
   },
   {
+    path: "/Reset-Password-Authentication",
+    element: (
+      <GuestRoute>
+        <Forgotpw />
+      </GuestRoute>
+    ),
+  },
+  {
     path: "/verify",
     element: (
       <VerificationRoute>
@@ -48,7 +58,11 @@ const router = createBrowserRouter([
   },
   {
     path: "/OneTimeOtp",
-    element: <OneTimeOtp />,
+    element: (
+      <OtpRoute>
+        <OneTimeOtp />,
+      </OtpRoute>
+    ),
   },
   {
     element: <App />,

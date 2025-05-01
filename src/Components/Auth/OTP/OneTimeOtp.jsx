@@ -5,9 +5,9 @@ import {
   InputOTPGroup,
   InputOTPSeparator,
   InputOTPSlot,
-} from "@/components/ui/input-otp";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
+} from "@c/ui/input-otp";
+import { Button } from "@c/ui/button";
+import { Card } from "@c/ui/card";
 
 export const OneTimeOtp = () => {
   return (
