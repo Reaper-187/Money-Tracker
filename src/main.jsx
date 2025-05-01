@@ -18,7 +18,7 @@ import { Register } from "@c/Auth/Sign-Authentication/Register";
 import { OneTimeOtp } from "@c/Auth/OTP/OneTimeOtp";
 import { Verification } from "@c/Auth/Verification/Verification";
 import { GuestRoute } from "@c/Auth/ProtectedRoute/ProtectedRoute";
-import { Forgotpw } from "@c/Auth/OTP/Forgotpw";
+import { ForgotPw } from "@c/Auth/OTP/ForgotPw";
 import { App } from "./App";
 import { Toaster } from "sonner";
 import "./index.css";
@@ -41,12 +41,8 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: "/Reset-Password-Authentication",
-    element: (
-      <GuestRoute>
-        <Forgotpw />
-      </GuestRoute>
-    ),
+    path: "/reset-password-authentication",
+    element: <ForgotPw />,
   },
   {
     path: "/verify",

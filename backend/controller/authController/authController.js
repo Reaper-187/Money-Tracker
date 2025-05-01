@@ -24,12 +24,6 @@ exports.logout = (req, res) => {
   }
 };
 
-// exports.authStatus = (req, res) => {
-//   const isLoggedIn = req.session.passport?.user ? true : false;
-//   res.status(200).json({ loggedIn: isLoggedIn, isVerified: user.isVerified,
-//     otpSent: user.otpSent });
-// };
-
 exports.authStatus = async (req, res) => {
   const userId = req.session.passport?.user;
 
@@ -201,10 +195,9 @@ exports.forgotPw = async (req, res) => {
       });
     }
 
-    const otpSent = Math.floor(1000 + Math.random() * 9000); // 4-stelliger Code
+    const otpSent = Math.floor(1000 + Math.random() * 900000); // 6-stelliger Code
 
     // Reset-Code und Ablaufdatum speichern
-    user.otpSent = true;
     user.otpSent = otpSent;
     user.resetCodeExpires = Date.now() + 600000; // Code 10 Minuten gültig
 
@@ -224,7 +217,7 @@ exports.forgotPw = async (req, res) => {
       from: EMAIL_USER,
       to: req.body.email,
       subject: "Passwort-Reset-OTP",
-      text: `Dein 4-stelliger Code zum Zurücksetzen des Passworts lautet: ${otpSent}. Dieser Code ist 10 Minuten gültig.`,
+      text: `Dein 6-stelliger Code zum Zurücksetzen des Passworts lautet: ${otpSent}. Dieser Code ist 10 Minuten gültig.`,
     });
 
     res.json({ message: "Code zum Zurücksetzen gesendet." });

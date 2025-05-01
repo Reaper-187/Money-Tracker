@@ -6,7 +6,7 @@ const userModel = new mongoose.Schema({
   password: { type: String, required: true },
   isVerified: { type: Boolean, default: false },
   verificationToken: { type: String, default: false },
-  tokenExpires: { type: Date, default: false },
+  tokenExpires: { type: Date },
   createdOn: { type: Date, default: Date.now },
   otpSent: { type: Number, default: null },
 });

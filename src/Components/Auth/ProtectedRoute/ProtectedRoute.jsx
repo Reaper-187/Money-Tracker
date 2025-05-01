@@ -48,7 +48,7 @@ export const OtpRoute = ({ children }) => {
     return <div>Loading...</div>;
   }
 
-  if (isAuthStatus.isVerified && isAuthStatus.otpSent) {
+  if (isAuthStatus.otpSent !== null) {
     return children;
   }
   return <Navigate to="/login" />;

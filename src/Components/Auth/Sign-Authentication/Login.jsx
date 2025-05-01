@@ -106,7 +106,7 @@ export const Login = () => {
                   <p className="px-2">remember me</p>
                 </div>
                 <Link
-                  to="/Reset-Password-Authentication"
+                  to="/reset-password-authentication"
                   className="text-blue-400 hover:text-blue-500 font-medium"
                 >
                   forgot password
@@ -140,7 +140,7 @@ export const Login = () => {
             <div>
               Don't have an account ?{" "}
               <Link
-                to="/Register"
+                to="/register"
                 className="text-blue-400 hover:text-blue-500 font-medium"
               >
                 Sign up

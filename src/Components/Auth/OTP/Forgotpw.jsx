@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 
 import {
   Card,
@@ -11,37 +11,22 @@ import {
 import { Input } from "../../ui/input";
 import { Button } from "../../ui/button";
 import { Label } from "../../ui/label";
-import { Eye, EyeOff, Github, Mail } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
+import { toast } from "sonner";
+import { useAuth } from "@c/Context/AuthContext";
 
 axios.defaults.withCredentials = true; // damit erlaube ich das senden von cookies
-const registerApi = import.meta.env.VITE_API_REGISTER;
 
 const formSchema = z.object({
-  name: z
-    .string()
-    .min(2, "Name must be at least 2 characters")
-    .regex(/^[A-Za-z]+$/, "Name must contain only letters"),
-  email: z.string().toLowerCase().email("Invalid email format"),
-  password: z
-    .string()
-    .min(8, "Password must be at least 8 characters")
-    .refine((value) => /[A-Z]/.test(value), {
-      message: "Password must contain at least one uppercase letter",
-    })
-    .refine((value) => /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(value), {
-      message: "Password must contain at least one special character",
-    }),
+  email: z.string().email("Invalid email format"),
 });
 
-export const Forgotpw = () => {
-  const [showPassword, setShowPassword] = useState(false);
-
-  const navigate = useNavigate();
+export const ForgotPw = () => {
+  const { forgotUserPw } = useAuth();
 
   const {
     register,
@@ -51,13 +36,19 @@ export const Forgotpw = () => {
     resolver: zodResolver(formSchema),
   });
 
+  const navigate = useNavigate();
+
   const onSubmit = async (data) => {
     try {
-      console.log(data);
-      const response = await axios.post(registerApi, data);
-      navigate("/login");
+      const resetRes = await forgotUserPw(data);
+      navigate("/OneTimeOtp");
     } catch (err) {
       console.error(err, "Error with the Registration");
+      if (err.response && err.response.data && err.response.data.message) {
+        toast.error(err.response.data.message);
+      } else {
+        toast.error("An unknown error occurred.");
+      }
     }
   };
 

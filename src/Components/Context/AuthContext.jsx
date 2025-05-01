@@ -4,8 +4,8 @@ import axios from "axios";
 axios.defaults.withCredentials = true;
 const authChecking = import.meta.env.VITE_API_AUTHCHECK;
 const loginApi = import.meta.env.VITE_API_LOGIN;
-
 const logoutApi = import.meta.env.VITE_API_LOGOUT;
+const forgotPw = import.meta.env.VITE_API_FORGOTPW;
 
 export const AuthContext = createContext();
 
@@ -19,16 +19,14 @@ export const GetAuthenticationProvider = ({ children }) => {
         loggedIn: response.data.loggedIn,
         isVerified: response.data.isVerified,
         verificationToken: response.data.verificationToken,
-        otpSent: response.data.otpSent,
       });
     } catch (err) {
       console.error(err);
     }
   };
-  console.log(isAuthStatus, "isAuthStatus");
 
-  const loginUser = async (formData) => {
-    await axios.post(loginApi, formData);
+  const loginUser = async (loginData) => {
+    await axios.post(loginApi, loginData);
     const res = await axios.get(authChecking);
     setIsAuthStatus(res.data);
     return res.data.loggedIn;
@@ -41,12 +39,21 @@ export const GetAuthenticationProvider = ({ children }) => {
     return res.data.loggedIn === false;
   };
 
+  const forgotUserPw = async (resetData) => {
+    await axios.post(forgotPw, resetData);
+    const res = await axios.get(authChecking);
+    setIsAuthStatus(res.data);
+    return res.data.otpSent;
+  };
+
   useEffect(() => {
     isUserAuthenticated();
   }, []);
 
   return (
-    <AuthContext.Provider value={{ isAuthStatus, loginUser, logoutUser }}>
+    <AuthContext.Provider
+      value={{ isAuthStatus, loginUser, logoutUser, forgotUserPw }}
+    >
       {children}
     </AuthContext.Provider>
   );
