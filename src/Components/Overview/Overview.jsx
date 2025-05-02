@@ -1,12 +1,26 @@
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import SavingsIcon from "@mui/icons-material/Savings";
 import TrendingUpIcon from "@mui/icons-material/TrendingUp";
 import TrendingDownIcon from "@mui/icons-material/TrendingDown";
 import { AddTransBtn } from "@c/ButtonComp/AddTransBtn/AddTransBtn";
-import "./overview.css";
 import { FetchTransactionsContext } from "@c/Context/Context";
+import "./overview.css";
+import axios from "axios";
+
+axios.defaults.withCredentials = true; // damit erlaube ich das senden von cookies
+const getUserInfo = import.meta.env.VITE_API_USERINFO;
 
 export function Overview({ date }) {
+  const [userInfo, setUserInfo] = useState(null);
+
+  useEffect(() => {
+    const fetchUserInfo = async () => {
+      const res = await axios.get(getUserInfo);
+      setUserInfo(res.data);
+    };
+    fetchUserInfo();
+  }, []);
+
   const { selectTransactions } = useContext(FetchTransactionsContext);
 
   const rangeDateFilterTrans = selectTransactions.filter((tx) => {
@@ -106,7 +120,7 @@ export function Overview({ date }) {
   return (
     <div className="flex flex-col items-center p-3 mt-10 md:mt-0">
       <div className="block float-left w-full py-3 text-base text-(--foreground)">
-        <h1 className="text-3xl sm:text-4xl">Welcome Back, Name</h1>
+        <h1 className="text-3xl sm:text-4xl">Welcome back, {userInfo?.name}</h1>
         <p className="text-m sm:text-lg">
           This is your Finacial Overview Report
         </p>

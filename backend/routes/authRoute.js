@@ -4,6 +4,8 @@ const authController = require("../controller/authController/authController");
 
 router.post("/logout", authController.logout);
 
+router.get("/getUserInfo", authController.getUserInfo);
+
 router.get("/authChecking", authController.authStatus);
 
 router.post("/login", authController.existingUser);

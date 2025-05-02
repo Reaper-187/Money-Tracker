@@ -24,6 +24,16 @@ exports.logout = (req, res) => {
   }
 };
 
+exports.getUserInfo = async (req, res) => {
+  const userId = req.session.passport?.user;
+  if (!userId) return res.status(401).json({ message: "Not logged in" });
+
+  const user = await User.findById(userId).select("name email");
+  if (!user) return res.status(404).json({ message: "User not found" });
+
+  res.json({ name: user.name, email: user.email });
+};
+
 exports.authStatus = async (req, res) => {
   const userId = req.session.passport?.user;
 
