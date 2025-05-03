@@ -9,6 +9,7 @@ const userModel = new mongoose.Schema({
   tokenExpires: { type: Date },
   createdOn: { type: Date, default: Date.now },
   otpSent: { type: Number, default: null },
+  resetCodeExpires: { type: Date },
 });
 
 module.exports = mongoose.model("User", userModel);

@@ -6,6 +6,7 @@ const authChecking = import.meta.env.VITE_API_AUTHCHECK;
 const loginApi = import.meta.env.VITE_API_LOGIN;
 const logoutApi = import.meta.env.VITE_API_LOGOUT;
 const forgotPw = import.meta.env.VITE_API_FORGOTPW;
+const verifyOtp = import.meta.env.VITE_API_VERIFYOTP;
 
 export const AuthContext = createContext();
 
@@ -46,13 +47,24 @@ export const GetAuthenticationProvider = ({ children }) => {
     return res.data.otpSent;
   };
 
+  const authenticateOtp = async (otpData) => {
+    const otp = await axios.post(verifyOtp, otpData);
+    return otp;
+  };
+
   useEffect(() => {
     isUserAuthenticated();
   }, []);
 
   return (
     <AuthContext.Provider
-      value={{ isAuthStatus, loginUser, logoutUser, forgotUserPw }}
+      value={{
+        isAuthStatus,
+        loginUser,
+        logoutUser,
+        forgotUserPw,
+        authenticateOtp,
+      }}
     >
       {children}
     </AuthContext.Provider>

@@ -237,10 +237,14 @@ exports.forgotPw = async (req, res) => {
   }
 };
 
-exports.verifyReset = async (req, res) => {
+exports.verifyOtp = async (req, res) => {
   const { email, otpSent } = req.body;
+  console.log(email);
+
+  console.log(req.body.email);
 
   const resetCodeInt = Number(otpSent);
+
   if (isNaN(resetCodeInt)) {
     return res.status(400).json({ message: "Ungültiger Reset-Code." });
   }

@@ -17,17 +17,22 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
 import { toast } from "sonner";
-import { useAuth } from "@c/Context/AuthContext";
 
 axios.defaults.withCredentials = true; // damit erlaube ich das senden von cookies
 
 const formSchema = z.object({
-  email: z.string().email("Invalid email format"),
+  password: z
+    .string()
+    .min(8, "Password must be at least 8 characters")
+    .refine((value) => /[A-Z]/.test(value), {
+      message: "Password must contain at least one uppercase letter",
+    })
+    .refine((value) => /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(value), {
+      message: "Password must contain at least one special character",
+    }),
 });
 
-export const ForgotPw = () => {
-  const { forgotUserPw } = useAuth();
-
+export const ChangePasswordPage = () => {
   const {
     register,
     handleSubmit,
@@ -41,7 +46,7 @@ export const ForgotPw = () => {
   const onSubmit = async (data) => {
     try {
       await forgotUserPw(data);
-      navigate("/OneTimeOtp");
+      navigate("/login");
     } catch (err) {
       console.error(err, "Error with the Registration");
       if (err.response && err.response.data && err.response.data.message) {
@@ -57,23 +62,23 @@ export const ForgotPw = () => {
       <div className="min-h-screen flex items-center justify-center p-4">
         <Card className="w-1/2 lg:w-1/3 md:w-1/2">
           <CardHeader>
-            <CardTitle className="flex justify-self-center text-4xl">
-              Reset-Authentication
+            <CardTitle className="flex justify-self-center text-3xl">
+              Password-Authentication
             </CardTitle>
             <CardDescription className="text-center">
-              Enter your credentials to Reset the password
+              Enter the new password
             </CardDescription>
           </CardHeader>
 
           <form onSubmit={handleSubmit(onSubmit)}>
             <CardContent className="flex flex-col space-y-3">
-              <Label className="text-md">Email</Label>
-              <Input {...register("email")} />
-              {errors.email && (
-                <div className="text-red-600">{errors.email.message}</div>
+              <Label className="text-md">New Password</Label>
+              <Input {...register("password")} />
+              {errors.password && (
+                <div className="text-red-600">{errors.password.message}</div>
               )}
               <Button className="w-full font-semibold" type="submit">
-                Reset password
+                recreate a new password
               </Button>
             </CardContent>
           </form>

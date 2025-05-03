@@ -16,7 +16,7 @@ router.get("/verifyUser", authController.verifySession);
 
 router.post("/forgotPw", authController.forgotPw);
 
-router.post("/verifyReset", authController.verifyReset);
+router.post("/verifyOtp", authController.verifyOtp);
 
 router.post("/resetPw", authController.resetPw);
 

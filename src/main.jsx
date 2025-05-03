@@ -21,6 +21,7 @@ import { GuestRoute } from "@c/Auth/ProtectedRoute/ProtectedRoute";
 import { ForgotPw } from "@c/Auth/OTP/ForgotPw";
 import { App } from "./App";
 import { Toaster } from "sonner";
+import { ChangePasswordPage } from "@c/Auth/ChangePassword/ChangePasswordPage";
 import "./index.css";
 
 const router = createBrowserRouter([
@@ -59,6 +60,10 @@ const router = createBrowserRouter([
         <OneTimeOtp />,
       </OtpRoute>
     ),
+  },
+  {
+    path: "/changePassword",
+    element: <ChangePasswordPage />,
   },
   {
     element: <App />,
