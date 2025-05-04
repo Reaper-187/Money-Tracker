@@ -5,16 +5,15 @@ const express = require("express");
 const app = express();
 const connectDB = require("./MongoDb");
 const transactionRoutes = require("./routes/transactionRoute");
-const userRoute = require("./routes/userRoute");
+const authRoutes = require("./routes/authRoute");
 const cors = require("cors");
 const session = require("express-session");
 const passport = require("passport");
-// const initializePassport = require("./routes/passportConfig");
-// const User = require("./model/UserLogin/UserLoginSchema");
+const initializePassport = require("./config/passport");
 const flash = require("express-flash");
 const MongoStore = require("connect-mongo");
 const crypto = require("crypto");
-// const axios = require("axios");
+const User = require("./model/userSchema/userModel");
 
 // CORS-Konfiguration
 // const FRONTEND_URL_PROD = process.env.FRONTEND_URL_PROD;
@@ -51,11 +50,11 @@ app.use(
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// initializePassport(
-//   passport,
-//   async (email) => await User.findOne({ email }),
-//   async (id) => await User.findById(id)
-// );
+initializePassport(
+  passport,
+  async (email) => await User.findOne({ email }),
+  async (id) => await User.findById(id)
+);
 
 app.use(passport.initialize());
 app.use(passport.session());
@@ -65,7 +64,7 @@ app.use(flash());
 app.use("/api", transactionRoutes); // Route für transcations
 
 // Route für User
-// app.use("/api/user", userRoute);
+app.use("/api/auth", authRoutes); // Route für userAuthen
 
 // DB-Verbindung herstellen
 connectDB();
