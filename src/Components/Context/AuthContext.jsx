@@ -7,6 +7,7 @@ const loginApi = import.meta.env.VITE_API_LOGIN;
 const logoutApi = import.meta.env.VITE_API_LOGOUT;
 const forgotPw = import.meta.env.VITE_API_FORGOTPW;
 const verifyOtp = import.meta.env.VITE_API_VERIFYOTP;
+const resetUserPw = import.meta.env.VITE_API_RESETUPW;
 
 export const AuthContext = createContext();
 
@@ -52,6 +53,11 @@ export const GetAuthenticationProvider = ({ children }) => {
     return otp;
   };
 
+  const changeUserPw = async (newPwData) => {
+    const newPw = await axios.post(resetUserPw, newPwData);
+    return newPw;
+  };
+
   useEffect(() => {
     isUserAuthenticated();
   }, []);
@@ -64,6 +70,7 @@ export const GetAuthenticationProvider = ({ children }) => {
         logoutUser,
         forgotUserPw,
         authenticateOtp,
+        changeUserPw,
       }}
     >
       {children}

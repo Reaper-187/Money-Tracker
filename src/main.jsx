@@ -54,7 +54,7 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: "/OneTimeOtp",
+    path: "/One-Time-Otp",
     element: (
       <OtpRoute>
         <OneTimeOtp />,
@@ -62,8 +62,12 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: "/changePassword",
-    element: <ChangePasswordPage />,
+    path: "/change-password",
+    element: (
+      <OtpRoute>
+        <ChangePasswordPage />,
+      </OtpRoute>
+    ),
   },
   {
     element: <App />,

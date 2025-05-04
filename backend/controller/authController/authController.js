@@ -205,7 +205,7 @@ exports.forgotPw = async (req, res) => {
       });
     }
 
-    const otpSent = Math.floor(1000 + Math.random() * 900000); // 6-stelliger Code
+    const otpSent = Math.floor(100000 + Math.random() * 900000);
 
     // Reset-Code und Ablaufdatum speichern
     user.otpSent = otpSent;
@@ -239,9 +239,6 @@ exports.forgotPw = async (req, res) => {
 
 exports.verifyOtp = async (req, res) => {
   const { email, otpSent } = req.body;
-  console.log(email);
-
-  console.log(req.body.email);
 
   const resetCodeInt = Number(otpSent);
 
@@ -273,7 +270,6 @@ exports.verifyOtp = async (req, res) => {
 
 exports.resetPw = async (req, res) => {
   const { email, otpSent, newPassword } = req.body;
-
   try {
     const user = await User.findOne({
       email,

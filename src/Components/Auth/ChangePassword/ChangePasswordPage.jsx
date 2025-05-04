@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback, useContext, useState } from "react";
 
 import {
   Card,
@@ -12,16 +12,18 @@ import { Input } from "../../ui/input";
 import { Button } from "../../ui/button";
 import { Label } from "../../ui/label";
 import { useForm } from "react-hook-form";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
 import { toast } from "sonner";
+import { AuthContext } from "@c/Context/AuthContext";
+import { Eye, EyeOff } from "lucide-react";
 
 axios.defaults.withCredentials = true; // damit erlaube ich das senden von cookies
 
 const formSchema = z.object({
-  password: z
+  newPassword: z
     .string()
     .min(8, "Password must be at least 8 characters")
     .refine((value) => /[A-Z]/.test(value), {
@@ -33,6 +35,11 @@ const formSchema = z.object({
 });
 
 export const ChangePasswordPage = () => {
+  const { changeUserPw } = useContext(AuthContext);
+  const [showPassword, setShowPassword] = useState(false);
+
+  const location = useLocation();
+
   const {
     register,
     handleSubmit,
@@ -45,7 +52,17 @@ export const ChangePasswordPage = () => {
 
   const onSubmit = async (data) => {
     try {
-      await forgotUserPw(data);
+      const email = location.state?.email;
+      const otpSent = location.state?.otpSent;
+
+      const newData = {
+        // same wie in der otp page
+        ...data,
+        email,
+        otpSent,
+      };
+
+      await changeUserPw(newData);
       navigate("/login");
     } catch (err) {
       console.error(err, "Error with the Registration");
@@ -73,12 +90,26 @@ export const ChangePasswordPage = () => {
           <form onSubmit={handleSubmit(onSubmit)}>
             <CardContent className="flex flex-col space-y-3">
               <Label className="text-md">New Password</Label>
-              <Input {...register("password")} />
-              {errors.password && (
-                <div className="text-red-600">{errors.password.message}</div>
-              )}
+              <div className="relative">
+                <Input
+                  {...register("newPassword")}
+                  type={showPassword ? "text" : "password"}
+                />
+                {errors.newPassword && (
+                  <div className="text-red-600">
+                    {errors.newPassword.message}
+                  </div>
+                )}
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2"
+                >
+                  {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                </button>
+              </div>
               <Button className="w-full font-semibold" type="submit">
-                recreate a new password
+                save new password
               </Button>
             </CardContent>
           </form>

@@ -35,9 +35,15 @@ export const OneTimeOtp = () => {
 
   const onSubmit = async (data) => {
     try {
-      const email = location.state?.email;
-      await authenticateOtp(data, email);
-      navigate("/changePassword", { state: { email } });
+      const email = location.state?.email; //email wird aus ForgotPW extrahiert
+      const otpSent = data.otpSent;
+      const newData = {
+        // da backend data + email obj erwartet muss das ein neus onj erstellt werden
+        ...data,
+        email,
+      };
+      await authenticateOtp(newData);
+      navigate("/change-password", { state: { email, otpSent } });
     } catch (err) {
       console.error(err);
       toast.error(err?.response?.data?.message || "An unknown error occurred.");

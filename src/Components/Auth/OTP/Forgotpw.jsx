@@ -40,10 +40,11 @@ export const ForgotPw = () => {
 
   const onSubmit = async (data) => {
     try {
+      const email = data.email;
       await forgotUserPw(data);
-      navigate("/OneTimeOtp");
+      navigate("/One-Time-Otp", { state: { email } });
     } catch (err) {
-      console.error(err, "Error with the Registration");
+      console.error(err, "Error with Email verify for pw reset");
       if (err.response && err.response.data && err.response.data.message) {
         toast.error(err.response.data.message);
       } else {
