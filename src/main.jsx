@@ -13,12 +13,13 @@ import {
 import { Dashboard } from "@c/Dashboard/Dashboard";
 import { Transactions } from "@c/Transaction/Transactions";
 import { GetAuthenticationProvider } from "@c/Context/AuthContext";
+import { GetTransactionsProvider } from "@c/Context/Context";
 import { Login } from "@c/Auth/Sign-Authentication/Login";
 import { Register } from "@c/Auth/Sign-Authentication/Register";
 import { OneTimeOtp } from "@c/Auth/OTP/OneTimeOtp";
 import { Verification } from "@c/Auth/Verification/Verification";
 import { GuestRoute } from "@c/Auth/ProtectedRoute/ProtectedRoute";
-import { ForgotPw } from "@c/Auth/OTP/ForgotPw";
+import { ForgotPw } from "@c/Auth/OTP/Forgotpw";
 import { App } from "./App";
 import { Toaster } from "sonner";
 import { ChangePasswordPage } from "@c/Auth/ChangePassword/ChangePasswordPage";
@@ -95,7 +96,9 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <GetAuthenticationProvider>
-    <Toaster />
-    <RouterProvider router={router} />
+    <GetTransactionsProvider>
+      <Toaster />
+      <RouterProvider router={router} />
+    </GetTransactionsProvider>
   </GetAuthenticationProvider>
 );

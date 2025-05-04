@@ -4,6 +4,8 @@ import TrendingUpIcon from "@mui/icons-material/TrendingUp";
 import TrendingDownIcon from "@mui/icons-material/TrendingDown";
 import { AddTransBtn } from "@c/ButtonComp/AddTransBtn/AddTransBtn";
 import { FetchTransactionsContext } from "@c/Context/Context";
+import { startOfDay, endOfDay } from "date-fns";
+
 import "./overview.css";
 import axios from "axios";
 
@@ -25,7 +27,10 @@ export function Overview({ date }) {
 
   const rangeDateFilterTrans = selectTransactions.filter((tx) => {
     const txDate = new Date(tx.date);
-    return txDate >= new Date(date.from) && txDate <= new Date(date.to);
+    return (
+      txDate >= startOfDay(new Date(date.from)) &&
+      txDate <= endOfDay(new Date(date.to))
+    );
   });
 
   const calcIncome = rangeDateFilterTrans

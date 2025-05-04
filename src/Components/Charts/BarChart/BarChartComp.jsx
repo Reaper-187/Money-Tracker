@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import {
   BarChart,
   Bar,
@@ -9,6 +9,7 @@ import {
 } from "recharts";
 import { Card, CardContent } from "@/components/ui/card";
 import { FetchTransactionsContext } from "@c/Context/Context";
+import { isWithinInterval, startOfDay, endOfDay } from "date-fns";
 
 const CustomTooltip = ({ active, payload, label }) => {
   if (active && payload && payload.length) {
@@ -29,10 +30,12 @@ const CustomTooltip = ({ active, payload, label }) => {
 export default function BarChartComponent({ date }) {
   const { selectTransactions } = useContext(FetchTransactionsContext);
 
-  const filteredTransactions = selectTransactions.filter((tx) => {
-    const txDate = new Date(tx.date);
-    return txDate >= new Date(date.from) && txDate <= new Date(date.to);
-  });
+  const filteredTransactions = selectTransactions.filter((tx) =>
+    isWithinInterval(new Date(tx.date), {
+      start: startOfDay(new Date(date.from)),
+      end: endOfDay(new Date(date.to)),
+    })
+  );
 
   const groupedByDay = filteredTransactions.reduce((acc, tx) => {
     const dateObj = new Date(tx.date);
