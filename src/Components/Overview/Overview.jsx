@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import SavingsIcon from "@mui/icons-material/Savings";
 import TrendingUpIcon from "@mui/icons-material/TrendingUp";
 import TrendingDownIcon from "@mui/icons-material/TrendingDown";
@@ -11,6 +11,9 @@ import axios from "axios";
 
 axios.defaults.withCredentials = true; // damit erlaube ich das senden von cookies
 const getUserInfo = import.meta.env.VITE_API_USERINFO;
+
+// „Nur dann useMemo, wenn du damit wirklich etwas sparst.“
+// (Performance, Wiederverwendung, unnötige Re-Berechnungen)
 
 export function Overview({ date }) {
   const [userInfo, setUserInfo] = useState(null);
@@ -25,25 +28,30 @@ export function Overview({ date }) {
 
   const { selectTransactions } = useContext(FetchTransactionsContext);
 
-  const rangeDateFilterTrans = selectTransactions.filter((tx) => {
-    const txDate = new Date(tx.date);
-    return (
-      txDate >= startOfDay(new Date(date.from)) &&
-      txDate <= endOfDay(new Date(date.to))
-    );
-  });
+  const { calcIncome, calcExpenses } = useMemo(() => {
+    const rangeDateFilterTrans = selectTransactions.filter((tx) => {
+      const txDate = new Date(tx.date);
+      return (
+        txDate >= startOfDay(new Date(date.from)) &&
+        txDate <= endOfDay(new Date(date.to))
+      );
+    });
 
-  const calcIncome = rangeDateFilterTrans
-    .filter((incomeTransactions) => incomeTransactions.amount >= 0)
-    .reduce((acc, currentAmount) => acc + currentAmount.amount, 0);
+    const income = rangeDateFilterTrans
+      .filter((incomeTransactions) => incomeTransactions.amount >= 0)
+      .reduce((acc, currentAmount) => acc + currentAmount.amount, 0);
 
-  const calcExpenses = rangeDateFilterTrans
-    .filter((expensTransactions) => expensTransactions.amount < 0)
-    .reduce((acc, currentAmount) => acc + currentAmount.amount, 0);
+    const expenses = rangeDateFilterTrans
+      .filter((expensTransactions) => expensTransactions.amount < 0)
+      .reduce((acc, currentAmount) => acc + currentAmount.amount, 0);
 
-  const calcRemaining = calcIncome + calcExpenses;
+    return {
+      calcIncome: income,
+      calcExpenses: expenses,
+    };
+  }, [selectTransactions, date.from, date.to]);
 
-  const currentMonthTransactions = selectTransactions.filter((currentTx) => {
+  const currentMonthTransactions = useMemo(() => {
     const currentMonth = new Date();
 
     const firstDayInCurrentMonth = new Date(
@@ -51,61 +59,84 @@ export function Overview({ date }) {
       currentMonth.getMonth(),
       1
     );
+
     const lastDayInCurrentMonth = new Date(
       currentMonth.getFullYear(),
       currentMonth.getMonth() + 1,
       0
     );
 
-    const currentMonthTx = new Date(currentTx.date);
-    return (
-      currentMonthTx >= new Date(firstDayInCurrentMonth) &&
-      currentMonthTx <= new Date(lastDayInCurrentMonth)
+    return selectTransactions.filter((tx) => {
+      const txDate = new Date(tx.date);
+      return (
+        txDate >= firstDayInCurrentMonth && txDate <= lastDayInCurrentMonth
+      );
+    });
+  }, [selectTransactions]);
+
+  const { calcIncomeCurrentMonth, calcExpensesCurrentMonth } = useMemo(() => {
+    const income = currentMonthTransactions.reduce(
+      (acc, tx) => (tx.amount >= 0 ? acc + tx.amount : acc),
+      0
     );
-  });
 
-  const calcIncomecurrentMonth = currentMonthTransactions
-    .filter((incomeTransactions) => incomeTransactions.amount >= 0)
-    .reduce((acc, currentAmount) => acc + currentAmount.amount, 0);
+    const expenses = currentMonthTransactions.reduce(
+      (acc, tx) => (tx.amount < 0 ? acc + tx.amount : acc),
+      0
+    );
 
-  const calcExpensescurrentMonth = currentMonthTransactions
-    .filter((expensTransactions) => expensTransactions.amount < 0)
-    .reduce((acc, currentAmount) => acc + currentAmount.amount, 0);
+    return {
+      calcIncomeCurrentMonth: income,
+      calcExpensesCurrentMonth: expenses,
+    };
+  }, [currentMonthTransactions]);
 
   const calcRemainingcurrentMonth =
-    calcIncomecurrentMonth + calcExpensescurrentMonth;
+    calcIncomeCurrentMonth + calcExpensesCurrentMonth;
 
-  console.log("calcRemainingcurrentMonth", calcRemainingcurrentMonth);
-
-  const lastMonthTransactions = selectTransactions.filter((lastTx) => {
+  const {
+    lastMonthTransactions,
+    calcIncomeLastMonth,
+    calcExpensesLastMonth,
+    calcRemainingLastMonth,
+  } = useMemo(() => {
     const currentMonth = new Date();
 
     const firstDayInPreviousMonth = new Date(
       Date.UTC(currentMonth.getFullYear(), currentMonth.getMonth() - 1, 1)
-    ).toISOString();
+    );
 
     const lastDayInPreviousMonth = new Date(
       currentMonth.getFullYear(),
       currentMonth.getMonth(),
       0
-    ).toISOString();
-
-    const lastMonthTx = new Date(lastTx.date);
-    return (
-      lastMonthTx >= new Date(firstDayInPreviousMonth) &&
-      lastMonthTx <= new Date(lastDayInPreviousMonth)
     );
-  });
 
-  const calcIncomeLastMonth = lastMonthTransactions
-    .filter((incomeTransactions) => incomeTransactions.amount >= 0)
-    .reduce((acc, currentAmount) => acc + currentAmount.amount, 0);
+    const lastMonthTransactions = selectTransactions.filter((lastTx) => {
+      const lastMonthTx = new Date(lastTx.date);
+      return (
+        lastMonthTx >= firstDayInPreviousMonth &&
+        lastMonthTx <= lastDayInPreviousMonth
+      );
+    });
 
-  const calcExpensesLastMonth = lastMonthTransactions
-    .filter((expensTransactions) => expensTransactions.amount < 0)
-    .reduce((acc, currentAmount) => acc + currentAmount.amount, 0);
+    const calcIncomeLastMonth = lastMonthTransactions
+      .filter((tx) => tx.amount >= 0)
+      .reduce((acc, tx) => acc + tx.amount, 0);
 
-  const calcRemainingLastMonth = calcIncomeLastMonth + calcExpensesLastMonth;
+    const calcExpensesLastMonth = lastMonthTransactions
+      .filter((tx) => tx.amount < 0)
+      .reduce((acc, tx) => acc + tx.amount, 0);
+
+    const calcRemainingLastMonth = calcIncomeLastMonth + calcExpensesLastMonth;
+
+    return {
+      lastMonthTransactions,
+      calcIncomeLastMonth,
+      calcExpensesLastMonth,
+      calcRemainingLastMonth,
+    };
+  }, [selectTransactions]);
 
   const remainingDifferenceInPercent =
     ((Math.abs(calcRemainingcurrentMonth) - Math.abs(calcRemainingLastMonth)) /
@@ -113,12 +144,12 @@ export function Overview({ date }) {
     100;
 
   const incomeDifferenceInPercent =
-    ((Math.abs(calcIncomecurrentMonth) - Math.abs(calcIncomeLastMonth)) /
+    ((Math.abs(calcIncomeCurrentMonth) - Math.abs(calcIncomeLastMonth)) /
       Math.abs(calcIncomeLastMonth)) *
     100;
 
   const expensesDifferenceInPercent =
-    ((Math.abs(calcExpensescurrentMonth) - Math.abs(calcExpensesLastMonth)) /
+    ((Math.abs(calcExpensesCurrentMonth) - Math.abs(calcExpensesLastMonth)) /
       Math.abs(calcExpensesLastMonth)) *
     100;
 
@@ -138,9 +169,9 @@ export function Overview({ date }) {
             <SavingsIcon className="stat-icons save-icon" />
           </div>
           <p
-            className={`${calcRemaining <= 0 ? "text-red-500" : "text-green-500"} text-xl`}
+            className={`${newCalcRemaining <= 0 ? "text-red-500" : "text-green-500"} text-xl`}
           >
-            {calcRemaining} €
+            {newCalcRemaining} €
           </p>
 
           <p>
