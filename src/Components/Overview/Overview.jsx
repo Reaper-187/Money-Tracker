@@ -105,19 +105,27 @@ export function Overview({ date }) {
   const newCalcRemaining = calcRemainingLastMonth + calcRemainingCurrentMonth;
 
   const remainingDifferenceInPercent =
-    ((Math.abs(calcRemainingCurrentMonth) - Math.abs(calcRemainingLastMonth)) /
-      Math.abs(calcRemainingLastMonth)) *
-    100;
+    calcRemainingLastMonth !== 0
+      ? ((Math.abs(calcRemainingCurrentMonth) -
+          Math.abs(calcRemainingLastMonth)) /
+          Math.abs(calcRemainingLastMonth)) *
+        100
+      : 0;
 
   const incomeDifferenceInPercent =
-    ((Math.abs(calcIncomeCurrentMonth) - Math.abs(calcIncomeLastMonth)) /
-      Math.abs(calcIncomeLastMonth)) *
-    100;
+    calcIncomeLastMonth !== 0
+      ? ((Math.abs(calcIncomeCurrentMonth) - Math.abs(calcIncomeLastMonth)) /
+          Math.abs(calcIncomeLastMonth)) *
+        100
+      : 0;
 
   const expensesDifferenceInPercent =
-    ((Math.abs(calcExpensesCurrentMonth) - Math.abs(calcExpensesLastMonth)) /
-      Math.abs(calcExpensesLastMonth)) *
-    100;
+    calcExpensesLastMonth !== 0
+      ? ((Math.abs(calcExpensesCurrentMonth) -
+          Math.abs(calcExpensesLastMonth)) /
+          Math.abs(calcExpensesLastMonth)) *
+        100
+      : 0;
 
   return (
     <div className="flex flex-col items-center p-3 mt-10 md:mt-0">

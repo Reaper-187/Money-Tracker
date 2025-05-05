@@ -1,4 +1,5 @@
-import { createContext, useState, useEffect } from "react";
+import { createContext, useEffect, useState } from "react";
+import { useAuth } from "./AuthContext";
 import axios from "axios";
 
 axios.defaults.withCredentials = true; // damit erlaube ich das senden von cookies
@@ -8,6 +9,7 @@ export const FetchTransactionsContext = createContext();
 
 export const GetTransactionsProvider = ({ children }) => {
   const [selectTransactions, setSelectTransactions] = useState([]);
+  const { isAuthStatus } = useAuth();
 
   const fetchTransactions = async () => {
     try {
@@ -23,8 +25,12 @@ export const GetTransactionsProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    fetchTransactions();
-  }, []);
+    if (isAuthStatus?.loggedIn) {
+      fetchTransactions();
+    } else {
+      setSelectTransactions([]);
+    }
+  }, [isAuthStatus]);
 
   return (
     <FetchTransactionsContext.Provider

@@ -1,11 +1,11 @@
 const Transaction = require("../../model/transactionSchema/transactionModel");
-// const User = require("../model/UserLogin/UserLoginSchema");
-// const mongoose = require("mongoose");
+const User = require("../../model/userSchema/userModel");
+const mongoose = require("mongoose");
 
 exports.getTransactions = async (req, res) => {
   try {
-    // const userId = new mongoose.Types.ObjectId(req.session.passport.user);
-    const eachTransaction = await Transaction.find();
+    const userId = new mongoose.Types.ObjectId(req.session.passport.user);
+    const eachTransaction = await Transaction.find({ userId });
 
     res.json({
       eachTransaction,
@@ -22,13 +22,13 @@ exports.createTransaction = async (req, res) => {
   try {
     const transaction = new Transaction({
       ...req.body,
-      // userId: req.session.passport.user,
+      userId: req.session.passport.user,
       date: new Date(req.body.date),
       amount: parseFloat(req.body.amount).toFixed(2),
     });
 
     const savedtransaction = await transaction.save();
-    // const user = await User.findOne({ _id: req.session.passport.user })
+    await User.findOne({ _id: req.session.passport.user });
 
     res.status(201).json({ savedtransaction });
   } catch (err) {
@@ -39,13 +39,18 @@ exports.createTransaction = async (req, res) => {
 // DELETE-Route, um eine TX hinzuzufügen
 exports.deleteTransactions = async (req, res) => {
   try {
+    const userId = req.session.passport.user;
     const { idsToDelete } = req.body;
 
     if (!Array.isArray(idsToDelete) || idsToDelete.length === 0) {
       return res.status(400).json({ message: "No IDs provided" });
     }
 
-    const result = await Transaction.deleteMany({ _id: { $in: idsToDelete } });
+    // Nur Transaktionen löschen, die dem User gehören
+    const result = await Transaction.deleteMany({
+      _id: { $in: idsToDelete },
+      userId: userId,
+    });
 
     res.status(200).json({
       message: `${result.deletedCount} Transaktionen gelöscht`,
