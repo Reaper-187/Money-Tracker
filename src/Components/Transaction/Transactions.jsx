@@ -56,7 +56,7 @@ import { FetchTransactionsContext } from "@c/Context/Context";
 axios.defaults.withCredentials = true; // damit erlaube ich das senden von cookies
 const transactions = import.meta.env.VITE_API_TRANSACTIONS;
 
-export function creatColumns(
+export function createColumns(
   deleteSelectedTransactions,
   showNote,
   handleExport
@@ -322,7 +322,7 @@ export function Transactions() {
     pdf.save("Transactions.pdf");
   }
 
-  const columns = creatColumns(
+  const columns = createColumns(
     deleteSelectedTransactions,
     showNote,
     handleExport

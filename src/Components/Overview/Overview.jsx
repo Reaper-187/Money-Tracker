@@ -129,10 +129,10 @@ export function Overview({ date }) {
 
   return (
     <div className="flex flex-col items-center p-3 mt-10 md:mt-0">
-      <div className="block float-left w-full py-3 text-base text-(--foreground)">
+      <div className="block float-left w-full py-3 text-base text-[--foreground]">
         <h1 className="text-3xl sm:text-4xl">Welcome back, {userInfo?.name}</h1>
         <p className="text-m sm:text-lg">
-          This is your Finacial Overview Report
+          This is your Financial Overview Report
         </p>
       </div>
 

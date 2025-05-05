@@ -126,7 +126,7 @@ export function SelectScreen({
               name="date"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-(--foreground)">Date</FormLabel>
+                  <FormLabel className="text-[--foreground]">Date</FormLabel>
                   <DatePickerNoRange field={field} form={form} />
                 </FormItem>
               )}
@@ -139,7 +139,7 @@ export function SelectScreen({
               name="category"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-(--foreground)">
+                  <FormLabel className="text-[--foreground]">
                     Category
                   </FormLabel>
                   <FormControl>
@@ -180,7 +180,7 @@ export function SelectScreen({
               name="payment"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-(--foreground)">Payment</FormLabel>
+                  <FormLabel className="text-[--foreground]">Payment</FormLabel>
                   <FormControl>
                     <Select
                       onValueChange={(value) => form.setValue("payment", value)}
@@ -222,7 +222,7 @@ export function SelectScreen({
               name="amount"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-(--foreground)">Amount</FormLabel>
+                  <FormLabel className="text-[--foreground]">Amount</FormLabel>
                   <FormControl>
                     <AmountBtn
                       value={field.value}
@@ -242,7 +242,7 @@ export function SelectScreen({
               name="notes"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-(--foreground)">Notes</FormLabel>
+                  <FormLabel className="text-[--foreground]">Notes</FormLabel>
                   <FormControl>
                     <Input
                       {...field}

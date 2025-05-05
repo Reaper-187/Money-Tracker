@@ -6,9 +6,9 @@ import { Header } from "@c/Header/Header";
 
 export const App = () => {
   return (
-    <div>
+    <>
       <Header />
       <Outlet />
-    </div>
+    </>
   );
 };
