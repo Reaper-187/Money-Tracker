@@ -20,15 +20,23 @@ export function Overview({ date }) {
 
   useEffect(() => {
     const fetchUserInfo = async () => {
-      const res = await axios.get(getUserInfo);
-      setUserInfo(res.data);
+      try {
+        const res = await axios.get(getUserInfo);
+        setUserInfo(res.data);
+      } catch (error) {
+        console.error("Fehler beim Laden der Userdaten:", error);
+      }
     };
     fetchUserInfo();
   }, []);
 
   const { selectTransactions } = useContext(FetchTransactionsContext);
 
-  const { calcIncome, calcExpenses } = useMemo(() => {
+  const {
+    calcIncomeCurrentMonth,
+    calcExpensesCurrentMonth,
+    calcRemainingCurrentMonth,
+  } = useMemo(() => {
     const rangeDateFilterTrans = selectTransactions.filter((tx) => {
       const txDate = new Date(tx.date);
       return (
@@ -45,101 +53,59 @@ export function Overview({ date }) {
       .filter((expensTransactions) => expensTransactions.amount < 0)
       .reduce((acc, currentAmount) => acc + currentAmount.amount, 0);
 
-    return {
-      calcIncome: income,
-      calcExpenses: expenses,
-    };
-  }, [selectTransactions, date.from, date.to]);
-
-  const currentMonthTransactions = useMemo(() => {
-    const currentMonth = new Date();
-
-    const firstDayInCurrentMonth = new Date(
-      currentMonth.getFullYear(),
-      currentMonth.getMonth(),
-      1
-    );
-
-    const lastDayInCurrentMonth = new Date(
-      currentMonth.getFullYear(),
-      currentMonth.getMonth() + 1,
-      0
-    );
-
-    return selectTransactions.filter((tx) => {
-      const txDate = new Date(tx.date);
-      return (
-        txDate >= firstDayInCurrentMonth && txDate <= lastDayInCurrentMonth
-      );
-    });
-  }, [selectTransactions]);
-
-  const { calcIncomeCurrentMonth, calcExpensesCurrentMonth } = useMemo(() => {
-    const income = currentMonthTransactions.reduce(
-      (acc, tx) => (tx.amount >= 0 ? acc + tx.amount : acc),
-      0
-    );
-
-    const expenses = currentMonthTransactions.reduce(
-      (acc, tx) => (tx.amount < 0 ? acc + tx.amount : acc),
-      0
-    );
+    const calcRemainingCurrentMonth = income + expenses;
 
     return {
       calcIncomeCurrentMonth: income,
       calcExpensesCurrentMonth: expenses,
+      calcRemainingCurrentMonth,
     };
-  }, [currentMonthTransactions]);
+  }, [selectTransactions, date.from, date.to]);
 
-  const calcRemainingcurrentMonth =
-    calcIncomeCurrentMonth + calcExpensesCurrentMonth;
+  const { calcIncomeLastMonth, calcExpensesLastMonth, calcRemainingLastMonth } =
+    useMemo(() => {
+      const currentMonth = new Date();
 
-  const {
-    lastMonthTransactions,
-    calcIncomeLastMonth,
-    calcExpensesLastMonth,
-    calcRemainingLastMonth,
-  } = useMemo(() => {
-    const currentMonth = new Date();
-
-    const firstDayInPreviousMonth = new Date(
-      Date.UTC(currentMonth.getFullYear(), currentMonth.getMonth() - 1, 1)
-    );
-
-    const lastDayInPreviousMonth = new Date(
-      currentMonth.getFullYear(),
-      currentMonth.getMonth(),
-      0
-    );
-
-    const lastMonthTransactions = selectTransactions.filter((lastTx) => {
-      const lastMonthTx = new Date(lastTx.date);
-      return (
-        lastMonthTx >= firstDayInPreviousMonth &&
-        lastMonthTx <= lastDayInPreviousMonth
+      const firstDayInPreviousMonth = new Date(
+        Date.UTC(currentMonth.getFullYear(), currentMonth.getMonth() - 1, 1)
       );
-    });
 
-    const calcIncomeLastMonth = lastMonthTransactions
-      .filter((tx) => tx.amount >= 0)
-      .reduce((acc, tx) => acc + tx.amount, 0);
+      const lastDayInPreviousMonth = new Date(
+        currentMonth.getFullYear(),
+        currentMonth.getMonth(),
+        0
+      );
 
-    const calcExpensesLastMonth = lastMonthTransactions
-      .filter((tx) => tx.amount < 0)
-      .reduce((acc, tx) => acc + tx.amount, 0);
+      const lastMonthTransactions = selectTransactions.filter((lastTx) => {
+        const lastMonthTx = new Date(lastTx.date);
+        return (
+          lastMonthTx >= firstDayInPreviousMonth &&
+          lastMonthTx <= lastDayInPreviousMonth
+        );
+      });
 
-    const calcRemainingLastMonth = calcIncomeLastMonth + calcExpensesLastMonth;
+      const calcIncomeLastMonth = lastMonthTransactions
+        .filter((tx) => tx.amount >= 0)
+        .reduce((acc, tx) => acc + tx.amount, 0);
 
-    return {
-      lastMonthTransactions,
-      calcIncomeLastMonth,
-      calcExpensesLastMonth,
-      calcRemainingLastMonth,
-    };
-  }, [selectTransactions]);
+      const calcExpensesLastMonth = lastMonthTransactions
+        .filter((tx) => tx.amount < 0)
+        .reduce((acc, tx) => acc + tx.amount, 0);
+
+      const calcRemainingLastMonth =
+        calcIncomeLastMonth + calcExpensesLastMonth;
+
+      return {
+        calcIncomeLastMonth,
+        calcExpensesLastMonth,
+        calcRemainingLastMonth,
+      };
+    }, [selectTransactions]);
+
+  const newCalcRemaining = calcRemainingLastMonth + calcRemainingCurrentMonth;
 
   const remainingDifferenceInPercent =
-    ((Math.abs(calcRemainingcurrentMonth) - Math.abs(calcRemainingLastMonth)) /
+    ((Math.abs(calcRemainingCurrentMonth) - Math.abs(calcRemainingLastMonth)) /
       Math.abs(calcRemainingLastMonth)) *
     100;
 
@@ -189,7 +155,7 @@ export function Overview({ date }) {
             <h2 className="text-[min(8vw,1.5rem)]">Income</h2>
             <TrendingUpIcon className="stat-icons up-icon" />
           </div>
-          <p className="text-xl text-green-500">{calcIncome} €</p>
+          <p className="text-xl text-green-500">{calcIncomeCurrentMonth} €</p>
           <p>
             <span
               className={`${incomeDifferenceInPercent <= 0 ? "text-red-500" : "text-green-500"}`}
@@ -205,10 +171,12 @@ export function Overview({ date }) {
             <h2 className="text-[min(8vw,1.5rem)]">Expenses</h2>
             <TrendingDownIcon className="stat-icons down-icon" />
           </div>
-          <p className="text-xl text-red-500">{Math.abs(calcExpenses)} €</p>
+          <p className="text-xl text-red-500">
+            {Math.abs(calcExpensesCurrentMonth)} €
+          </p>
           <p>
             <span
-              className={`${remainingDifferenceInPercent <= 0 ? "text-red-500" : "text-green-500"}`}
+              className={`${remainingDifferenceInPercent >= 0 ? "text-red-500" : "text-green-500"}`}
             >
               {expensesDifferenceInPercent.toFixed(2)} %
             </span>{" "}
