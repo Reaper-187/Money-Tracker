@@ -1,14 +1,16 @@
 import { useContext, useEffect, useMemo, useState } from "react";
-import SavingsIcon from "@mui/icons-material/Savings";
-import TrendingUpIcon from "@mui/icons-material/TrendingUp";
-import TrendingDownIcon from "@mui/icons-material/TrendingDown";
 import { AddTransBtn } from "@c/ButtonComp/AddTransBtn/AddTransBtn";
 import { FetchTransactionsContext } from "@c/Context/Context";
 import { startOfDay, endOfDay } from "date-fns";
+import { PercentageMotion } from "@c/NumberAnimation/NumberAnimation";
+import { motion } from "motion/react";
+import SavingsIcon from "@mui/icons-material/Savings";
+import TrendingUpIcon from "@mui/icons-material/TrendingUp";
+import TrendingDownIcon from "@mui/icons-material/TrendingDown";
 import NumberFlow from "@number-flow/react";
+
 import "./overview.css";
 import axios from "axios";
-import { PercentageMotion } from "@c/NumberAnimation/NumberAnimation";
 axios.defaults.withCredentials = true; // damit erlaube ich das senden von cookies
 const getUserInfo = import.meta.env.VITE_API_USERINFO;
 
@@ -139,15 +141,39 @@ export function Overview({ date }) {
 
   return (
     <div className="flex flex-col items-center p-3 mt-10 md:mt-0">
-      <div className="block float-left w-full py-3 text-base text-[--foreground]">
-        <h1 className="text-3xl sm:text-4xl">Welcome back, {userInfo?.name}</h1>
-        <p className="text-m sm:text-lg">
+      <motion.div
+        variants={{
+          hidden: { opacity: 0, y: 25 },
+          visible: { opacity: 1, y: 0 },
+        }}
+        initial="hidden"
+        animate="visible"
+        transition={{ duration: 0.5, delay: 0.25 }}
+        className="relative block float-left w-full py-4 text-base text-[--foreground]"
+      >
+        <h1 className="lg:text-5xl md: text-2xl">
+          Welcome back, {userInfo?.name}
+        </h1>
+        <p className="sm:text-lg lg:text-2xl">
           This is your Financial Overview Report
         </p>
-      </div>
+      </motion.div>
 
       <div className="w-7xl grid justify-items-center grid-cols-1 gap-5 items-center sm:grid-cols-2 lg:grid-cols-4">
-        <div className="overview-card">
+        <motion.div
+          variants={{
+            hidden: {
+              opacity: 0,
+              y: 20,
+              x: 10,
+            },
+            visible: { opacity: 1, x: 0, y: 0 },
+          }}
+          initial="hidden"
+          animate="visible"
+          transition={{ duration: 0.5, delay: 0.25 }}
+          className="overview-card"
+        >
           <div className="w-full flex align-center justify-evenly">
             <h2 className="text-[min(8vw,1.5rem)]">Remaining</h2>
             <SavingsIcon className="stat-icons save-icon" />
@@ -159,9 +185,22 @@ export function Overview({ date }) {
           />
 
           <PercentageMotion value={remainingDifferenceInPercent} />
-        </div>
+        </motion.div>
 
-        <div className="overview-card income">
+        <motion.div
+          variants={{
+            hidden: {
+              opacity: 0,
+              y: 20,
+              x: 10,
+            },
+            visible: { opacity: 1, x: 0, y: 0 },
+          }}
+          initial="hidden"
+          animate="visible"
+          transition={{ duration: 0.5, delay: 0.35 }}
+          className="overview-card income"
+        >
           <div className="w-full flex align-center justify-evenly">
             <h2 className="text-[min(8vw,1.5rem)]">Income</h2>
             <TrendingUpIcon className="stat-icons up-icon" />
@@ -173,9 +212,22 @@ export function Overview({ date }) {
           />
 
           <PercentageMotion value={incomeDifferenceInPercent} />
-        </div>
+        </motion.div>
 
-        <div className="overview-card outcome">
+        <motion.div
+          variants={{
+            hidden: {
+              opacity: 0,
+              y: 20,
+              x: 10,
+            },
+            visible: { opacity: 1, x: 0, y: 0 },
+          }}
+          initial="hidden"
+          animate="visible"
+          transition={{ duration: 0.5, delay: 0.45 }}
+          className="overview-card"
+        >
           <div className="w-full flex align-center justify-evenly">
             <h2 className="text-[min(8vw,1.5rem)]">Expenses</h2>
             <TrendingDownIcon className="stat-icons down-icon" />
@@ -186,7 +238,7 @@ export function Overview({ date }) {
             format={currencyFormatter}
           />
           <PercentageMotion value={expensesDifferenceInPercent} />
-        </div>
+        </motion.div>
 
         <div className="w-full flex justify-center">
           <AddTransBtn />

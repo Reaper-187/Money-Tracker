@@ -63,25 +63,33 @@ export default function StackedDonutChart() {
         <h2 className="text-lg font-semibold text-center py-2">
           Spending Breakdown for {month}
         </h2>
-        <ResponsiveContainer width={"100%"} height={400}>
+        <ResponsiveContainer width="100%" height={300}>
           <PieChart>
-            {pieChartData.map((entry, index) => (
-              <Pie
-                key={index}
-                data={[entry]}
-                dataKey="value"
-                nameKey="name"
-                cx={isSmallScreen ? "40%" : "50%"}
-                cy={isSmallScreen ? "65%" : "55%"}
-                innerRadius={60 + index * 35}
-                outerRadius={70 + index * 35}
-                startAngle={90}
-                endAngle={90 - (entry.value / totalValue) * 360}
-              >
-                <Cell fill={colors[entry.name] || "#ccc"} />
-              </Pie>
-            ))}
-            <Tooltip />
+            <Pie
+              data={pieChartData}
+              dataKey="value"
+              nameKey="name"
+              cx="50%"
+              cy="50%"
+              outerRadius={120}
+              innerRadius={70}
+              paddingAngle={3}
+              startAngle={90}
+              endAngle={-270}
+              label={({ name, percent }) =>
+                `${name} ${(percent * 100).toFixed(0)}%`
+              }
+            >
+              {pieChartData.map((entry, index) => (
+                <Cell
+                  key={`cell-${index}`}
+                  fill={colors[entry.name] || "#ccc"}
+                />
+              ))}
+            </Pie>
+            <Tooltip
+              formatter={(value) => [`${value.toFixed(2)} €`, "Betrag"]}
+            />
             <Legend
               layout={isSmallScreen ? "horizontal" : "vertical"}
               align={isSmallScreen ? "center" : "right"}
