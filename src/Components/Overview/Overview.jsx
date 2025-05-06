@@ -5,10 +5,10 @@ import TrendingDownIcon from "@mui/icons-material/TrendingDown";
 import { AddTransBtn } from "@c/ButtonComp/AddTransBtn/AddTransBtn";
 import { FetchTransactionsContext } from "@c/Context/Context";
 import { startOfDay, endOfDay } from "date-fns";
-
+import NumberFlow from "@number-flow/react";
 import "./overview.css";
 import axios from "axios";
-
+import { PercentageMotion } from "@c/NumberAnimation/NumberAnimation";
 axios.defaults.withCredentials = true; // damit erlaube ich das senden von cookies
 const getUserInfo = import.meta.env.VITE_API_USERINFO;
 
@@ -127,6 +127,16 @@ export function Overview({ date }) {
         100
       : 0;
 
+  const currencyFormatter = {
+    style: "currency",
+    currency: "EUR",
+  };
+
+  const percentageFormatter = {
+    style: "percent",
+    signDisplay: "always",
+  };
+
   return (
     <div className="flex flex-col items-center p-3 mt-10 md:mt-0">
       <div className="block float-left w-full py-3 text-base text-[--foreground]">
@@ -136,60 +146,46 @@ export function Overview({ date }) {
         </p>
       </div>
 
-      <div className="w-full grid justify-items-center grid-cols-1 gap-5 items-center sm:grid-cols-2 lg:grid-cols-4">
-        <div className="overview-card remaing">
-          <div className="flex align-center justify-evenly">
+      <div className="w-7xl grid justify-items-center grid-cols-1 gap-5 items-center sm:grid-cols-2 lg:grid-cols-4">
+        <div className="overview-card">
+          <div className="w-full flex align-center justify-evenly">
             <h2 className="text-[min(8vw,1.5rem)]">Remaining</h2>
             <SavingsIcon className="stat-icons save-icon" />
           </div>
-          <p
+          <NumberFlow
             className={`${newCalcRemaining <= 0 ? "text-red-500" : "text-green-500"} text-xl`}
-          >
-            {newCalcRemaining} €
-          </p>
+            value={newCalcRemaining}
+            format={currencyFormatter}
+          />
 
-          <p>
-            <span
-              className={`${remainingDifferenceInPercent <= 0 ? "text-red-500" : "text-green-500"}`}
-            >
-              {remainingDifferenceInPercent.toFixed(2)} %
-            </span>{" "}
-            from last Month
-          </p>
+          <PercentageMotion value={remainingDifferenceInPercent} />
         </div>
 
         <div className="overview-card income">
-          <div className="flex align-center justify-evenly">
+          <div className="w-full flex align-center justify-evenly">
             <h2 className="text-[min(8vw,1.5rem)]">Income</h2>
             <TrendingUpIcon className="stat-icons up-icon" />
           </div>
-          <p className="text-xl text-green-500">{calcIncomeCurrentMonth} €</p>
-          <p>
-            <span
-              className={`${incomeDifferenceInPercent <= 0 ? "text-red-500" : "text-green-500"}`}
-            >
-              {incomeDifferenceInPercent.toFixed(2)} %
-            </span>{" "}
-            from last Month
-          </p>
+          <NumberFlow
+            className={`${calcIncomeCurrentMonth <= 0 ? "text-red-500" : "text-green-500"} text-xl`}
+            value={calcIncomeCurrentMonth}
+            format={currencyFormatter}
+          />
+
+          <PercentageMotion value={incomeDifferenceInPercent} />
         </div>
 
         <div className="overview-card outcome">
-          <div className="flex align-center justify-evenly">
+          <div className="w-full flex align-center justify-evenly">
             <h2 className="text-[min(8vw,1.5rem)]">Expenses</h2>
             <TrendingDownIcon className="stat-icons down-icon" />
           </div>
-          <p className="text-xl text-red-500">
-            {Math.abs(calcExpensesCurrentMonth)} €
-          </p>
-          <p>
-            <span
-              className={`${remainingDifferenceInPercent >= 0 ? "text-red-500" : "text-green-500"}`}
-            >
-              {expensesDifferenceInPercent.toFixed(2)} %
-            </span>{" "}
-            from last Month
-          </p>
+          <NumberFlow
+            className={`${calcExpensesCurrentMonth <= 0 ? "text-red-500" : "text-green-500"} text-xl`}
+            value={calcExpensesCurrentMonth}
+            format={currencyFormatter}
+          />
+          <PercentageMotion value={expensesDifferenceInPercent} />
         </div>
 
         <div className="w-full flex justify-center">
