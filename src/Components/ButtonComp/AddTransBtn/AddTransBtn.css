@@ -37,15 +37,6 @@
   transition: all 0.4s;
 }
 
-.btn-white::after {
-  background-color: var(--color-border);
-}
-
-.add-trans-btn:hover::after {
-  transform: scaleX(1.2) scaleY(1.4);
-  opacity: 0;
-}
-
 .btn-animated {
   animation: moveInBottom 5s ease-out;
   animation-fill-mode: backwards;

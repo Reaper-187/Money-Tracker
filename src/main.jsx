@@ -50,7 +50,7 @@ const router = createBrowserRouter([
     path: "/verify",
     element: (
       <VerificationRoute>
-        <Verification />,
+        <Verification />
       </VerificationRoute>
     ),
   },
@@ -58,7 +58,7 @@ const router = createBrowserRouter([
     path: "/One-Time-Otp",
     element: (
       <OtpRoute>
-        <OneTimeOtp />,
+        <OneTimeOtp />
       </OtpRoute>
     ),
   },
@@ -66,7 +66,7 @@ const router = createBrowserRouter([
     path: "/change-password",
     element: (
       <OtpRoute>
-        <ChangePasswordPage />,
+        <ChangePasswordPage />
       </OtpRoute>
     ),
   },
@@ -86,7 +86,7 @@ const router = createBrowserRouter([
         path: "transactions",
         element: (
           <ProtectedRoute>
-            <Transactions />,
+            <Transactions />
           </ProtectedRoute>
         ),
       },
