@@ -14,7 +14,6 @@ import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
-  DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
@@ -46,6 +45,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { AddTransBtn } from "@c/ButtonComp/AddTransBtn/AddTransBtn";
 import { toast } from "sonner";
+import { motion } from "motion/react";
 import * as XLSX from "xlsx";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
@@ -154,8 +154,6 @@ export function createColumns(
       },
       cell: ({ row }) => {
         const amount = row.getValue("amount");
-
-        // Format the amount as a dollar amount
         const formatted = new Intl.NumberFormat("de-DE", {
           style: "currency",
           currency: "EUR",
@@ -329,7 +327,7 @@ export function Transactions() {
   );
 
   const [sorting, setSorting] = useState([]);
-  const [columnFilters, setColumnFilters] = useState([]);
+  const [globalFilter, setGlobalFilter] = useState("");
   const [columnVisibility, setColumnVisibility] = useState({});
   const [rowSelection, setRowSelection] = useState({});
 
@@ -338,29 +336,56 @@ export function Transactions() {
     columns,
     getRowId: (row) => row._id,
     onSortingChange: setSorting,
-    onColumnFiltersChange: setColumnFilters,
+    onGlobalFilterChange: setGlobalFilter,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     onColumnVisibilityChange: setColumnVisibility,
     onRowSelectionChange: setRowSelection,
-    state: { sorting, columnFilters, columnVisibility, rowSelection },
+    state: {
+      sorting,
+      globalFilter,
+      columnVisibility,
+      rowSelection,
+    },
   });
+
+  const rowVariants = {
+    hidden: { opacity: 0, x: 100 },
+    visible: (i) => ({
+      opacity: 1,
+      x: 0,
+      transition: { delay: i * 0.05, duration: 0.4 },
+    }),
+  };
 
   return (
     <div className="w-full px-2">
       <div className="flex-row items-center justify-center gap-4 py-4">
-        <div className="flex flex-col gap-3 items-start md:flex-row items-center justify-end mt-12 lg:mt-0">
+        <motion.div
+          variants={{
+            hidden: {
+              opacity: 0,
+              y: 20,
+              x: 10,
+            },
+            visible: { opacity: 1, x: 0, y: 0 },
+          }}
+          initial="hidden"
+          animate="visible"
+          transition={{ duration: 0.5, delay: 0.45 }}
+          className="flex flex-col gap-3 items-start md:flex-row items-center justify-end mt-12 lg:mt-0"
+        >
           <Input
             className="max-w-31 lg:max-w-sm"
-            placeholder="Filter categorys..."
-            value={table.getColumn("category")?.getFilterValue() ?? ""}
-            onChange={(event) =>
-              table.getColumn("category")?.setFilterValue(event.target.value)
-            }
+            placeholder="Suche nach Kategorie, Betrag, Datum..."
+            value={globalFilter ?? ""}
+            onChange={(e) => setGlobalFilter(e.target.value)}
           />
           {/* Prüft ob min. eine TX (row) ausgewählt wurde */}
+          <AddTransBtn />
+
           {table.getFilteredSelectedRowModel().rows.length > 0 && (
             <>
               <DeleteConfirmDialog
@@ -386,7 +411,6 @@ export function Transactions() {
               ></ExportToComp>
             </>
           )}
-          <AddTransBtn />
 
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -414,7 +438,7 @@ export function Transactions() {
                 })}
             </DropdownMenuContent>
           </DropdownMenu>
-        </div>
+        </motion.div>
       </div>
       <div className="rounded-md border">
         <NoteDetailsDialog
@@ -444,10 +468,13 @@ export function Transactions() {
           </TableHeader>
           <TableBody>
             {table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row) => (
-                <TableRow
+              table.getRowModel().rows.map((row, i) => (
+                <motion.tr
                   key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
+                  custom={i}
+                  initial="hidden"
+                  animate="visible"
+                  variants={rowVariants}
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
@@ -457,7 +484,7 @@ export function Transactions() {
                       )}
                     </TableCell>
                   ))}
-                </TableRow>
+                </motion.tr>
               ))
             ) : (
               <TableRow>

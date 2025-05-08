@@ -23,34 +23,48 @@ import {
 } from "@/components/ui/select";
 
 import { Button } from "@/components/ui/button";
+import { motion } from "motion/react";
 
 export function DeleteConfirmDialog({ onConfirm }) {
   return (
-    <AlertDialog>
-      <AlertDialogTrigger asChild>
-        <Button className="bg-red-500 w-full sm:w-fit">
-          Ausgewählte löschen
-        </Button>
-      </AlertDialogTrigger>
+    <motion.div
+      variants={{
+        hidden: {
+          opacity: 0,
+          x: 50,
+        },
+        visible: { opacity: 1, x: 0 },
+      }}
+      initial="hidden"
+      animate="visible"
+      transition={{ duration: 0.3, delay: 0.25 }}
+    >
+      <AlertDialog>
+        <AlertDialogTrigger asChild>
+          <Button className="bg-red-500 w-full font-extrabold sm:w-fit">
+            Ausgewählte löschen
+          </Button>
+        </AlertDialogTrigger>
 
-      <AlertDialogContent>
-        <AlertDialogHeader>
-          <AlertDialogTitle>Bist du dir sicher?</AlertDialogTitle>
-          <AlertDialogDescription>
-            Diese Aktion kann nicht rückgängig gemacht werden.
-          </AlertDialogDescription>
-        </AlertDialogHeader>
-        <AlertDialogFooter>
-          <AlertDialogCancel>Abbrechen</AlertDialogCancel>
-          <AlertDialogAction
-            onClick={onConfirm}
-            className="bg-red-600 hover:bg-red-700"
-          >
-            Löschen
-          </AlertDialogAction>
-        </AlertDialogFooter>
-      </AlertDialogContent>
-    </AlertDialog>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Bist du dir sicher?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Diese Aktion kann nicht rückgängig gemacht werden.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Abbrechen</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={onConfirm}
+              className="bg-red-600 hover:bg-red-700"
+            >
+              Löschen
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </motion.div>
   );
 }
 
@@ -75,9 +89,22 @@ export function ExportToComp({ onHandleExport }) {
 
   return (
     <AlertDialog>
-      <AlertDialogTrigger asChild className="w-full sm:w-43">
-        <Button>Export Transactions</Button>
-      </AlertDialogTrigger>
+      <motion.div
+        variants={{
+          hidden: {
+            opacity: 0,
+            x: 50,
+          },
+          visible: { opacity: 1, x: 0 },
+        }}
+        initial="hidden"
+        animate="visible"
+        transition={{ duration: 0.3, delay: 0.25 }}
+      >
+        <AlertDialogTrigger asChild className="w-full font-extrabold sm:w-44">
+          <Button>Export Transactions</Button>
+        </AlertDialogTrigger>
+      </motion.div>
 
       <AlertDialogContent>
         <AlertDialogHeader>
