@@ -51,7 +51,7 @@ export function Dashboard() {
         initial="hidden"
         animate="visible"
         transition={{ duration: 0.5, delay: 0.75 }}
-        className="grid xl:grid-cols-2 md:grid-cols-1 gap-4 p-3 chart-container"
+        className="grid xl:grid-cols-2 md:grid-cols-1 gap-4 p-3"
       >
         <BarChartComponent date={date} />
 

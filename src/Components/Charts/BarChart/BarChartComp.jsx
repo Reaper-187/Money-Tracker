@@ -10,6 +10,7 @@ import {
 import { Card, CardContent } from "@/components/ui/card";
 import { FetchTransactionsContext } from "@c/Context/Context";
 import { isWithinInterval, startOfDay, endOfDay } from "date-fns";
+import { useMediaQuery } from "react-responsive";
 
 const CustomTooltip = ({ active, payload, label }) => {
   if (active && payload && payload.length) {
@@ -29,6 +30,8 @@ const CustomTooltip = ({ active, payload, label }) => {
 
 export default function BarChartComponent({ date }) {
   const { selectTransactions } = useContext(FetchTransactionsContext);
+
+  const isSmallScreen = useMediaQuery({ maxWidth: 640 });
 
   const filteredTransactions = selectTransactions.filter((tx) =>
     isWithinInterval(new Date(tx.date), {
@@ -71,16 +74,30 @@ export default function BarChartComponent({ date }) {
   const data = groupedArray;
 
   return (
-    <Card className="w-full p-4 bar-card flex justify-center bg-transparent">
+    <Card className="w-full mx-auto bg-transparent p-4">
       <CardContent>
         <h2 className="text-lg text-center font-semibold">Overview</h2>
-        <ResponsiveContainer width="100%" height={370}>
+        <ResponsiveContainer width="100%" height={isSmallScreen ? 250 : 370}>
           <BarChart data={data}>
-            <XAxis dataKey="date" />
+            <XAxis
+              dataKey="date"
+              tickFormatter={(value) => value.slice(0, 5)} // nur "01.05"
+            />
+
             <YAxis />
             <Tooltip content={<CustomTooltip />} />
-            <Bar dataKey="income" fill="#00C02C" radius={4} barSize={20} />
-            <Bar dataKey="expenses" fill="#D52828" radius={4} barSize={20} />
+            <Bar
+              dataKey="income"
+              fill="#00C02C"
+              radius={4}
+              barSize={isSmallScreen ? 10 : 20}
+            />
+            <Bar
+              dataKey="expenses"
+              fill="#D52828"
+              radius={4}
+              barSize={isSmallScreen ? 10 : 20}
+            />
           </BarChart>
         </ResponsiveContainer>
       </CardContent>

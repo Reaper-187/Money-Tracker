@@ -45,7 +45,7 @@ export default function StackedDonutChart() {
     value,
   }));
 
-  const totalValue = pieChartData.reduce((sum, item) => sum + item.value, 0);
+  pieChartData.reduce((sum, item) => sum + item.value, 0);
 
   const colors = {
     housing: "#0088FE",
@@ -57,10 +57,13 @@ export default function StackedDonutChart() {
 
   const month = new Date().toLocaleString("default", { month: "long" });
 
+  const pieLables = ({ name, percent }) =>
+    `${name} ${(percent * 100).toFixed(0)}%`;
+
   return (
-    <Card className="w-full p-4 bg-transparent">
+    <Card className="w-full max-w-xl mx-auto bg-transparent p-4">
       <CardContent>
-        <h2 className="text-lg font-semibold text-center py-2">
+        <h2 className="text-base sm:text-lg font-semibold text-center">
           Spending Breakdown for {month}
         </h2>
         <ResponsiveContainer width="100%" height={300}>
@@ -71,14 +74,12 @@ export default function StackedDonutChart() {
               nameKey="name"
               cx="50%"
               cy="50%"
-              outerRadius={120}
-              innerRadius={70}
+              outerRadius={80}
+              innerRadius={50}
               paddingAngle={3}
               startAngle={90}
               endAngle={-270}
-              label={({ name, percent }) =>
-                `${name} ${(percent * 100).toFixed(0)}%`
-              }
+              label={isSmallScreen ? null : pieLables}
             >
               {pieChartData.map((entry, index) => (
                 <Cell
@@ -91,9 +92,9 @@ export default function StackedDonutChart() {
               formatter={(value) => [`${value.toFixed(2)} €`, "Betrag"]}
             />
             <Legend
-              layout={isSmallScreen ? "horizontal" : "vertical"}
-              align={isSmallScreen ? "center" : "right"}
-              verticalAlign={isSmallScreen ? "bottom" : "middle"}
+              layout={isSmallScreen ? "vertical" : "horizontal"}
+              align={"center"}
+              verticalAlign={"bottom"}
             />
           </PieChart>
         </ResponsiveContainer>
