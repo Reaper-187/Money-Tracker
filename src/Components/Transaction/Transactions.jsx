@@ -362,24 +362,20 @@ export function Transactions() {
 
   return (
     <div className="w-full px-2">
-      <div className="flex-row items-center justify-center gap-4 py-4">
+      <div className="flex flex-wrap gap-4 justify-center items-center py-5 mt-10">
         <motion.div
           variants={{
-            hidden: {
-              opacity: 0,
-              y: 20,
-              x: 10,
-            },
+            hidden: { opacity: 0, y: 20, x: 10 },
             visible: { opacity: 1, x: 0, y: 0 },
           }}
           initial="hidden"
           animate="visible"
           transition={{ duration: 0.5, delay: 0.45 }}
-          className="flex flex-col gap-3 items-start md:flex-row items-center justify-end mt-12 lg:mt-0"
+          className="flex flex-wrap justify-center items-center gap-4 w-full"
         >
           <Input
-            className="max-w-31 lg:max-w-sm"
-            placeholder="Suche nach Kategorie, Betrag, Datum..."
+            className="max-w-xl md:w-44"
+            placeholder="Search for categories, amounts, etc..."
             value={globalFilter ?? ""}
             onChange={(e) => setGlobalFilter(e.target.value)}
           />
@@ -389,6 +385,7 @@ export function Transactions() {
           {table.getFilteredSelectedRowModel().rows.length > 0 && (
             <>
               <DeleteConfirmDialog
+                fullWidth={true}
                 onConfirm={() => {
                   deleteSelectedTransactions(
                     table
@@ -400,6 +397,7 @@ export function Transactions() {
                 ({table.getFilteredSelectedRowModel().rows.length})
               </DeleteConfirmDialog>
               <ExportToComp
+                fullWidth={true}
                 onHandleExport={(exportTyp) => {
                   handleExport(
                     table

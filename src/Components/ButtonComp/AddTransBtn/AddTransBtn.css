@@ -7,7 +7,6 @@
   transition: all 0.2s;
   position: relative;
   cursor: pointer;
-  box-shadow: 0px 0px 0.35rem 0px var(--color-border);
   font-size: 1rem;
 }
 

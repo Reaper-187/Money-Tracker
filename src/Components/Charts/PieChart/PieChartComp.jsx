@@ -61,7 +61,7 @@ export default function StackedDonutChart() {
     `${name} ${(percent * 100).toFixed(0)}%`;
 
   return (
-    <Card className="w-full max-w-xl mx-auto bg-transparent p-4">
+    <Card className="w-full bg-transparent p-4 mt-3 mx-3 md:mx-auto md:w-1/2 lg:mt-0 lg:mr-3">
       <CardContent>
         <h2 className="text-base sm:text-lg font-semibold text-center">
           Spending Breakdown for {month}

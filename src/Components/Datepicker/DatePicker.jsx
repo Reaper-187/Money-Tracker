@@ -14,7 +14,7 @@ import "./DatePicker.css";
 
 export function DatePickerWithRange({ date, onDateChange }) {
   return (
-    <div className={cn("grid gap-2 mt-4")}>
+    <div className={cn("grid gap-2 my-4")}>
       <Popover>
         <PopoverTrigger asChild>
           <Button

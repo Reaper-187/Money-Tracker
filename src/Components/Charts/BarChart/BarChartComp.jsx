@@ -74,7 +74,7 @@ export default function BarChartComponent({ date }) {
   const data = groupedArray;
 
   return (
-    <Card className="w-full mx-auto bg-transparent p-4">
+    <Card className="w-full bg-transparent p-4 mx-3">
       <CardContent>
         <h2 className="text-lg text-center font-semibold">Overview</h2>
         <ResponsiveContainer width="100%" height={isSmallScreen ? 250 : 370}>

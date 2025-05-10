@@ -24,6 +24,7 @@ import {
 
 import { Button } from "@/components/ui/button";
 import { motion } from "motion/react";
+import { useMediaQuery } from "react-responsive";
 
 export function DeleteConfirmDialog({ onConfirm }) {
   return (
@@ -38,11 +39,12 @@ export function DeleteConfirmDialog({ onConfirm }) {
       initial="hidden"
       animate="visible"
       transition={{ duration: 0.3, delay: 0.25 }}
+      className="w-full sm:w-1/2 md:w-1/4 lg:w-1/5"
     >
       <AlertDialog>
         <AlertDialogTrigger asChild>
-          <Button className="bg-red-500 w-full font-extrabold sm:w-fit">
-            Ausgewählte löschen
+          <Button className="bg-red-500 font-extrabold min-w-full ">
+            delete Transactions
           </Button>
         </AlertDialogTrigger>
 
@@ -68,22 +70,6 @@ export function DeleteConfirmDialog({ onConfirm }) {
   );
 }
 
-export function NoteDetailsDialog({ open, onOpenChange, selectedNoteText }) {
-  return (
-    <AlertDialog open={open} onOpenChange={onOpenChange}>
-      <AlertDialogContent>
-        <AlertDialogHeader>
-          <AlertDialogTitle>Notiz</AlertDialogTitle>
-          <AlertDialogDescription>{selectedNoteText}</AlertDialogDescription>
-        </AlertDialogHeader>
-        <AlertDialogFooter>
-          <Button onClick={() => onOpenChange(false)}>Schließen</Button>
-        </AlertDialogFooter>
-      </AlertDialogContent>
-    </AlertDialog>
-  );
-}
-
 export function ExportToComp({ onHandleExport }) {
   const [exportTyp, setExportTyp] = useState("Excel");
 
@@ -100,9 +86,12 @@ export function ExportToComp({ onHandleExport }) {
         initial="hidden"
         animate="visible"
         transition={{ duration: 0.3, delay: 0.25 }}
+        className="w-full sm:w-1/2 md:w-1/4 lg:w-1/5"
       >
-        <AlertDialogTrigger asChild className="w-full font-extrabold sm:w-44">
-          <Button>Export Transactions</Button>
+        <AlertDialogTrigger asChild>
+          <Button className="font-extrabold min-w-full">
+            Export Transactions
+          </Button>
         </AlertDialogTrigger>
       </motion.div>
 
@@ -140,6 +129,22 @@ export function ExportToComp({ onHandleExport }) {
           <AlertDialogAction onClick={() => onHandleExport(exportTyp)}>
             Export to {exportTyp}
           </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
+  );
+}
+
+export function NoteDetailsDialog({ open, onOpenChange, selectedNoteText }) {
+  return (
+    <AlertDialog open={open} onOpenChange={onOpenChange}>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>Notiz</AlertDialogTitle>
+          <AlertDialogDescription>{selectedNoteText}</AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <Button onClick={() => onOpenChange(false)}>Schließen</Button>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

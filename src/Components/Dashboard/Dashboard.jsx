@@ -35,7 +35,7 @@ export function Dashboard() {
         initial="hidden"
         animate="visible"
         transition={{ duration: 0.5, delay: 0.65 }}
-        className="flex justify-center date-range-picker"
+        className="flex justify-center"
       >
         <DatePickerWithRange date={date} onDateChange={handleDateChange} />
       </motion.div>
@@ -51,7 +51,7 @@ export function Dashboard() {
         initial="hidden"
         animate="visible"
         transition={{ duration: 0.5, delay: 0.75 }}
-        className="grid xl:grid-cols-2 md:grid-cols-1 gap-4 p-3"
+        className="flex flex-wrap lg:flex-nowrap"
       >
         <BarChartComponent date={date} />
 
