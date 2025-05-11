@@ -16,15 +16,7 @@
 
 .stat-icons {
   scale: 1.8;
-  background-color: rgba(0, 136, 254, 0.884);
   border-radius: 5px;
   margin: 0.3rem;
   padding: 0.3rem;
-}
-
-.down-icon {
-  background-color: rgba(240, 44, 44, 0.884);
-}
-.up-icon {
-  background-color: rgba(0, 128, 0, 0.884);
 }

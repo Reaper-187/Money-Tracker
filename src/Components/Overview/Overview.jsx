@@ -140,7 +140,7 @@ export function Overview({ date }) {
   };
 
   return (
-    <div className="flex flex-col items-center">
+    <div className="flex flex-col items-center ">
       <motion.div
         variants={{
           hidden: { opacity: 0, y: 25 },
@@ -151,7 +151,7 @@ export function Overview({ date }) {
         transition={{ duration: 0.5, delay: 0.25 }}
         className="relative block float-left w-full py-4 text-base text-[--foreground]"
       >
-        <h1 className="sm: text-[min(8vw,1.3rem)] px-3 mt-10 lg:text-4xl mt-0">
+        <h1 className="sm: text-[min(8vw,1.3rem)] px-3 mt-10 lg:text-4xl lg:mt-0">
           Welcome back, {userInfo?.name}
         </h1>
         <p className="sm:text-sm px-3 lg:text-2xl">
@@ -159,7 +159,7 @@ export function Overview({ date }) {
         </p>
       </motion.div>
 
-      <div className="grid justify-items-center grid-cols-1 items-center px-3 w-full lg:grid-cols-4 gap-5">
+      <div className="grid justify-items-center grid-cols-1 items-center px-3 w-full lg:grid-cols-3 gap-5">
         <motion.div
           variants={{
             hidden: {
@@ -174,9 +174,9 @@ export function Overview({ date }) {
           transition={{ duration: 0.5, delay: 0.25 }}
           className="overview-card"
         >
-          <div className="w-full flex align-center justify-evenly">
+          <div className="w-full flex align-center justify-between sm:w-1/2">
             <h2 className="text-[min(8vw,1.3rem)]">Remaining</h2>
-            <SavingsIcon className="stat-icons save-icon" />
+            <SavingsIcon className="stat-icons bg-blue-500" />
           </div>
           <NumberFlow
             className={`${newCalcRemaining <= 0 ? "text-red-500" : "text-green-500"} text-xl`}
@@ -201,9 +201,9 @@ export function Overview({ date }) {
           transition={{ duration: 0.5, delay: 0.35 }}
           className="overview-card income"
         >
-          <div className="w-full flex align-center justify-evenly">
+          <div className="w-full flex align-center justify-between sm:w-1/2">
             <h2 className="text-[min(6vw,1.3rem)] ">Income</h2>
-            <TrendingUpIcon className="stat-icons up-icon" />
+            <TrendingUpIcon className="stat-icons bg-green-500" />
           </div>
           <NumberFlow
             className={`${calcIncomeCurrentMonth <= 0 ? "text-red-500" : "text-green-500"} text-xl`}
@@ -228,9 +228,9 @@ export function Overview({ date }) {
           transition={{ duration: 0.5, delay: 0.45 }}
           className="overview-card"
         >
-          <div className="w-full flex align-center justify-evenly">
+          <div className="w-full flex align-center justify-between sm:w-1/2">
             <h2 className="text-[min(8vw,1.3rem)]">Expenses</h2>
-            <TrendingDownIcon className="stat-icons down-icon" />
+            <TrendingDownIcon className="stat-icons bg-red-500" />
           </div>
           <NumberFlow
             className={`${calcExpensesCurrentMonth <= 0 ? "text-red-500" : "text-green-500"} text-xl`}
@@ -239,10 +239,9 @@ export function Overview({ date }) {
           />
           <PercentageMotion value={expensesDifferenceInPercent} />
         </motion.div>
-
-        <div className="w-full flex justify-center">
-          <AddTransBtn />
-        </div>
+      </div>
+      <div className="flex justify-center mt-4 sm:w-full">
+        <AddTransBtn />
       </div>
     </div>
   );

@@ -241,8 +241,13 @@ export function Transactions() {
   }
 
   function showNote(note) {
-    setSelectedNoteText(note);
-    setIsNoteDialogOpen(true);
+    if (selectedNoteText.length > 0) {
+      setSelectedNoteText(note);
+      setIsNoteDialogOpen(true);
+    } else {
+      setSelectedNoteText("You did not note something");
+      setIsNoteDialogOpen(true);
+    }
   }
 
   function formatDate(date) {
@@ -361,8 +366,8 @@ export function Transactions() {
   };
 
   return (
-    <div className="w-full px-2">
-      <div className="flex flex-wrap gap-4 justify-center items-center py-5 mt-10">
+    <div className="w-full px-2 pt-5 md:pt-0">
+      <div className="flex flex-wrap gap-4 justify-center items-center py-10 md:py-5">
         <motion.div
           variants={{
             hidden: { opacity: 0, y: 20, x: 10 },
@@ -371,7 +376,7 @@ export function Transactions() {
           initial="hidden"
           animate="visible"
           transition={{ duration: 0.5, delay: 0.45 }}
-          className="flex flex-wrap justify-center items-center gap-4 w-full"
+          className="w-full flex flex-wrap justify-center items-center gap-4"
         >
           <Input
             className="max-w-xl md:w-44"
@@ -412,7 +417,7 @@ export function Transactions() {
 
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="outline" className="ml-auto">
+              <Button variant="outline" className="w-full sm:w-1/2 lg:w-1/6">
                 Filter <ChevronDown />
               </Button>
             </DropdownMenuTrigger>

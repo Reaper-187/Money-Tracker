@@ -66,16 +66,8 @@ export function SelectScreen({
       date: data.date.toISOString(),
     };
     try {
-      const response = await axios.post(transactions, cleanedData);
-      toast("You saved the transaction:", {
-        description: (
-          <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-            <code className="text-white">
-              {JSON.stringify(cleanedData, null, 2)}
-            </code>
-          </pre>
-        ),
-      });
+      await axios.post(transactions, cleanedData);
+      toast("You saved a new transaction:");
       await fetchTransactions();
     } catch (err) {
       console.error("POST-Data not found", err);
@@ -110,7 +102,7 @@ export function SelectScreen({
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="w-full space-y-15 h-full sm:space-y-20 md:space-y-15"
+          className="w-full space-y-10 h-full sm:space-y-20 md:space-y-15"
         >
           <Button
             type="button"

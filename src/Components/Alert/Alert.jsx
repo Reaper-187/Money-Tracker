@@ -24,7 +24,6 @@ import {
 
 import { Button } from "@/components/ui/button";
 import { motion } from "motion/react";
-import { useMediaQuery } from "react-responsive";
 
 export function DeleteConfirmDialog({ onConfirm }) {
   return (
@@ -39,29 +38,29 @@ export function DeleteConfirmDialog({ onConfirm }) {
       initial="hidden"
       animate="visible"
       transition={{ duration: 0.3, delay: 0.25 }}
-      className="w-full sm:w-1/2 md:w-1/4 lg:w-1/5"
+      className="w-full sm:w-1/2 md:w-1/4 lg:w-1/6"
     >
       <AlertDialog>
         <AlertDialogTrigger asChild>
-          <Button className="bg-red-500 font-extrabold min-w-full ">
+          <Button className="bg-red-600 font-semibold min-w-full cursor-pointer hover:bg-red-500">
             delete Transactions
           </Button>
         </AlertDialogTrigger>
 
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Bist du dir sicher?</AlertDialogTitle>
+            <AlertDialogTitle>are you sure ?</AlertDialogTitle>
             <AlertDialogDescription>
-              Diese Aktion kann nicht rückgängig gemacht werden.
+              This action cannot be undone.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Abbrechen</AlertDialogCancel>
+            <AlertDialogCancel>cancle</AlertDialogCancel>
             <AlertDialogAction
               onClick={onConfirm}
               className="bg-red-600 hover:bg-red-700"
             >
-              Löschen
+              Delete
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
@@ -86,10 +85,10 @@ export function ExportToComp({ onHandleExport }) {
         initial="hidden"
         animate="visible"
         transition={{ duration: 0.3, delay: 0.25 }}
-        className="w-full sm:w-1/2 md:w-1/4 lg:w-1/5"
+        className="w-full sm:w-1/2 md:w-1/4 lg:w-1/6"
       >
         <AlertDialogTrigger asChild>
-          <Button className="font-extrabold min-w-full">
+          <Button className="font-semibold min-w-full cursor-pointer">
             Export Transactions
           </Button>
         </AlertDialogTrigger>
@@ -97,9 +96,9 @@ export function ExportToComp({ onHandleExport }) {
 
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Bist du dir sicher?</AlertDialogTitle>
+          <AlertDialogTitle>are you sure ?</AlertDialogTitle>
           <AlertDialogDescription>
-            Ausgewählte Transaktionen werden Exportiert
+            Selected transactions are exported.
             {/* In shadcn/ui wird der <Select>-Tag selbst nicht gesteuert,
              sondern wird der Wert über ----onValueChange---- setzen, nicht über !!!!onChange!!!!!. */}
             <Select value={exportTyp} onValueChange={setExportTyp}>
@@ -125,7 +124,7 @@ export function ExportToComp({ onHandleExport }) {
         </AlertDialogHeader>
 
         <AlertDialogFooter>
-          <AlertDialogCancel>Abbrechen</AlertDialogCancel>
+          <AlertDialogCancel>cancle</AlertDialogCancel>
           <AlertDialogAction onClick={() => onHandleExport(exportTyp)}>
             Export to {exportTyp}
           </AlertDialogAction>
@@ -144,7 +143,7 @@ export function NoteDetailsDialog({ open, onOpenChange, selectedNoteText }) {
           <AlertDialogDescription>{selectedNoteText}</AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <Button onClick={() => onOpenChange(false)}>Schließen</Button>
+          <Button onClick={() => onOpenChange(false)}>Close</Button>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

@@ -1,8 +1,7 @@
 import { useState } from "react";
 import { SelectScreen } from "@c/Overview/SelectScreen/SelectScreen";
 import { motion } from "motion/react";
-
-import "./AddTransBtn.css";
+import { Button } from "@c/ui/button";
 
 export function AddTransBtn() {
   const [toggleSelectScreen, setToggleSelectScreen] = useState(false);
@@ -26,14 +25,14 @@ export function AddTransBtn() {
         initial="hidden"
         animate="visible"
         transition={{ duration: 0.5, delay: 0.55 }}
-        className="add-trans-container"
+        className="w-full sm:w-1/2 md:w-1/4 lg:w-1/6"
       >
-        <span
-          className="add-trans-btn btn-white btn-animate"
+        <Button
+          className="min-w-full border shadow-sm bg-background text-foreground font-semibold text-md cursor-pointer hover:bg-muted"
           onClick={() => setToggleSelectScreen(!toggleSelectScreen)}
         >
-          + Add New
-        </span>
+          + add Transaction
+        </Button>
       </motion.div>
 
       <SelectScreen
