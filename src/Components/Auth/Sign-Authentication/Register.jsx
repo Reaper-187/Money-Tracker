@@ -64,9 +64,9 @@ export const Register = () => {
   return (
     <>
       <div className="min-h-screen flex items-center justify-center p-4">
-        <Card className="w-1/2 lg:w-1/3 md:w-1/2">
+        <Card className="w-full sm:w-1/2 lg:w-1/3">
           <CardHeader>
-            <CardTitle className="flex justify-self-center text-4xl">
+            <CardTitle className="flex justify-self-center text-2xl sm:text-3xl ">
               Register
             </CardTitle>
             <CardDescription className="text-center">

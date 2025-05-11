@@ -30,7 +30,6 @@ const formSchema = z.object({
 
 export const Login = () => {
   const { loginUser } = useAuth();
-
   const [showPassword, setShowPassword] = useState(false);
 
   const {
@@ -62,8 +61,8 @@ export const Login = () => {
 
   return (
     <>
-      <div className="min-h-screen flex items-center justify-center p-4">
-        <Card className="w-1/2 lg:w-1/3 md:w-1/2">
+      <div className="w-full min-h-screen flex items-center justify-center p-4">
+        <Card className="w-full sm:w-1/2 lg:w-1/3">
           <CardHeader>
             <CardTitle className="flex justify-self-center text-4xl">
               Login
@@ -100,10 +99,10 @@ export const Login = () => {
               <Button className="w-full font-semibold" type="submit">
                 Sign in
               </Button>
-              <div className="flex justify-between py-3">
+              <div className="flex items-center flex-wrap justify-center py-1 sm:justify-between ">
                 <div className="flex items-center">
                   <Checkbox />
-                  <p className="px-2">remember me</p>
+                  <p className="p-2 font-medium">remember me</p>
                 </div>
                 <Link
                   to="/reset-password-authentication"
