@@ -16,7 +16,7 @@ import {
   DropdownMenuContent,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@c/ui/dropdown-menu";
+} from "@/components/ui/dropdown-menu";
 
 import {
   Table,
@@ -25,7 +25,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@c/ui/table";
+} from "@/components/ui/table";
 
 import {
   ArrowUpDown,
@@ -40,9 +40,9 @@ import {
   NoteDetailsDialog,
 } from "@c/Alert/Alert";
 
-import { Button } from "@c/ui/button";
-import { Checkbox } from "@c/ui/checkbox";
-import { Input } from "@c/ui/input";
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Input } from "@/components/ui/input";
 import { AddTransBtn } from "@c/ButtonComp/AddTransBtn/AddTransBtn";
 import { toast } from "sonner";
 import { motion } from "motion/react";

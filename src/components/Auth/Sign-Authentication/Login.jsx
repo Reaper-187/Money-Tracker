@@ -8,10 +8,10 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Input } from "@c/ui/input";
-import { Button } from "@c/ui/button";
-import { Checkbox } from "@c/ui/checkbox";
-import { Label } from "@c/ui/label";
+import { Input } from "../../ui/input";
+import { Button } from "../../ui/button";
+import { Checkbox } from "../../ui/checkbox";
+import { Label } from "../../ui/label";
 import { toast } from "sonner";
 import { Eye, EyeOff, Github, Mail } from "lucide-react";
 import { useForm } from "react-hook-form";
@@ -23,12 +23,9 @@ import { useAuth } from "@c/Context/AuthContext";
 
 axios.defaults.withCredentials = true; // damit erlaube ich das senden von cookies
 
-const API_GAUTH = import.meta.env.VITE_API_GAUTH;
-
 const formSchema = z.object({
   email: z.string().email("Invalid email format"),
   password: z.string().min(8, "Password must be at least 8 characters"),
-  rememberMe: z.boolean().optional(),
 });
 
 export const Login = () => {
@@ -102,8 +99,11 @@ export const Login = () => {
               <Button className="w-full font-semibold" type="submit">
                 Sign in
               </Button>
-
-              <div className="flex justify-end">
+              <div className="flex items-center flex-wrap justify-center py-1 sm:justify-between ">
+                <div className="flex items-center">
+                  <Checkbox />
+                  <p className="p-2 font-medium">remember me</p>
+                </div>
                 <Link
                   to="/reset-password-authentication"
                   className="text-blue-400 hover:text-blue-500 font-medium"
@@ -124,24 +124,17 @@ export const Login = () => {
             </div>
           </div>
           <div className="grid grid-cols-2 gap-4 px-4">
-            <Button
-              className="w-full font-semibold"
-              variant="outline"
-              onClick={() => (window.location.href = "/api/auth/github")}
-            >
+            <Button className="w-full font-semibold" varaint="outlone">
               <Github className="mr-2 h-4 w-4" />
-              GitHub
+              Github
             </Button>
 
-            <Button
-              className="w-full font-semibold"
-              variant="outline"
-              onClick={() => (window.location.href = API_GAUTH)}
-            >
+            <Button className="w-full font-semibold" varaint="outlone">
               <Mail className="mr-2 h-4 w-4" />
               Google
             </Button>
           </div>
+
           <CardFooter className="felx justify-center">
             <div>
               Don't have an account ?{" "}

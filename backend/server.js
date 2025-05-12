@@ -70,7 +70,7 @@ app.use("/api", transactionRoutes); // Route für transcations
 // Route für User
 app.use("/api/auth", authRoutes); // Route für userAuthen
 
-app.use("/", socialAuthRoutes); // Route für userAuthen
+app.use("/", socialAuthRoutes); // Route für socialAuthen
 
 // DB-Verbindung herstellen
 connectDB();
