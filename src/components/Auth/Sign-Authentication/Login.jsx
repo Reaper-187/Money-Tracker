@@ -22,7 +22,7 @@ import axios from "axios";
 import { useAuth } from "@c/Context/AuthContext";
 
 axios.defaults.withCredentials = true; // damit erlaube ich das senden von cookies
-
+const API_GAUTHN = import.meta.env.VITE_API_GAUTHN;
 const formSchema = z.object({
   email: z.string().email("Invalid email format"),
   password: z.string().min(8, "Password must be at least 8 characters"),
@@ -129,7 +129,13 @@ export const Login = () => {
               Github
             </Button>
 
-            <Button className="w-full font-semibold" varaint="outlone">
+            <Button
+              className="w-full font-semibold"
+              varaint="outlone"
+              onClick={() => {
+                window.location.href = API_GAUTHN;
+              }}
+            >
               <Mail className="mr-2 h-4 w-4" />
               Google
             </Button>
