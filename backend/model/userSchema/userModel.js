@@ -2,7 +2,12 @@ const mongoose = require("mongoose");
 
 const userModel = new mongoose.Schema({
   name: { type: String, required: true },
-  email: { type: String, required: true, unique: true },
+  email: {
+    type: String,
+    required: function () {
+      return !this.githubId && !this.googleId;
+    },
+  },
   password: {
     type: String,
     required: function () {
@@ -11,8 +16,18 @@ const userModel = new mongoose.Schema({
   }, // Passwort nur erforderlich, wenn kein Google oder GitHub Login
   googleId: { type: String, unique: true, sparse: true },
   githubId: { type: String, unique: true, sparse: true },
-  isVerified: { type: Boolean, default: false },
-  verificationToken: { type: String, default: false },
+  isVerified: {
+    type: Boolean,
+    default: function () {
+      return !!(this.googleId || this.githubId);
+    },
+  },
+  verificationToken: {
+    type: String,
+    default: function () {
+      return this.googleId || this.githubId ? null : undefined;
+    },
+  },
   tokenExpires: { type: Date },
   createdOn: { type: Date, default: Date.now },
   otpSent: { type: Number, default: null },

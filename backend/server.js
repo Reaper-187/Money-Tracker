@@ -12,6 +12,7 @@ const session = require("express-session");
 const passport = require("passport");
 const initializePassport = require("./config/initializePassport");
 const initializeGoogleAuth = require("./config/passport-google-oauth");
+const initializeGhubAuth = require("./config/passport-ghub-oauth");
 const flash = require("express-flash");
 const MongoStore = require("connect-mongo");
 const crypto = require("crypto");
@@ -59,6 +60,7 @@ initializePassport(
 );
 
 initializeGoogleAuth(passport);
+initializeGhubAuth(passport);
 
 app.use(passport.initialize());
 app.use(passport.session());

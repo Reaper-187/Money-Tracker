@@ -29,4 +29,11 @@ router.get(
 
 router.get("/google/callback", authController.handleGoogleCallback);
 
+router.get(
+  "/auth/github",
+  passport.authenticate("github", { scope: ["profile", "email"] })
+);
+
+router.get("/github/callback", authController.handleGithubCallback);
+
 module.exports = router;

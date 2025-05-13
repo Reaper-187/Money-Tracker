@@ -321,3 +321,24 @@ exports.handleGoogleCallback = (req, res, next) => {
     });
   })(req, res, next);
 };
+
+exports.handleGithubCallback = (req, res, next) => {
+  passport.authenticate("github", (err, user, info) => {
+    if (err || !user) {
+      console.log("ERROR", err);
+
+      return res.redirect(`${FRONTEND_URL}/login`);
+    }
+
+    req.logIn(user, (err) => {
+      if (err) {
+        console.log("ok1");
+
+        return res.redirect(`${FRONTEND_URL}/login`);
+      }
+      console.log("ok2");
+
+      return res.redirect(`${FRONTEND_URL}/dashboard`);
+    });
+  })(req, res, next);
+};
