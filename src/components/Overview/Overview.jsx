@@ -174,7 +174,7 @@ export function Overview({ date }) {
           transition={{ duration: 0.5, delay: 0.25 }}
           className="overview-card"
         >
-          <div className="w-full flex align-center justify-between sm:w-1/2">
+          <div className="w-full px-5 flex align-center justify-between sm:w-1/2 sm:px-0">
             <h2 className="text-[min(8vw,1.3rem)]">Remaining</h2>
             <SavingsIcon className="stat-icons bg-blue-500" />
           </div>
@@ -201,7 +201,7 @@ export function Overview({ date }) {
           transition={{ duration: 0.5, delay: 0.35 }}
           className="overview-card income"
         >
-          <div className="w-full flex align-center justify-between sm:w-1/2">
+          <div className="w-full px-5 flex align-center justify-between sm:w-1/2 sm:px-0">
             <h2 className="text-[min(6vw,1.3rem)] ">Income</h2>
             <TrendingUpIcon className="stat-icons bg-green-500" />
           </div>
@@ -228,7 +228,7 @@ export function Overview({ date }) {
           transition={{ duration: 0.5, delay: 0.45 }}
           className="overview-card"
         >
-          <div className="w-full flex align-center justify-between sm:w-1/2">
+          <div className="w-full px-5 flex align-center justify-between sm:w-1/2 sm:px-0">
             <h2 className="text-[min(8vw,1.3rem)]">Expenses</h2>
             <TrendingDownIcon className="stat-icons bg-red-500" />
           </div>

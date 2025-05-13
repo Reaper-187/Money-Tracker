@@ -101,11 +101,7 @@ export const Login = () => {
               <Button className="w-full font-semibold" type="submit">
                 Sign in
               </Button>
-              <div className="flex items-center flex-wrap justify-center py-1 sm:justify-between ">
-                <div className="flex items-center">
-                  <Checkbox />
-                  <p className="p-2 font-medium">remember me</p>
-                </div>
+              <div className="flex justify-end">
                 <Link
                   to="/reset-password-authentication"
                   className="text-blue-400 hover:text-blue-500 font-medium"
