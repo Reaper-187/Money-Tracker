@@ -11,6 +11,8 @@ router.get("/authChecking", authController.authStatus);
 
 router.post("/login", authController.existingUser);
 
+router.post("/guestUser", authController.guestUserLogin);
+
 router.post("/register", authController.createUser);
 
 router.get("/verifyUser", authController.verifySession);

@@ -19,7 +19,6 @@ function initializeGmailAuth(passport) {
             email: profile.emails[0].value,
           });
           if (existingUser) {
-            console.log("User found:", existingUser);
             return done(null, existingUser);
           }
           const newUser = new User({

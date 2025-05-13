@@ -8,14 +8,32 @@ const EMAIL_USER = process.env.EMAIL_USER;
 const EMAIL_PASS = process.env.EMAIL_PASS;
 const FRONTEND_URL = process.env.FRONTEND_URL_DEV;
 
-exports.logout = (req, res) => {
+exports.logout = async (req, res) => {
   try {
+    const userSession = req.session?.user;
+
+    if (!userSession) {
+      return res
+        .status(400)
+        .json({ success: false, message: "No active session" });
+    }
+
+    // Wenn Guest, dann Gast-Status zurücksetzen
+    if (userSession.isGuest) {
+      const guestUser = await User.findById(userSession.id);
+      if (guestUser) {
+        guestUser.isGuestLoggedIn = false;
+        await guestUser.save();
+      }
+    }
+
     req.session.destroy((err) => {
       if (err) {
         return res
           .status(500)
           .json({ success: false, message: "Logout failed" });
       }
+      res.clearCookie("connect.sid");
       res.status(200).json({ success: true, message: "Logout successful" });
     });
   } catch (err) {
@@ -27,7 +45,9 @@ exports.logout = (req, res) => {
 };
 
 exports.getUserInfo = async (req, res) => {
-  const userId = req.session.passport?.user;
+  const loggedInUser = req.session.passport?.user || req.session.user;
+  const userId =
+    typeof loggedInUser === "object" ? loggedInUser.id : loggedInUser;
   if (!userId) return res.status(401).json({ message: "Not logged in" });
 
   const user = await User.findById(userId).select("name email");
@@ -37,7 +57,7 @@ exports.getUserInfo = async (req, res) => {
 };
 
 exports.authStatus = async (req, res) => {
-  const userId = req.session.passport?.user;
+  const userId = req.session.passport?.user || req.session.user?.id; // <- hier wichtig!
 
   if (!userId) {
     return res.status(200).json({ loggedIn: false });
@@ -45,7 +65,7 @@ exports.authStatus = async (req, res) => {
 
   try {
     const user = await User.findById(userId).select(
-      "isVerified verificationToken otpSent"
+      "isVerified verificationToken otpSent isGuest"
     );
 
     if (!user) {
@@ -57,6 +77,7 @@ exports.authStatus = async (req, res) => {
       isVerified: user.isVerified,
       otpSent: user.otpSent,
       verificationToken: user.verificationToken,
+      isGuest: user.isGuest,
     });
   } catch (err) {
     console.error("AuthCheck Error:", err);
@@ -90,7 +111,15 @@ exports.existingUser = (req, res, next) => {
           .status(500)
           .json({ success: false, message: "sign-in unsuccessfully" });
       }
+
+      req.session.user = {
+        id: user._id,
+        email: user.email,
+        isGuest: false,
+      };
+
       req.session.loggedIn = true;
+
       res.status(200).json({
         success: true,
         message: "Login successfully",
@@ -317,6 +346,14 @@ exports.handleGoogleCallback = (req, res, next) => {
       if (err) {
         return res.redirect(`${FRONTEND_URL}/login`);
       }
+
+      req.session.user = {
+        id: user._id,
+        email: user.email,
+        isGuest: false,
+      };
+      req.session.loggedIn = true;
+
       return res.redirect(`${FRONTEND_URL}/dashboard`);
     });
   })(req, res, next);
@@ -325,20 +362,60 @@ exports.handleGoogleCallback = (req, res, next) => {
 exports.handleGithubCallback = (req, res, next) => {
   passport.authenticate("github", (err, user, info) => {
     if (err || !user) {
-      console.log("ERROR", err);
-
       return res.redirect(`${FRONTEND_URL}/login`);
     }
-
     req.logIn(user, (err) => {
       if (err) {
-        console.log("ok1");
-
         return res.redirect(`${FRONTEND_URL}/login`);
       }
-      console.log("ok2");
+
+      req.session.user = {
+        id: user._id,
+        email: user.email,
+        isGuest: false,
+      };
+      req.session.loggedIn = true;
 
       return res.redirect(`${FRONTEND_URL}/dashboard`);
     });
   })(req, res, next);
+};
+
+exports.guestUserLogin = async (req, res, next) => {
+  try {
+    const { email, password } = req.body;
+
+    const guestUser = await User.findOne({ email });
+
+    if (!guestUser) {
+      return res.status(404).json({ message: "Guest user not found" });
+    }
+
+    if (!guestUser.isGuest) {
+      return res.status(403).json({ message: "This user is not a guest" });
+    }
+
+    if (guestUser.isGuestLoggedIn) {
+      return res
+        .status(409)
+        .json({ message: "Guest account is already in use" });
+    }
+
+    req.session.user = {
+      id: guestUser._id,
+      email: guestUser.email,
+      isGuest: true,
+    };
+
+    req.session.cookie.maxAge = 1000 * 60 * 15;
+
+    guestUser.isGuestLoggedIn = true;
+
+    await guestUser.save();
+
+    return res.status(200).json({ message: "Guest login successful" });
+  } catch (err) {
+    console.error("Error trying to login as Guest", err);
+    return res.status(500).json({ message: "Server error during guest login" });
+  }
 };

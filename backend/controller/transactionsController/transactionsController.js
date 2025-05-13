@@ -4,33 +4,61 @@ const mongoose = require("mongoose");
 
 exports.getTransactions = async (req, res) => {
   try {
-    const userId = new mongoose.Types.ObjectId(req.session.passport.user);
-    const eachTransaction = await Transaction.find({ userId });
+    const user = req.session.passport?.user || req.session.user;
+    const userId = typeof user === "object" ? user.id : user;
 
-    res.json({
-      eachTransaction,
+    if (!userId) {
+      return res.status(401).json({ message: "Nicht autorisiert" });
+    }
+
+    const eachTransaction = await Transaction.find({
+      userId: new mongoose.Types.ObjectId(userId),
     });
+
+    res.json({ eachTransaction });
   } catch (err) {
-    res
-      .status(500)
-      .json({ message: "Fehler beim Abrufen der Tranasaktionen", error: err });
+    res.status(500).json({
+      message: "Fehler beim Abrufen der Transaktionen",
+      error: err,
+    });
   }
 };
 
 // POST-Route, um eine TX hinzuzufügen
 exports.createTransaction = async (req, res) => {
   try {
+    const user = req.session.passport?.user || req.session.user;
+    const userId = typeof user === "object" ? user.id : user;
+
+    if (!userId) {
+      return res
+        .status(401)
+        .json({ message: "Kein Benutzer oder Gast gefunden" });
+    }
+
+    // Limit – nur für Guest
+    const isGuest = !req.session.passport?.user;
+
+    if (isGuest) {
+      const guestTxCount = await Transaction.countDocuments({ userId });
+
+      if (guestTxCount >= 10) {
+        return res.status(403).json({
+          message: "Guest users can only create up to 10 transactions.",
+        });
+      }
+    }
+
     const transaction = new Transaction({
       ...req.body,
-      userId: req.session.passport.user,
+      userId,
       date: new Date(req.body.date),
       amount: parseFloat(req.body.amount).toFixed(2),
     });
 
-    const savedtransaction = await transaction.save();
-    await User.findOne({ _id: req.session.passport.user });
+    const savedTransaction = await transaction.save();
 
-    res.status(201).json({ savedtransaction });
+    res.status(201).json({ savedTransaction });
   } catch (err) {
     res.status(400).json({ message: err.message });
   }
@@ -39,7 +67,8 @@ exports.createTransaction = async (req, res) => {
 // DELETE-Route, um eine TX hinzuzufügen
 exports.deleteTransactions = async (req, res) => {
   try {
-    const userId = req.session.passport.user;
+    const user = req.session.passport?.user || req.session.user;
+    const userId = typeof user === "object" ? user.id : user;
     const { idsToDelete } = req.body;
 
     if (!Array.isArray(idsToDelete) || idsToDelete.length === 0) {
@@ -53,7 +82,7 @@ exports.deleteTransactions = async (req, res) => {
     });
 
     res.status(200).json({
-      message: `${result.deletedCount} Transaktionen gelöscht`,
+      message: `${result.deletedCount} transactions deleted`,
     });
   } catch (err) {
     res.status(500).json({ message: err.message });

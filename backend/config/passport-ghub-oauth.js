@@ -21,7 +21,6 @@ function initializeGithubAuth(passport) {
           const existingUser = await User.findOne({ email });
 
           if (existingUser) {
-            console.log("User found:", existingUser);
             return done(null, existingUser);
           }
           const newUser = new User({

@@ -8,7 +8,10 @@ const logoutApi = import.meta.env.VITE_API_LOGOUT;
 const forgotPw = import.meta.env.VITE_API_FORGOTPW;
 const verifyOtp = import.meta.env.VITE_API_VERIFYOTP;
 const resetUserPw = import.meta.env.VITE_API_RESETUPW;
+const guestUserApi = import.meta.env.VITE_API_GUESTUSER;
 
+const GUEST_USER = import.meta.env.VITE_GUEST_USER;
+const GUEST_PASSWORD = import.meta.env.VITE_GUEST_PASSWORD;
 export const AuthContext = createContext();
 
 export const GetAuthenticationProvider = ({ children }) => {
@@ -21,6 +24,7 @@ export const GetAuthenticationProvider = ({ children }) => {
         loggedIn: response.data.loggedIn,
         isVerified: response.data.isVerified,
         verificationToken: response.data.verificationToken,
+        isGuest: response.data.isGuest,
       });
     } catch (err) {
       console.error(err);
@@ -32,6 +36,24 @@ export const GetAuthenticationProvider = ({ children }) => {
     const res = await axios.get(authChecking);
     setIsAuthStatus(res.data);
     return res.data.loggedIn;
+  };
+
+  const loginGuestUser = async () => {
+    try {
+      const loginGuestData = {
+        email: GUEST_USER,
+        password: GUEST_PASSWORD,
+      };
+
+      await axios.post(guestUserApi, loginGuestData);
+      const res = await axios.get(authChecking);
+      console.log("AuthCheck nach Gast-Login:", res.data);
+      setIsAuthStatus(res.data);
+      return res.data.loggedIn;
+    } catch (err) {
+      console.error("Gastlogin fehlgeschlagen:", err);
+      return false;
+    }
   };
 
   const logoutUser = async () => {
@@ -71,6 +93,7 @@ export const GetAuthenticationProvider = ({ children }) => {
         forgotUserPw,
         authenticateOtp,
         changeUserPw,
+        loginGuestUser,
       }}
     >
       {children}

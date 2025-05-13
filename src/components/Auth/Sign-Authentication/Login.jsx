@@ -10,10 +10,9 @@ import {
 } from "@/components/ui/card";
 import { Input } from "../../ui/input";
 import { Button } from "../../ui/button";
-import { Checkbox } from "../../ui/checkbox";
 import { Label } from "../../ui/label";
 import { toast } from "sonner";
-import { Eye, EyeOff, Github, Mail } from "lucide-react";
+import { Eye, EyeOff, Github, Mail, User } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 import { z } from "zod";
@@ -31,7 +30,7 @@ const formSchema = z.object({
 });
 
 export const Login = () => {
-  const { loginUser } = useAuth();
+  const { loginUser, loginGuestUser } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
 
   const {
@@ -58,6 +57,21 @@ export const Login = () => {
       } else {
         toast.error("An unknown error occurred.");
       }
+    }
+  };
+
+  const loginAsGuest = async () => {
+    try {
+      const guestLogin = await loginGuestUser();
+      console.log("loginGuestUser returned:", guestLogin);
+      if (guestLogin) {
+        navigate("/dashboard");
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error(
+        "Someone is using the guest account, please try again later."
+      );
     }
   };
 
@@ -121,7 +135,7 @@ export const Login = () => {
               </span>
             </div>
           </div>
-          <div className="grid grid-cols-2 gap-4 px-4">
+          <div className="grid grid-cols-2 gap-4 px-4 ">
             <Button
               className="w-full font-semibold"
               varaint="outlone"
@@ -142,6 +156,14 @@ export const Login = () => {
             >
               <Mail className="mr-2 h-4 w-4" />
               Google
+            </Button>
+            <Button
+              className="w-full col-span-2 font-semibold"
+              varaint="outlone"
+              onClick={loginAsGuest}
+            >
+              <User className="mr-2 h-4 w-4" />
+              Guest for Test
             </Button>
           </div>
 
