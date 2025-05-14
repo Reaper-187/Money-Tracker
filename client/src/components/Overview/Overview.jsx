@@ -19,6 +19,7 @@ export function Overview({ date }) {
   const [userInfo, setUserInfo] = useState(null);
   const cardStyle =
     "flex flex-col justify-start items-center rounded-[10px] shadow-[0_0_5px_0_var(--color-border)] px-2 py-4 w-full max-w-[clamp(350px,45vw,400px)] gap-4 text-[var(--foreground)] text-[var(--font-size-small)] text-center";
+  const statIconStyle = "scale-[1.8] rounded-[5px] m-[0.3rem] p-[0.3rem]";
 
   useEffect(() => {
     const fetchUserInfo = async () => {
@@ -180,7 +181,7 @@ export function Overview({ date }) {
         >
           <div className="w-full px-5 flex align-center justify-between sm:w-1/2 sm:px-0">
             <h2 className="text-[min(8vw,1.3rem)]">Remaining</h2>
-            <SavingsIcon className="stat-icons bg-blue-500" />
+            <SavingsIcon className={`${statIconStyle} bg-blue-500`} />
           </div>
           <NumberFlow
             className={`${newCalcRemaining <= 0 ? "text-red-500" : "text-green-500"} text-xl`}
@@ -207,7 +208,7 @@ export function Overview({ date }) {
         >
           <div className="w-full px-5 flex align-center justify-between sm:w-1/2 sm:px-0">
             <h2 className="text-[min(6vw,1.3rem)] ">Income</h2>
-            <TrendingUpIcon className="stat-icons bg-green-500" />
+            <TrendingUpIcon className={`${statIconStyle} bg-green-500`} />
           </div>
           <NumberFlow
             className={`${calcIncomeCurrentMonth <= 0 ? "text-red-500" : "text-green-500"} text-xl`}
@@ -234,7 +235,7 @@ export function Overview({ date }) {
         >
           <div className="w-full px-5 flex align-center justify-between sm:w-1/2 sm:px-0">
             <h2 className="text-[min(8vw,1.3rem)]">Expenses</h2>
-            <TrendingDownIcon className="stat-icons bg-red-500" />
+            <TrendingDownIcon className={`${statIconStyle} bg-red-500`} />
           </div>
           <NumberFlow
             className={`${calcExpensesCurrentMonth <= 0 ? "text-red-500" : "text-green-500"} text-xl`}
