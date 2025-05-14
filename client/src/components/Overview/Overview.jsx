@@ -9,7 +9,7 @@ import TrendingUpIcon from "@mui/icons-material/TrendingUp";
 import TrendingDownIcon from "@mui/icons-material/TrendingDown";
 import NumberFlow from "@number-flow/react";
 
-import "./overview.css";
+import "./Overview.css";
 import axios from "axios";
 axios.defaults.withCredentials = true; // damit erlaube ich das senden von cookies
 const getUserInfo = import.meta.env.VITE_API_USERINFO;
