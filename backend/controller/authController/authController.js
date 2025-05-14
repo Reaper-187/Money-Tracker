@@ -6,7 +6,7 @@ const passport = require("passport");
 
 const EMAIL_USER = process.env.EMAIL_USER;
 const EMAIL_PASS = process.env.EMAIL_PASS;
-const FRONTEND_URL = process.env.FRONTEND_URL_DEV;
+const FRONTEND_URL = process.env.FRONTEND_URL;
 
 exports.logout = async (req, res) => {
   try {

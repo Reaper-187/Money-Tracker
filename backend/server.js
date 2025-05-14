@@ -43,8 +43,8 @@ app.use(
     }),
     cookie: {
       httpOnly: true,
-      secure: false, // Falls HTTPS genutzt wird, auf true setzen.
-      sameSite: "lax", // Falls Frontend auf anderer Domain, 'none' verwenden
+      secure: true, // Falls HTTPS genutzt wird, auf true setzen.
+      sameSite: "none", // Falls Frontend auf anderer Domain, 'none' verwenden
       maxAge: 1000 * 60 * 60 * 24,
     },
   })
