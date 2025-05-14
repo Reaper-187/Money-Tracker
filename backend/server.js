@@ -77,8 +77,8 @@ app.use("/", socialAuthRoutes); // Route für socialAuthen
 // DB-Verbindung herstellen
 connectDB();
 
-const port = 5000;
+const PORT = process.env.PORT || 5000;
 
-app.listen(port, "localhost", () => {
-  console.log("Server is on port " + port);
+app.listen(PORT, "localhost", () => {
+  console.log("Server is on PORT " + PORT);
 });

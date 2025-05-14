@@ -1,9 +1,11 @@
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
 const User = require("../model/userSchema/userModel");
+axios.defaults.withCredentials = true;
 
 const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
 const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
-const GOOGLE_CALLBACK_URL = "http://localhost:5000/api/auth/google/callback";
+const GOOGLE_CALLBACK_URL =
+  "https://money-tracker-txn1.onrender.com/auth/google/callback";
 
 function initializeGmailAuth(passport) {
   passport.use(
