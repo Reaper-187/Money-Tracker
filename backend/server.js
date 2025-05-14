@@ -19,12 +19,12 @@ const crypto = require("crypto");
 const User = require("./model/userSchema/userModel");
 
 // CORS-Konfiguration
-// const FRONTEND_URL_PROD = process.env.FRONTEND_URL_PROD;
-const FRONTEND_URL_DEV = process.env.FRONTEND_URL_DEV;
+const FRONTEND_URL = process.env.FRONTEND_URL;
+// const FRONTEND_URL_DEV = process.env.FRONTEND_URL_DEV;
 
 app.use(
   cors({
-    origin: [/*FRONTEND_URL_PROD,*/ FRONTEND_URL_DEV],
+    origin: [FRONTEND_URL /*FRONTEND_URL_DEV*/],
     credentials: true,
   })
 );
