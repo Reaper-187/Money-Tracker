@@ -8,8 +8,6 @@ import SavingsIcon from "@mui/icons-material/Savings";
 import TrendingUpIcon from "@mui/icons-material/TrendingUp";
 import TrendingDownIcon from "@mui/icons-material/TrendingDown";
 import NumberFlow from "@number-flow/react";
-
-import "./overview.css";
 import axios from "axios";
 axios.defaults.withCredentials = true; // damit erlaube ich das senden von cookies
 const getUserInfo = import.meta.env.VITE_API_USERINFO;
@@ -19,6 +17,8 @@ const getUserInfo = import.meta.env.VITE_API_USERINFO;
 
 export function Overview({ date }) {
   const [userInfo, setUserInfo] = useState(null);
+  const cardStyle =
+    "flex flex-col justify-start items-center rounded-[10px] shadow-[0_0_5px_0_var(--color-border)] px-2 py-4 w-full max-w-[clamp(350px,45vw,400px)] gap-4 text-[var(--foreground)] text-[var(--font-size-small)] text-center";
 
   useEffect(() => {
     const fetchUserInfo = async () => {
@@ -176,7 +176,7 @@ export function Overview({ date }) {
           initial="hidden"
           animate="visible"
           transition={{ duration: 0.5, delay: 0.25 }}
-          className="overview-card"
+          className={cardStyle}
         >
           <div className="w-full px-5 flex align-center justify-between sm:w-1/2 sm:px-0">
             <h2 className="text-[min(8vw,1.3rem)]">Remaining</h2>
@@ -203,7 +203,7 @@ export function Overview({ date }) {
           initial="hidden"
           animate="visible"
           transition={{ duration: 0.5, delay: 0.35 }}
-          className="overview-card income"
+          className={cardStyle}
         >
           <div className="w-full px-5 flex align-center justify-between sm:w-1/2 sm:px-0">
             <h2 className="text-[min(6vw,1.3rem)] ">Income</h2>
@@ -230,7 +230,7 @@ export function Overview({ date }) {
           initial="hidden"
           animate="visible"
           transition={{ duration: 0.5, delay: 0.45 }}
-          className="overview-card"
+          className={cardStyle}
         >
           <div className="w-full px-5 flex align-center justify-between sm:w-1/2 sm:px-0">
             <h2 className="text-[min(8vw,1.3rem)]">Expenses</h2>
