@@ -151,10 +151,14 @@ export function Overview({ date }) {
         transition={{ duration: 0.5, delay: 0.25 }}
         className="relative block float-left w-full py-4 text-base text-[--foreground]"
       >
-        <h1 className="sm: text-[min(8vw,1.3rem)] px-3 mt-10 lg:text-4xl lg:mt-0">
+        <h1
+          className="px-3 mt-10 lg:mt-0"
+          style={{ fontSize: "clamp(1.2rem, 3vw, 2rem)" }}
+        >
           Welcome back, {userInfo?.name}
         </h1>
-        <p className="sm:text-sm px-3 lg:text-2xl">
+
+        <p className="px-3" style={{ fontSize: "clamp(.8rem, 2vw, 1.3rem)" }}>
           This is your Financial Overview Report
         </p>
       </motion.div>

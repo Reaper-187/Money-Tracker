@@ -1,5 +1,5 @@
 "use client";
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -59,18 +59,27 @@ export function SelectScreen({
   disabled,
 }) {
   const { fetchTransactions } = useContext(FetchTransactionsContext);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   async function onSubmit(data) {
+    setIsSubmitting(true);
+
     const cleanedData = {
       ...data,
       date: data.date.toISOString(),
     };
+
     try {
       await axios.post(transactions, cleanedData);
       toast("You saved a new transaction:");
       await fetchTransactions();
+
+      // damit nicht zu viele post-req geichzeitig passieren
+      await new Promise((resolve) => setTimeout(resolve, 500));
     } catch (err) {
       console.error("POST-Data not found", err);
+    } finally {
+      setIsSubmitting(false);
     }
   }
 
@@ -248,7 +257,9 @@ export function SelectScreen({
           </div>
 
           <FormMessage />
-          <Button type="submit">Submit</Button>
+          <Button type="submit" disabled={isSubmitting}>
+            {isSubmitting ? "Saving..." : "Submit"}
+          </Button>
         </form>
       </Form>
     </div>

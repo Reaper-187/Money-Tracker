@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   flexRender,
   getCoreRowModel,
@@ -332,9 +332,18 @@ export function Transactions() {
   );
 
   const [sorting, setSorting] = useState([]);
+  const [searchInput, setSearchInput] = useState("");
   const [globalFilter, setGlobalFilter] = useState("");
   const [columnVisibility, setColumnVisibility] = useState({});
   const [rowSelection, setRowSelection] = useState({});
+
+  useEffect(() => {
+    const delay = setTimeout(() => {
+      setGlobalFilter(searchInput);
+    }, 500);
+
+    return () => clearTimeout(delay);
+  }, [searchInput]);
 
   const table = useReactTable({
     data: selectTransactions,
@@ -381,9 +390,10 @@ export function Transactions() {
           <Input
             className="max-w-xl md:w-44"
             placeholder="Search for categories, amounts, etc..."
-            value={globalFilter ?? ""}
-            onChange={(e) => setGlobalFilter(e.target.value)}
+            value={searchInput}
+            onChange={(e) => setSearchInput(e.target.value)}
           />
+
           {/* Prüft ob min. eine TX (row) ausgewählt wurde */}
           <AddTransBtn />
 

@@ -8,7 +8,6 @@ export function AddTransBtn() {
 
   const closeSelectScreen = () => {
     setToggleSelectScreen(false);
-    console.log("Clicked");
   };
 
   return (
