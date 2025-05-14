@@ -10,8 +10,6 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 
-import "./DatePicker.css";
-
 export function DatePickerWithRange({ date, onDateChange }) {
   return (
     <div className={cn("grid gap-2 my-4")}>
