@@ -72,6 +72,9 @@ exports.authStatus = async (req, res) => {
       return res.status(404).json({ loggedIn: false });
     }
 
+    console.log("Session im authStatus:", req.session);
+    console.log("Cookies:", req.cookies);
+
     res.status(200).json({
       loggedIn: true,
       isVerified: user.isVerified,
