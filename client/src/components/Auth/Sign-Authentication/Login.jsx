@@ -63,15 +63,17 @@ export const Login = () => {
   const loginAsGuest = async () => {
     try {
       const guestLogin = await loginGuestUser();
-      console.log("loginGuestUser returned:", guestLogin);
       if (guestLogin) {
         navigate("/dashboard");
       }
-    } catch (error) {
-      console.error(error);
-      toast.error(
-        "Someone is using the guest account, please try again later."
-      );
+    } catch (status) {
+      if (status === 409) {
+        toast.error(
+          "The guest account is currently in use. Please try again later."
+        );
+      } else {
+        toast.error("Something went wrong while logging in as guest.");
+      }
     }
   };
 

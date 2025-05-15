@@ -49,8 +49,10 @@ export const GetAuthenticationProvider = ({ children }) => {
       setIsAuthStatus(res.data);
       return res.data.loggedIn;
     } catch (err) {
-      console.error("Gastlogin fehlgeschlagen:", err);
-      return false;
+      if (axios.isAxiosError(err) && err.response?.status === 409) {
+        throw 409;
+      }
+      throw 500;
     }
   };
 
