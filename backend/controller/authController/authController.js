@@ -57,6 +57,7 @@ exports.getUserInfo = async (req, res) => {
 };
 
 exports.authStatus = async (req, res) => {
+  console.log("Session im authStatus:", req.session);
   const userId = req.session.passport?.user || req.session.user?.id; // <- hier wichtig!
 
   if (!userId) {
@@ -64,6 +65,7 @@ exports.authStatus = async (req, res) => {
   }
 
   try {
+    console.log("Session im authStatus2:", req.session);
     const user = await User.findById(userId).select(
       "isVerified verificationToken otpSent isGuest"
     );
@@ -72,7 +74,6 @@ exports.authStatus = async (req, res) => {
       return res.status(404).json({ loggedIn: false });
     }
 
-    console.log("Session im authStatus:", req.session);
     console.log("Cookies:", req.cookies);
 
     res.status(200).json({
