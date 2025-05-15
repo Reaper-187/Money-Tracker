@@ -3,8 +3,7 @@ const User = require("../model/userSchema/userModel");
 
 const GITHUB_CLIENT_ID = process.env.GITHUB_CLIENT_ID;
 const GITHUB_CLIENT_SECRET = process.env.GITHUB_CLIENT_SECRET;
-const GITHUB_CALLBACK_URL =
-  "https://money-tracker-txn1.onrender.com/auth/github/callback";
+const GITHUB_CALLBACK_URL = process.env.GITHUB_CALLBACK_URL;
 
 function initializeGithubAuth(passport) {
   passport.use(
