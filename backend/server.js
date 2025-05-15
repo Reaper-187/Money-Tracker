@@ -6,7 +6,6 @@ const app = express();
 const connectDB = require("./MongoDb");
 const transactionRoutes = require("./routes/transactionRoute");
 const authRoutes = require("./routes/authRoute");
-const socialAuthRoutes = require("./routes/authRoute");
 const cors = require("cors");
 const session = require("express-session");
 const passport = require("passport");
@@ -75,8 +74,6 @@ app.use("/api", transactionRoutes); // Route für transcations
 
 // Route für User
 app.use("/api/auth", authRoutes); // Route für userAuthen
-
-app.use("/", socialAuthRoutes); // Route für socialAuthen
 
 // DB-Verbindung herstellen
 connectDB();

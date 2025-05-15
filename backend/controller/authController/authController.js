@@ -61,7 +61,6 @@ exports.authStatus = async (req, res) => {
     req.user?._id || req.session.passport?.user || req.session.user?.id;
 
   if (!userId) {
-    console.log("No user ID found in session");
     return res.status(200).json({ loggedIn: false });
   }
 

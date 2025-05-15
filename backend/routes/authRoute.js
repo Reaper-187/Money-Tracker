@@ -24,7 +24,7 @@ router.post("/verifyOtp", authController.verifyOtp);
 router.post("/resetPw", authController.resetPw);
 
 router.get(
-  "/auth/google",
+  "/google",
   // Leitet den User direkt zur Google-Anmeldeseite weiter und der scope bestimmt auf welche Daten ich zugreifen möchte.
   passport.authenticate("google", { scope: ["profile", "email"] })
 );
@@ -32,7 +32,7 @@ router.get(
 router.get("/google/callback", authController.handleGoogleCallback);
 
 router.get(
-  "/auth/github",
+  "/github",
   passport.authenticate("github", { scope: ["profile", "email"] })
 );
 
