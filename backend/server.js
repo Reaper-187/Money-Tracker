@@ -24,16 +24,18 @@ const FRONTEND_URL = process.env.FRONTEND_URL;
 
 app.use(
   cors({
-    origin: [FRONTEND_URL /*FRONTEND_URL_DEV*/],
+    origin: FRONTEND_URL,
     credentials: true,
   })
 );
 
+console.log("CORS erlaubt:", FRONTEND_URL);
 const SECRET_RANDOM_KEY = crypto.randomBytes(32).toString("hex");
 
 // Session-Konfiguration
 app.use(
   session({
+    name: "connect.sid",
     secret: process.env.SECRET_KEY || SECRET_RANDOM_KEY,
     resave: false,
     saveUninitialized: false, // Muss false sein, sonst wird leere Session gespeichert
