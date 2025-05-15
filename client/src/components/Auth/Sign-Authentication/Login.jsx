@@ -45,7 +45,7 @@ export const Login = () => {
 
   const onSubmit = async (data) => {
     try {
-      const loginRes = await loginUser(data);
+      const loginRes = await loginUser(data, { withCredentials: true });
       console.log("Login Res", loginRes);
 
       if (loginRes) {
