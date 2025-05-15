@@ -22,6 +22,8 @@ export const GetAuthenticationProvider = ({ children }) => {
       const response = await axios.get(authChecking, {
         withCredentials: true,
       });
+      console.log("Response isAuthStatus", response);
+
       setIsAuthStatus({
         loggedIn: response.data.loggedIn,
         isVerified: response.data.isVerified,
