@@ -59,7 +59,15 @@ exports.getUserInfo = async (req, res) => {
 exports.authStatus = async (req, res) => {
   console.log("Session im authStatus:", req.session);
   const userId =
-    req.user?._id || req.session.passport?.user || req.session.user?.id;
+    req.user?._id ||
+    req.user?.id ||
+    req.session.passport?.user ||
+    req.session.user?.id;
+
+  console.log("req.user?._id", req.user?._id);
+  console.log("req.user?.id", req.user?.id);
+  console.log("req.session.passport?.user", req.session.passport?.user);
+  console.log("req.session.user?.id", req.session.user?.id);
 
   if (!userId) {
     console.log("No user ID found in session");
