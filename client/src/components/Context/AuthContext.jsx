@@ -19,7 +19,9 @@ export const GetAuthenticationProvider = ({ children }) => {
 
   const isUserAuthenticated = async () => {
     try {
-      const response = await axios.get(authChecking);
+      const response = await axios.get(authChecking, {
+        withCredentials: true,
+      });
       setIsAuthStatus({
         loggedIn: response.data.loggedIn,
         isVerified: response.data.isVerified,

@@ -29,7 +29,13 @@ app.use(
   })
 );
 
-console.log("CORS erlaubt:", FRONTEND_URL);
+const corsOptions = {
+  origin: "https://money-tracker-blond.vercel.app",
+  credentials: true,
+};
+
+app.use(cors(corsOptions));
+
 const SECRET_RANDOM_KEY = crypto.randomBytes(32).toString("hex");
 
 // Session-Konfiguration
@@ -46,7 +52,8 @@ app.use(
     cookie: {
       httpOnly: true,
       secure: true, // Falls HTTPS genutzt wird, auf true setzen.
-      sameSite: "none", // Falls Frontend auf anderer Domain, 'none' verwenden
+      sameSite: "None",
+      domain: "money-tracker-blond.vercel.app", // Falls Frontend auf anderer Domain, 'none' verwenden
       maxAge: 1000 * 60 * 60 * 24,
     },
   })
