@@ -18,11 +18,12 @@ const MongoStore = require("connect-mongo");
 const crypto = require("crypto");
 const User = require("./model/userSchema/userModel");
 
+// muss du setzten wenn du mit vercel arbeitest sonst
+// werden keine cookies gespeichert
 app.set("trust proxy", 1);
 
 // CORS-Konfiguration
 const FRONTEND_URL = process.env.FRONTEND_URL;
-// const FRONTEND_URL_DEV = process.env.FRONTEND_URL_DEV;
 
 app.use(
   cors({

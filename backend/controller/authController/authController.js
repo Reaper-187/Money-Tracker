@@ -57,17 +57,8 @@ exports.getUserInfo = async (req, res) => {
 };
 
 exports.authStatus = async (req, res) => {
-  console.log("Session im authStatus:", req.session);
   const userId =
-    req.user?._id ||
-    req.user?.id ||
-    req.session.passport?.user ||
-    req.session.user?.id;
-
-  console.log("req.user?._id", req.user?._id);
-  console.log("req.user?.id", req.user?.id);
-  console.log("req.session.passport?.user", req.session.passport?.user);
-  console.log("req.session.user?.id", req.session.user?.id);
+    req.user?._id || req.session.passport?.user || req.session.user?.id;
 
   if (!userId) {
     console.log("No user ID found in session");
@@ -75,7 +66,6 @@ exports.authStatus = async (req, res) => {
   }
 
   try {
-    console.log("Session im authStatus2:", req.session);
     const user = await User.findById(userId).select(
       "isVerified verificationToken otpSent isGuest"
     );
@@ -83,8 +73,6 @@ exports.authStatus = async (req, res) => {
     if (!user) {
       return res.status(404).json({ loggedIn: false });
     }
-
-    console.log("Cookies:", req.cookies);
 
     res.status(200).json({
       loggedIn: true,
@@ -133,7 +121,6 @@ exports.existingUser = (req, res, next) => {
       };
 
       req.session.loggedIn = true;
-      console.log("Session Set:", req.session);
 
       res.status(200).json({
         success: true,

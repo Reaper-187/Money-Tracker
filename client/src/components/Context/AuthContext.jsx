@@ -19,11 +19,7 @@ export const GetAuthenticationProvider = ({ children }) => {
 
   const isUserAuthenticated = async () => {
     try {
-      const response = await axios.get(authChecking, {
-        withCredentials: true,
-      });
-      console.log("Response isAuthStatus", response);
-
+      const response = await axios.get(authChecking);
       setIsAuthStatus({
         loggedIn: response.data.loggedIn,
         isVerified: response.data.isVerified,
@@ -38,8 +34,6 @@ export const GetAuthenticationProvider = ({ children }) => {
   const loginUser = async (loginData) => {
     await axios.post(loginApi, loginData);
     const res = await axios.get(authChecking);
-    console.log("Auth Status", res.data);
-
     setIsAuthStatus(res.data);
     return res.data.loggedIn;
   };
@@ -50,10 +44,8 @@ export const GetAuthenticationProvider = ({ children }) => {
         email: GUEST_USER,
         password: GUEST_PASSWORD,
       };
-
       await axios.post(guestUserApi, loginGuestData);
       const res = await axios.get(authChecking);
-      console.log("AuthCheck nach Gast-Login:", res.data);
       setIsAuthStatus(res.data);
       return res.data.loggedIn;
     } catch (err) {
