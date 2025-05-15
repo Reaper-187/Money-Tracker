@@ -34,6 +34,8 @@ export const GetAuthenticationProvider = ({ children }) => {
   const loginUser = async (loginData) => {
     await axios.post(loginApi, loginData);
     const res = await axios.get(authChecking);
+    console.log("Auth Status", res.data);
+
     setIsAuthStatus(res.data);
     return res.data.loggedIn;
   };

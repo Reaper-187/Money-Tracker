@@ -119,6 +119,7 @@ exports.existingUser = (req, res, next) => {
       };
 
       req.session.loggedIn = true;
+      console.log("Session Set:", req.session);
 
       res.status(200).json({
         success: true,

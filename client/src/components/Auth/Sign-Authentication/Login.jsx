@@ -46,6 +46,8 @@ export const Login = () => {
   const onSubmit = async (data) => {
     try {
       const loginRes = await loginUser(data);
+      console.log("Login Res", loginRes);
+
       if (loginRes) {
         navigate("/dashboard");
       }
