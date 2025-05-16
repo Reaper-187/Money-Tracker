@@ -147,7 +147,7 @@ exports.createUser = async (req, res) => {
     });
 
     const saveRegistData = await newUser.save();
-    const verifyLink = `${process.env.FRONTEND_URL_PROD}/verify?token=${verificationToken}`;
+    const verifyLink = `${process.env.FRONTEND_URL}/verify?token=${verificationToken}`;
 
     // E-Mail versenden
     const transporter = nodemailer.createTransport({
