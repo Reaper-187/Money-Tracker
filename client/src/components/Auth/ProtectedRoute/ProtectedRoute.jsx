@@ -35,7 +35,7 @@ export const VerificationRoute = ({ children }) => {
     return <Spinner />;
   }
 
-  if (!isAuthStatus.isVerified && isAuthStatus.verificationToken) {
+  if (!isAuthStatus.isVerified && isAuthStatus.verificationToken !== false) {
     return children;
   }
 
