@@ -47,7 +47,7 @@ const router = createBrowserRouter([
     element: <ForgotPw />,
   },
   {
-    path: "/verify",
+    path: "/verifyUser",
     element: (
       <VerificationRoute>
         <Verification />
