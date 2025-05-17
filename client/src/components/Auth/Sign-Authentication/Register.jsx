@@ -17,6 +17,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
+import { toast } from "sonner";
 
 axios.defaults.withCredentials = true; // damit erlaube ich das senden von cookies
 const registerApi = import.meta.env.VITE_API_REGISTER;
@@ -55,9 +56,17 @@ export const Register = () => {
     try {
       console.log(data);
       const response = await axios.post(registerApi, data);
+      if (response.status === 201) {
+        toast(response.data.message);
+      }
       navigate("/login");
     } catch (err) {
       console.error(err, "Error with the Registration");
+      if (err.response && err.response.data && err.response.data.message) {
+        toast.error(err.response.data.message);
+      } else {
+        toast.error("An unknown error occurred.");
+      }
     }
   };
 

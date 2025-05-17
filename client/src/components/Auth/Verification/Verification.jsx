@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Card } from "@/components/ui/card";
-import { useSearchParams } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import axios from "axios";
+import { Button } from "@c/ui/button";
 
 const verifyApi = import.meta.env.VITE_API_VERIFY;
 
@@ -42,6 +43,10 @@ export const Verification = () => {
         <h1 className="text-2xl font-semibold">E-Mail-Authentication....</h1>
 
         <p>{message}</p>
+
+        <Button className="w-fit">
+          <Link to="/login">back to Login</Link>
+        </Button>
       </Card>
     </div>
   );
