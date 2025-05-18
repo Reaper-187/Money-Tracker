@@ -69,10 +69,8 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
 
-// Routen
-app.use("/api", transactionRoutes); // Route für transcations
+app.use("/api", transactionRoutes);
 
-// Route für User
 app.use("/api/auth", authRoutes); // Route für userAuthen
 
 // DB-Verbindung herstellen

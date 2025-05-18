@@ -9,6 +9,7 @@ const forgotPw = import.meta.env.VITE_API_FORGOTPW;
 const verifyOtp = import.meta.env.VITE_API_VERIFYOTP;
 const resetUserPw = import.meta.env.VITE_API_RESETUPW;
 const guestUserApi = import.meta.env.VITE_API_GUESTUSER;
+const guestCleanerApi = import.meta.env.VITE_API_GUEST_CLEANER;
 
 const GUEST_USER = import.meta.env.VITE_GUEST_USER;
 const GUEST_PASSWORD = import.meta.env.VITE_GUEST_PASSWORD;
@@ -44,7 +45,9 @@ export const GetAuthenticationProvider = ({ children }) => {
         email: GUEST_USER,
         password: GUEST_PASSWORD,
       };
-      await axios.post(guestUserApi, loginGuestData);
+      const loginGuestRes = await axios.post(guestUserApi, loginGuestData);
+      const token = loginGuestRes.data.token;
+      sessionStorage.setItem("guestCronToken", token);
       const res = await axios.get(authChecking);
       setIsAuthStatus(res.data);
       return res.data.loggedIn;
@@ -53,6 +56,26 @@ export const GetAuthenticationProvider = ({ children }) => {
         throw 409;
       }
       throw 500;
+    }
+  };
+
+  const runGuestCleanup = async () => {
+    const token = sessionStorage.getItem("guestCronToken");
+
+    if (!token) {
+      throw new Error("Token missing");
+    }
+
+    try {
+      const res = await axios.post(guestCleanerApi, null, {
+        headers: {
+          "x-guest-cron-token": token,
+        },
+      });
+      return res.data;
+    } catch (err) {
+      console.error("Cronjob failed", err);
+      throw err;
     }
   };
 
@@ -94,6 +117,7 @@ export const GetAuthenticationProvider = ({ children }) => {
         authenticateOtp,
         changeUserPw,
         loginGuestUser,
+        runGuestCleanup,
       }}
     >
       {children}
