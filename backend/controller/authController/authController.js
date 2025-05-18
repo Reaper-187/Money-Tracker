@@ -225,8 +225,16 @@ exports.forgotPw = async (req, res) => {
 
   try {
     const user = await User.findOne({ email });
+
     if (!user) {
       return res.status(404).json({ message: "E-Mail nicht gefunden." });
+    }
+
+    if (user.googleId || user.githubId) {
+      return res.status(400).json({
+        message:
+          "Dein Konto wurde über Google oder GitHub erstellt. Bitte nutze diesen Login-Weg.",
+      });
     }
 
     // Überprüfen, ob der Code noch nicht abgelaufen ist
