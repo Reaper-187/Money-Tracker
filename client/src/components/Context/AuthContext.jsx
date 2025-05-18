@@ -44,9 +44,7 @@ export const GetAuthenticationProvider = ({ children }) => {
         email: GUEST_USER,
         password: GUEST_PASSWORD,
       };
-      const loginGuestRes = await axios.post(guestUserApi, loginGuestData);
-      const token = loginGuestRes.data.token;
-      sessionStorage.setItem("guestCronToken", token);
+      await axios.post(guestUserApi, loginGuestData);
       const res = await axios.get(authChecking);
       setIsAuthStatus(res.data);
       return res.data.loggedIn;
