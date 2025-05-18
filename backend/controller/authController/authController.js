@@ -414,7 +414,7 @@ exports.guestUserLogin = async (req, res, next) => {
     guestUser.guestSessionExpiresAt = new Date(Date.now() + 1000 * 60 * 15);
     await guestUser.save();
 
-    return res.status(200).json({ message: "Guest login successful", token });
+    return res.status(200).json({ message: "Guest login successful" });
   } catch (err) {
     console.error("Error trying to login as Guest", err);
     return res.status(500).json({ message: "Server error during guest login" });
