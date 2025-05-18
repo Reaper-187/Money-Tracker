@@ -412,8 +412,6 @@ exports.guestUserLogin = async (req, res, next) => {
 
     guestUser.isGuestLoggedIn = true;
     guestUser.guestSessionExpiresAt = new Date(Date.now() + 1000 * 60 * 15);
-    const token = crypto.randomBytes(16).toString("hex");
-    guestUser.cronAccessToken = token;
     await guestUser.save();
 
     return res.status(200).json({ message: "Guest login successful", token });
