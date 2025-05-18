@@ -20,7 +20,6 @@ exports.runCron = async (req, res) => {
       await guest.save();
     }
     console.log("Cronjob erfolgreich abgeschlossen.");
-    await mongoose.disconnect();
     res.status(200).send("Cronjob erfolgreich ausgeführt.");
   } catch (error) {
     console.error("Fehler im Cronjob:", error);
