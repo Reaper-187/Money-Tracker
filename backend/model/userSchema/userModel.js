@@ -35,7 +35,6 @@ const userModel = new mongoose.Schema({
   isGuest: { type: Boolean, default: false },
   isGuestLoggedIn: { type: Boolean, default: false },
   guestSessionExpiresAt: { type: Date, default: null },
-  cronAccessToken: { type: String },
 });
 
 module.exports = mongoose.model("User", userModel);

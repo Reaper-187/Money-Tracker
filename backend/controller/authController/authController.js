@@ -422,29 +422,3 @@ exports.guestUserLogin = async (req, res, next) => {
     return res.status(500).json({ message: "Server error during guest login" });
   }
 };
-
-exports.guestCleanerTimer = async (req, res) => {
-  const token = req.headers["x-guest-cron-token"];
-
-  if (!token) {
-    return res.status(403).json({ message: "Token missing" });
-  }
-
-  const guestUser = await User.findOne({
-    cronAccessToken: token,
-    isGuest: true,
-    isGuestLoggedIn: true,
-    guestSessionExpiresAt: { $gt: new Date() },
-  });
-
-  if (!guestUser) {
-    return res.status(403).json({ message: "Invalid or expired token" });
-  }
-
-  try {
-    await runCronJob();
-    res.status(200).json({ message: "Cronjob executed" });
-  } catch (err) {
-    res.status(500).json({ message: "Error running cronjob" });
-  }
-};

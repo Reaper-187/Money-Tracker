@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const authController = require("../controller/authController/authController");
 const passport = require("passport");
-const runCronJob = require("../cronJob/cronGuest");
+const cronJob = require("../cronJob/cronGuest");
 
 router.post("/logout", authController.logout);
 
@@ -39,6 +39,6 @@ router.get(
 
 router.get("/github/callback", authController.handleGithubCallback);
 
-router.post("/guest-cleanup", authController.guestCleanerTimer);
+router.get("/run-cron", cronJob.runCron);
 
 module.exports = router;

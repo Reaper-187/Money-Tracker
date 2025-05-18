@@ -30,7 +30,7 @@ const formSchema = z.object({
 });
 
 export const Login = () => {
-  const { loginUser, loginGuestUser, runGuestCleanup } = useAuth();
+  const { loginUser, loginGuestUser } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
 
   const {
@@ -63,9 +63,6 @@ export const Login = () => {
   const loginAsGuest = async () => {
     try {
       const guestLogin = await loginGuestUser();
-
-      await runGuestCleanup();
-
       if (guestLogin) {
         navigate("/dashboard");
       }
