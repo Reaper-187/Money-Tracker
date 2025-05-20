@@ -19,10 +19,9 @@ exports.runCron = async (req, res) => {
       guest.guestSessionExpiresAt = null;
       await guest.save();
     }
-    console.log("Cronjob erfolgreich abgeschlossen.");
-    res.status(200).send("Cronjob erfolgreich ausgeführt.");
+    res.send("ok");
   } catch (error) {
-    console.error("Fehler im Cronjob:", error);
-    res.status(500).send("Fehler im Cronjob.");
+    console.error("Error in cronjob:", error);
+    res.status(500).send("Error occurred during cronjob execution.");
   }
 };

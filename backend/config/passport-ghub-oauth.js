@@ -29,7 +29,6 @@ function initializeGithubAuth(passport) {
             email,
           });
           await newUser.save();
-          console.log("New user created:", newUser);
           done(null, newUser);
         } catch (error) {
           done(error, null);

@@ -27,7 +27,6 @@ function initializeGmailAuth(passport) {
             email: profile.emails[0].value,
           });
           await newUser.save();
-          console.log("New user created:", newUser);
           done(null, newUser);
         } catch (error) {
           done(error, null);

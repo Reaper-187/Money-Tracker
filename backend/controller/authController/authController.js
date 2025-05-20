@@ -210,7 +210,7 @@ exports.verifySession = async (req, res) => {
     });
   } catch (err) {
     console.error("Error with the verification:", err);
-    res.status(500).send("Intern ServerError.");
+    res.status(500).send("Intern Server-Error.");
   }
 };
 
@@ -220,20 +220,20 @@ exports.forgotPw = async (req, res) => {
   // E-Mail Validierung
   const emailRegex = /^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/;
   if (!emailRegex.test(email)) {
-    return res.status(400).json({ message: "Ungültige E-Mail-Adresse." });
+    return res.status(400).json({ message: "Invalid email address." });
   }
 
   try {
     const user = await User.findOne({ email });
 
     if (!user) {
-      return res.status(404).json({ message: "E-Mail nicht gefunden." });
+      return res.status(404).json({ message: "Email not found." });
     }
 
     if (user.googleId || user.githubId) {
       return res.status(400).json({
         message:
-          "Dein Konto wurde über Google oder GitHub erstellt. Bitte nutze diesen Login-Weg.",
+          "Your account was created using Google or GitHub. Please use that login method.",
       });
     }
 
@@ -241,7 +241,7 @@ exports.forgotPw = async (req, res) => {
     if (user.resetCodeExpires > Date.now()) {
       return res.status(400).json({
         message:
-          "Ein Reset-Code wurde bereits gesendet. Bitte warte, bis der Code abläuft.",
+          "A reset code has already been sent. Please wait until it expires before requesting a new one.",
       });
     }
 
@@ -266,14 +266,14 @@ exports.forgotPw = async (req, res) => {
     await transporter.sendMail({
       from: EMAIL_USER,
       to: req.body.email,
-      subject: "Passwort-Reset-OTP",
-      text: `Dein 6-stelliger Code zum Zurücksetzen des Passworts lautet: ${otpSent}. Dieser Code ist 10 Minuten gültig.`,
+      subject: "Password-Reset-OTP",
+      text: `Your 6-digit password reset code is: ${otpSent}. This code is valid for 10 minutes.`,
     });
 
-    res.json({ message: "Code zum Zurücksetzen gesendet." });
+    res.json({ message: "Password reset code sent." });
   } catch (error) {
-    console.error("Fehler beim Senden des Codes:", error);
-    res.status(500).json({ message: "Serverfehler" });
+    console.error("Error sending the code:", error);
+    res.status(500).json({ message: "Server error" });
   }
 };
 
@@ -283,7 +283,7 @@ exports.verifyOtp = async (req, res) => {
   const resetCodeInt = Number(otpSent);
 
   if (isNaN(resetCodeInt)) {
-    return res.status(400).json({ message: "Ungültiger Reset-Code." });
+    return res.status(400).json({ message: "Invalid reset code." });
   }
 
   try {
@@ -296,15 +296,15 @@ exports.verifyOtp = async (req, res) => {
     if (!user) {
       return res
         .status(400)
-        .json({ message: "Ungültiger oder abgelaufener Code." });
+        .json({ message: "Invalid or expired reset code." });
     }
 
     res.status(200).json({
-      message: "Code verifiziert. Du kannst nun dein Passwort ändern.",
+      message: "Code verified. You can now reset your password.",
     });
   } catch (error) {
-    console.error("Fehler bei der Code-Verifikation:", error);
-    res.status(500).json({ message: "Serverfehler" });
+    console.error("Error during code verification:", error);
+    res.status(500).json({ message: "Server error." });
   }
 };
 
@@ -321,14 +321,14 @@ exports.resetPw = async (req, res) => {
       console.log("Code is invalid or expired.");
       return res
         .status(400)
-        .json({ message: "Ungültiger oder abgelaufener Code." });
+        .json({ message: "Invalid or expired reset code." });
     }
 
     // Überprüfen, ob das neue Passwort mit dem alten übereinstimmt
     const isSamePassword = await bcrypt.compare(newPassword, user.password);
     if (isSamePassword) {
       return res.status(400).json({
-        message: "Das neue Passwort darf nicht mit dem alten übereinstimmen.",
+        message: "New password must be different from the current one.",
       });
     }
 
@@ -338,10 +338,10 @@ exports.resetPw = async (req, res) => {
 
     await user.save();
 
-    res.json({ message: "Passwort erfolgreich geändert." });
+    res.json({ message: "Password successfully updated." });
   } catch (error) {
-    console.error("Fehler beim Zurücksetzen des Passworts:", error);
-    res.status(500).json({ message: "Serverfehler" });
+    console.error("Error while resetting the password:", error);
+    res.status(500).json({ message: "Server error" });
   }
 };
 
