@@ -59,6 +59,7 @@ exports.getUserInfo = async (req, res) => {
 exports.authStatus = async (req, res) => {
   const userId =
     req.user?._id || req.session.passport?.user || req.session.user?.id;
+  console.log("UserID-AuthStatusBackend", userId);
 
   if (!userId) {
     return res.status(200).json({ loggedIn: false });
@@ -113,11 +114,13 @@ exports.existingUser = (req, res, next) => {
           .json({ success: false, message: "sign-in unsuccessfully" });
       }
 
-      req.session.user = {
+      const session2 = (req.session.user = {
         id: user._id,
         email: user.email,
         isGuest: false,
-      };
+      });
+
+      console.log("session2", session2);
 
       req.session.loggedIn = true;
 
@@ -348,20 +351,25 @@ exports.resetPw = async (req, res) => {
 exports.handleGoogleCallback = (req, res, next) => {
   passport.authenticate("google", (err, user, info) => {
     if (err || !user) {
-      return res.redirect(`${FRONTEND_URL}/login`);
+      res.redirect(`${FRONTEND_URL}/login`);
+      console.log("Error beim Login", err);
     }
 
     req.logIn(user, (err) => {
       if (err) {
-        return res.redirect(`${FRONTEND_URL}/login`);
+        res.redirect(`${FRONTEND_URL}/login`);
+        console.log("Error beim Login2", err);
       }
 
-      req.session.user = {
+      const session = (req.session.user = {
         id: user._id,
         email: user.email,
         isGuest: false,
-      };
+      });
+      console.log("session", session);
+
       req.session.loggedIn = true;
+      console.log("req.session.loggedIn", req.session.loggedIn);
 
       return res.redirect(`${FRONTEND_URL}/dashboard`);
     });
