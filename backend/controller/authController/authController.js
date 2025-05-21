@@ -58,7 +58,10 @@ exports.getUserInfo = async (req, res) => {
 
 exports.authStatus = async (req, res) => {
   const userId =
-    req.user?._id || req.session.passport?.user || req.session.user?.id;
+    req.user?._id ||
+    req.session.passport?.user ||
+    req.session.user?.id ||
+    req.user?.id;
   console.log("UserID-AuthStatusBackend", userId);
 
   if (!userId) {
