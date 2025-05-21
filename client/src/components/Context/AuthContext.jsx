@@ -19,7 +19,9 @@ export const GetAuthenticationProvider = ({ children }) => {
 
   const isUserAuthenticated = async () => {
     try {
-      const response = await axios.get(authChecking);
+      const response = await axios.get(authChecking, {
+        withCredentials: true,
+      });
       setIsAuthStatus({
         loggedIn: response.data.loggedIn,
         isVerified: response.data.isVerified,
@@ -32,8 +34,12 @@ export const GetAuthenticationProvider = ({ children }) => {
   };
 
   const loginUser = async (loginData) => {
-    await axios.post(loginApi, loginData);
-    const res = await axios.get(authChecking);
+    await axios.post(loginApi, loginData, {
+      withCredentials: true,
+    });
+    const res = await axios.get(authChecking, {
+      withCredentials: true,
+    });
     setIsAuthStatus(res.data);
     return res.data.loggedIn;
   };
