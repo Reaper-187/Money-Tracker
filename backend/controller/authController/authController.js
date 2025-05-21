@@ -354,27 +354,37 @@ exports.resetPw = async (req, res) => {
 exports.handleGoogleCallback = (req, res, next) => {
   passport.authenticate("google", (err, user, info) => {
     if (err || !user) {
-      res.redirect(`${FRONTEND_URL}/login`);
       console.log("Error beim Login", err);
+      return res.redirect(`${FRONTEND_URL}/login`);
     }
 
     req.logIn(user, (err) => {
       if (err) {
-        res.redirect(`${FRONTEND_URL}/login`);
         console.log("Error beim Login2", err);
+        return res.redirect(`${FRONTEND_URL}/login`);
       }
 
-      const session = (req.session.user = {
+      // Setze Session-Werte
+      req.session.user = {
         id: user._id,
         email: user.email,
         isGuest: false,
-      });
-      console.log("session", session);
-
+      };
       req.session.loggedIn = true;
+
+      console.log("session", req.session.user);
       console.log("req.session.loggedIn", req.session.loggedIn);
 
-      return res.redirect(`${FRONTEND_URL}/dashboard`);
+      // Speichere die Session, bevor redirect erfolgt!
+      req.session.save((err) => {
+        if (err) {
+          console.log("Fehler beim Session speichern:", err);
+          return res.redirect(`${FRONTEND_URL}/login`);
+        }
+
+        // Session ist gespeichert -> Redirect ist nun sicher
+        return res.redirect(`${FRONTEND_URL}/dashboard`);
+      });
     });
   })(req, res, next);
 };
