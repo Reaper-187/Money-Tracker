@@ -123,7 +123,7 @@ exports.existingUser = (req, res, next) => {
         isGuest: false,
       });
 
-      console.log("session2", session2);
+      console.log("session normal Login", session2);
 
       req.session.loggedIn = true;
 
@@ -354,37 +354,26 @@ exports.resetPw = async (req, res) => {
 exports.handleGoogleCallback = (req, res, next) => {
   passport.authenticate("google", (err, user, info) => {
     if (err || !user) {
+      res.redirect(`${FRONTEND_URL}/login`);
       console.log("Error beim Login", err);
-      return res.redirect(`${FRONTEND_URL}/login`);
     }
 
     req.logIn(user, (err) => {
       if (err) {
+        res.redirect(`${FRONTEND_URL}/login`);
         console.log("Error beim Login2", err);
-        return res.redirect(`${FRONTEND_URL}/login`);
       }
 
-      // Setze Session-Werte
-      req.session.user = {
+      const session = (req.session.user = {
         id: user._id,
         email: user.email,
         isGuest: false,
-      };
+      });
+      console.log("session Google", session);
+
       req.session.loggedIn = true;
 
-      console.log("session", req.session.user);
-      console.log("req.session.loggedIn", req.session.loggedIn);
-
-      // Speichere die Session, bevor redirect erfolgt!
-      req.session.save((err) => {
-        if (err) {
-          console.log("Fehler beim Session speichern:", err);
-          return res.redirect(`${FRONTEND_URL}/login`);
-        }
-
-        // Session ist gespeichert -> Redirect ist nun sicher
-        return res.redirect(`${FRONTEND_URL}/dashboard`);
-      });
+      return res.redirect(`${FRONTEND_URL}/dashboard`);
     });
   })(req, res, next);
 };
@@ -399,12 +388,14 @@ exports.handleGithubCallback = (req, res, next) => {
         return res.redirect(`${FRONTEND_URL}/login`);
       }
 
-      req.session.user = {
+      const session = (req.session.user = {
         id: user._id,
         email: user.email,
         isGuest: false,
-      };
+      });
       req.session.loggedIn = true;
+
+      console.log("Session Github", session);
 
       return res.redirect(`${FRONTEND_URL}/dashboard`);
     });

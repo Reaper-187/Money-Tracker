@@ -46,7 +46,7 @@ app.use(
     }),
     cookie: {
       httpOnly: true,
-      secure: true, // Falls HTTPS genutzt wird, auf true setzen.
+      secure: process.env.NODE_ENV === "production", // Falls HTTPS genutzt wird, auf true setzen.
       sameSite: "none", // Falls Frontend auf anderer Domain, 'none' verwenden
       maxAge: 1000 * 60 * 60 * 24,
     },
