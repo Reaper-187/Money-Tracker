@@ -73,11 +73,6 @@ app.use("/api", transactionRoutes);
 
 app.use("/api/auth", authRoutes); // Route für userAuthen
 
-app.use((req, res, next) => {
-  console.log("Session:", req.session);
-  next();
-});
-
 // DB-Verbindung herstellen
 connectDB();
 

@@ -62,7 +62,6 @@ exports.authStatus = async (req, res) => {
     req.session.passport?.user ||
     req.session.user?.id ||
     req.user?.id;
-  console.log("UserID-AuthStatusBackend", userId);
 
   if (!userId) {
     return res.status(200).json({ loggedIn: false });
@@ -101,7 +100,6 @@ exports.existingUser = (req, res, next) => {
         .json({ success: false, message: "wrong login-data" });
     }
 
-    // Überprüfung, ob der Benutzer verifiziert ist
     if (!user.isVerified) {
       return res.status(403).json({
         success: false,
@@ -111,19 +109,16 @@ exports.existingUser = (req, res, next) => {
 
     req.logIn(user, (err) => {
       if (err) {
-        console.log("Error with login:", err);
         return res
           .status(500)
           .json({ success: false, message: "sign-in unsuccessfully" });
       }
 
-      const session2 = (req.session.user = {
+      req.session.user = {
         id: user._id,
         email: user.email,
         isGuest: false,
-      });
-
-      console.log("session normal Login", session2);
+      };
 
       req.session.loggedIn = true;
 
@@ -324,7 +319,6 @@ exports.resetPw = async (req, res) => {
     });
 
     if (!user) {
-      console.log("Code is invalid or expired.");
       return res
         .status(400)
         .json({ message: "Invalid or expired reset code." });
@@ -355,21 +349,18 @@ exports.handleGoogleCallback = (req, res, next) => {
   passport.authenticate("google", (err, user, info) => {
     if (err || !user) {
       res.redirect(`${FRONTEND_URL}/login`);
-      console.log("Error beim Login", err);
     }
 
     req.logIn(user, (err) => {
       if (err) {
         res.redirect(`${FRONTEND_URL}/login`);
-        console.log("Error beim Login2", err);
       }
 
-      const session = (req.session.user = {
+      req.session.user = {
         id: user._id,
         email: user.email,
         isGuest: false,
-      });
-      console.log("session Google", session);
+      };
 
       req.session.loggedIn = true;
 
@@ -388,14 +379,12 @@ exports.handleGithubCallback = (req, res, next) => {
         return res.redirect(`${FRONTEND_URL}/login`);
       }
 
-      const session = (req.session.user = {
+      req.session.user = {
         id: user._id,
         email: user.email,
         isGuest: false,
-      });
+      };
       req.session.loggedIn = true;
-
-      console.log("Session Github", session);
 
       return res.redirect(`${FRONTEND_URL}/dashboard`);
     });
